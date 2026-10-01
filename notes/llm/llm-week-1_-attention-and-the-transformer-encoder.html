@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LLM Week 1: Attention and the Transformer Encoder (Complete Notes)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f5f8fc;--fg:#17202e;--card:#fff;--mut:#52607a;--line:#d6dfec;--nav:#14304f;--acc:#1f5fae;--code:#eaf1fb;
+--kb:#e6f0fd;--kbd:#1f5fae;--gb:#e5f6ee;--gbd:#1d8a5c;--ib:#ebe9fb;--ibd:#4b45b5;--tb:#e2f5f6;--tbd:#16808a;--sb:#eef1f5;--sbd:#6b778c}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1622;--fg:#e6ecf5;--card:#172131;--mut:#9fb0c9;--line:#2a3a52;--acc:#6aa8f0;--code:#1d2b40;--kb:#16294a;--gb:#123528;--ib:#25234f;--tb:#123a3f;--sb:#222c3a}}
+:root[data-theme="dark"]{--bg:#0f1622;--fg:#e6ecf5;--card:#172131;--mut:#9fb0c9;--line:#2a3a52;--acc:#6aa8f0;--code:#1d2b40;--kb:#16294a;--gb:#123528;--ib:#25234f;--tb:#123a3f;--sb:#222c3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:#14304f;color:#fff;padding:34px 20px;text-align:center}
+header h1{margin:0 0 6px;font-size:clamp(1.5rem,5vw,2.2rem)}header p{margin:0;color:#c5d5ea}
+main{max-width:920px;margin:0 auto;padding:14px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+nav a{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:.82rem;color:var(--acc);text-decoration:none}
+section{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:10px;padding:6px 20px 18px;margin:22px 0}
+h2{color:var(--acc);margin:14px 0 6px;font-size:1.4rem}h3{margin:20px 0 4px;color:var(--fg);border-bottom:2px solid var(--line);padding-bottom:2px}
+.box{border-radius:8px;padding:10px 14px;margin:12px 0;border:1px solid;border-left-width:5px}
+.box>b.t{display:block;margin-bottom:2px}
+.key{background:var(--kb);border-color:var(--kbd)}.idea{background:var(--gb);border-color:var(--gbd)}.warn{background:var(--ib);border-color:var(--ibd)}.def{background:var(--tb);border-color:var(--tbd)}.eq{background:var(--code);border-color:var(--line);overflow-x:auto}
+.scroll{overflow-x:auto}table{border-collapse:collapse;margin:10px 0;font-size:.92rem}th,td{border:1px solid var(--line);padding:5px 10px;text-align:center}th{background:var(--code)}
+td.l,th.l{text-align:left}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;justify-content:center}
+.flow.v{flex-direction:column}
+.n{border:2px solid;border-radius:8px;padding:6px 11px;font-size:.88rem;text-align:center;background:var(--card);line-height:1.35}
+.n.b{border-color:var(--kbd);background:var(--kb)}.n.g{border-color:var(--gbd);background:var(--gb)}.n.i{border-color:var(--ibd);background:var(--ib)}.n.t{border-color:var(--tbd);background:var(--tb)}.n.s{border-color:var(--sbd);background:var(--sb)}
+.a{color:var(--mut);font-weight:700;font-size:1.1rem}
+.diagram{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:10px;margin:14px 0}
+.diagram .cap{text-align:center;font-size:.85rem;color:var(--mut);margin-top:4px}
+.br{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:6px}
+.hm td{min-width:46px}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+.hm td[style]{color:#17202e}</style>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},svg:{fontCache:'global'}}</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header><h1>Week 1: Attention and the Transformer Encoder</h1><p>Introduction to Large Language Models · IIT Madras · Complete notes from slides and lecture summary (Module 1.1 and 1.2)</p></header>
+<main>
+<nav><a href="#s0">Roadmap</a><a href="#s1">1 Basics</a><a href="#s2">2 Blocks</a><a href="#s3">3 RNN</a><a href="#s4">4 Seq2Seq</a><a href="#s5">5 Attention</a><a href="#s6">6 Parallelism</a><a href="#s7">7 Transformer</a><a href="#s8">8 Self-attention</a><a href="#s9">9 Q K V</a><a href="#s10">10 Worked example</a><a href="#s11">11 Matrix form</a><a href="#s12">12 Scaling</a><a href="#s13">13 Multi-head</a><a href="#s14">14 FFN</a><a href="#s15">15 Encoder</a><a href="#s16">16 Revision</a></nav>
+
+<section id="s0"><h2>0. Roadmap of the week</h2>
+<p>Week 1 tells one connected story. Old models (RNNs) read text one word at a time. That works but is slow to train and forgetful. Attention was added to help memory, but training stayed slow. The Transformer keeps attention and removes the word-by-word loop, so a whole sentence is processed at once. This is the reason modern LLMs could be trained on huge data.</p>
+<div class="diagram"><div class="flow">
+<div class="n s">RNN reads word by word</div><span class="a">→</span><div class="n s">Seq2seq: one bottleneck vector</div><span class="a">→</span><div class="n b">Add attention</div><span class="a">→</span><div class="n s">Still sequential in time</div><span class="a">→</span><div class="n g">Self-attention (parallel)</div><span class="a">→</span><div class="n g">Q, K, V and scaling</div><span class="a">→</span><div class="n g">Multi-head</div><span class="a">→</span><div class="n t">FFN + 6 layers = Encoder</div></div><div class="cap">The story of the week</div></div>
+<div class="box key"><b class="t">How to read these notes</b>Sections 1 to 6 are the background (why we needed something new). Sections 7 to 15 build the Transformer encoder step by step with every derivation. Section 16 is revision: formulas, glossary and practice questions with answers.</div></section>
+
+<section id="s1"><h2>1. Background: text as numbers</h2>
+<h3>1.1 Why sequences are special</h3>
+<p>Language is a <b>sequence</b>: order matters ("dog bites man" is not "man bites dog") and length varies from sentence to sentence. A model for language must (a) accept variable length input and (b) use the meaning of each word <i>in context</i>.</p>
+<h3>1.2 Word embeddings</h3>
+<p>Computers cannot use words directly, so each word is mapped to a vector of numbers called a <b>word embedding</b>. In the slides, toy 3-dimensional embeddings are used: "I" = [1,0,0], "enjoyed" = [0,1,0], "the" = [1,1,0], "movie" = [1,0,1], "transformers" = [1,1,1]. In the real model these have 512 numbers.</p>
+<div class="box def"><b class="t">Static vs contextual embeddings</b><b>Static</b> (Word2Vec, GloVe): each word has one fixed vector regardless of the sentence. The word "bank" gets the same vector in "river bank" and "bank loan". <b>Contextual</b>: the vector for a word changes depending on the other words around it. RNN hidden states and Transformer outputs are contextual.</div>
+<p>Notation used throughout: a sentence has $T$ words (the slides also use $n$); $h_1,\dots,h_T$ are the input vectors; $z_1,\dots,z_T$ are the context-aware outputs.</p></section>
+
+<section id="s2"><h2>2. The three classic building blocks</h2>
+<p>Deep models are built by stacking small repeating blocks. The block defines what kind of structure the model is good at.</p>
+<div class="scroll"><table><tr><th class="l">Model</th><th class="l">Core block</th><th class="l">Good at</th></tr>
+<tr><td class="l">Feed-forward NN (FFNN)</td><td class="l">Neuron: $\sigma(W^TX+b)$, a weighted sum then a non-linearity (sigmoid, ReLU)</td><td class="l">Learning a general input → output mapping</td></tr>
+<tr><td class="l">Convolutional NN (CNN)</td><td class="l">Sliding filter (convolution) + max-pooling</td><td class="l">Local patterns in grids (images)</td></tr>
+<tr><td class="l">Recurrent NN (RNN)</td><td class="l">Recurrence $H_t=f(H_{t-1},X_t)$</td><td class="l">Sequences, where order matters</td></tr></table></div>
+<div class="diagram"><div class="flow"><div class="n b">FFNN: X</div><span class="a">→</span><div class="n s">W<sup>T</sup>X + b</div><span class="a">→</span><div class="n s">sigmoid / ReLU</div><span class="a">→</span><div class="n g">H</div></div>
+<div class="flow"><div class="n b">CNN: X</div><span class="a">→</span><div class="n s">convolution filters</div><span class="a">→</span><div class="n s">pooling</div><span class="a">→</span><div class="n g">feature map</div></div>
+<div class="flow"><div class="n b">RNN: H<sub>t-1</sub>, X<sub>t</sub></div><span class="a">→</span><div class="n s">recurrent cell f(·)</div><span class="a">→</span><div class="n g">H<sub>t</sub></div><div class="cap" style="width:100%">The three blocks</div></div></div>
+<p>The Transformer will use two of these ideas: FFNNs (for the per-word network) and something CNN-like (many parallel "filters", which become <i>heads</i>). It will not use recurrence.</p></section>
+
+<section id="s3"><h2>3. RNNs in detail and their limits</h2>
+<h3>3.1 How an RNN works</h3>
+<p>An RNN keeps a memory called the <b>hidden state</b>. At every step it reads one word $X_t$ and updates the memory using the old memory:</p>
+<div class="box eq">$$H_t=f(H_{t-1},X_t),\qquad\text{commonly}\quad H_t=\tanh(W_hH_{t-1}+W_xX_t+b)$$</div>
+<p>Because $H_t$ depends on $H_{t-1}$, which depends on $H_{t-2}$ and so on, $H_t$ summarises $X_1,\dots,X_t$. So each $H_t$ is a contextual representation of word $t$ using only the <b>left</b> context.</p>
+<div class="diagram"><div class="flow"><div class="n s">h<sub>0</sub></div><span class="a">→</span><div class="n b">RNN ← "I"</div><span class="a">h<sub>1</sub>→</span><div class="n b">RNN ← "enjoyed"</div><span class="a">h<sub>2</sub>→</span><div class="n b">RNN ← "the"</div><span class="a">h<sub>3</sub>→</span><div class="n b">RNN ← "movie"</div><span class="a">h<sub>4</sub>→</span><div class="n b">RNN ← "transformers"</div><span class="a">→</span><div class="n g">h<sub>5</sub></div></div><div class="cap">An RNN encoder: every step waits for the previous one</div></div>
+<h3>3.2 Bidirectional RNN</h3>
+<p>To also use the <b>right</b> context, run a second RNN from right to left and join the two states: $[H_t^{fwd}\,;\,H_t^{bwd}]$. This gives each word information from both sides, but you still need two sequential passes.</p>
+<h3>3.3 Problem 1: no parallelism</h3>
+<div class="box warn"><b class="t">The sequential bottleneck</b>The whole sentence $X_1..X_T$ is available at time 0, yet $H_t$ cannot be computed until $H_{t-1}$ is finished. A GPU has thousands of cores but an RNN can use only one "column" of work at a time along the sentence. Training time grows linearly with length and cannot be sped up by adding hardware along that direction.</div>
+<h3>3.4 Problem 2: vanishing / exploding gradients</h3>
+<p>Training uses backpropagation through time. The gradient of a late loss with respect to an early hidden state is a <b>product</b> of many Jacobians:</p>
+<div class="box eq">$$\frac{\partial H_t}{\partial H_k}=\prod_{j=k+1}^{t}\frac{\partial H_j}{\partial H_{j-1}}$$</div>
+<p>If these factors are usually smaller than 1 the product shrinks to almost 0 (<b>vanishing</b>, the model forgets far-away words). If usually bigger than 1 it blows up (<b>exploding</b>, unstable training). Long-distance links are therefore hard to learn. (LSTMs/GRUs reduce, but do not remove, this.) The lecture lists "get rid of vanishing/exploding gradients" in its wishlist.</p></section>
+
+<section id="s4"><h2>4. Sequence-to-sequence (encoder-decoder)</h2>
+<p>Many tasks map one sequence to another: translation, summarisation, question answering. The seq2seq model uses two RNNs.</p>
+<ul><li><b>Encoder RNN</b> reads the source sentence and produces hidden states $h_1..h_5$.</li>
+<li>The final state $h_5$ is the <b>concept vector</b> (also called thought vector, context vector or annotation).</li>
+<li><b>Decoder RNN</b> is started with $s_0=h_5$ and generates the target words one by one.</li></ul>
+<div class="diagram"><div class="flow v">
+<div class="flow"><div class="n b">I</div><div class="n b">enjoyed</div><div class="n b">the</div><div class="n b">movie</div><div class="n b">transformers</div><span class="a">⟹ Encoder RNN ⟹</span><div class="n g">h<sub>1</sub> … h<sub>5</sub></div></div>
+<span class="a">↓ s<sub>0</sub> = h<sub>5</sub></span>
+<div class="flow"><div class="n t">Decoder RNN</div><span class="a">⟹</span><div class="n i">Naan</div><div class="n i">transfarmar</div><div class="n i">padaththai</div><div class="n i">rasiththen</div></div></div><div class="cap">Seq2seq: English → Tamil (romanized)</div></div>
+<h3>4.1 How the decoder produces words</h3>
+<p>At each step the decoder state $s_t$ is passed through a softmax over the vocabulary; the most likely word is the output $y_t$. It starts from a special <code>&lt;Go&gt;</code> token. During <b>training</b> the true previous word is fed as input (Naan, then transfarmar, then padaththai), even if the model guessed wrongly; this is called teacher forcing.</p>
+<h3>4.2 Limitations</h3>
+<div class="box warn"><b class="t">Two problems</b><b>1. Information bottleneck:</b> the entire sentence must fit in one vector $h_5$, so long sentences lose detail. <b>2. No alignment:</b> the decoder does not know which source word to look at while producing each target word. The lecture says: "Attention mechanism resolves this."</div></section>
+
+<section id="s5"><h2>5. Attention in seq2seq</h2>
+<h3>5.1 The idea</h3>
+<p>Human translators glance back at the specific source word they are translating. Attention lets the decoder do the same. Make a copy of <b>all</b> encoder states $h_1,\dots,h_n$ and hand them to the decoder (the encoder itself can then be dropped until decoding ends). At each decoder step, the decoder decides how much to look at each $h_i$.</p>
+<h3>5.2 Context vector</h3>
+<div class="box eq">$$c_t=\sum_{i=1}^{n}\alpha_{ti}\,h_i\quad\text{(context for output }y_t\text{)}$$</div>
+<p>$n$ = number of source words, $t$ = decoder time step, $\alpha_{ti}$ = attention weight of source word $i$ at step $t$. As a matrix product: $c_t=[\,h_1\ h_2\ \dots\ h_n\,]\,[\alpha_{t1},\dots,\alpha_{tn}]^T$. The context $c_t$ (together with the previous output word) is fed into decoder state $s_t$. So the decoder gets a <b>new</b> context at every step instead of one fixed vector.</p>
+<div class="diagram"><div class="br">
+<div class="col"><div class="n g">h<sub>1</sub> (I)</div><div class="n g">h<sub>2</sub> (enjoyed)</div><div class="n g">h<sub>3</sub> (the)</div><div class="n g">h<sub>4</sub> (film)</div><div class="n g">h<sub>5</sub> (transformers)</div></div>
+<span class="a">→ weights α<sub>t1</sub> … α<sub>t5</sub> →</span><div class="n b">Σ α<sub>ti</sub>h<sub>i</sub></div><span class="a">→</span><div class="n t">c<sub>t</sub></div><span class="a">→</span><div class="n i">decoder state s<sub>t</sub> → y<sub>t</sub></div></div><div class="cap">Attention builds a fresh context vector c<sub>t</sub> at every decoder step</div></div>
+<h3>5.3 Getting the weights</h3>
+<div class="box eq">$$e_{ti}=\text{score}(s_{t-1},h_i),\qquad \alpha_{ti}=\text{align}(y_t,h_i)=\frac{\exp(e_{ti})}{\sum_{i'=1}^{n}\exp(e_{ti'})}$$</div>
+<ol><li>Compare the decoder's current state $s_{t-1}$ with each source state $h_i$ using a <b>score</b> function. High score means "relevant".</li>
+<li>Apply <b>softmax</b> so the weights are positive and add up to 1 (a probability distribution over source words). The exponential also makes the largest scores stand out.</li></ol>
+<p>The score used in the seq2seq attention slide is the <b>additive</b> (Bahdanau-style) form:</p>
+<div class="box eq">$$\text{score}(s_{t-1},h_j)=V_a^{T}\tanh\!\big(U_{att}\,s_{t-1}+W_{att}\,h_j\big)$$</div>
+<p>It has two linear maps ($U_{att}$ on the decoder state, $W_{att}$ on the encoder state), one non-linearity (tanh) and a final dot product with the learned vector $V_a$. Note it involves three vectors: $s$, $h$ and $V_a$. Keep this in mind: it is exactly what Q, K, V will replace.</p>
+<h3>5.4 Step by step through the example</h3>
+<div class="scroll"><table><tr><th>Step t</th><th>Decoder outputs</th><th>Weights used</th><th>Context</th></tr>
+<tr><td>1</td><td>Naan (input &lt;Go&gt;)</td><td>α<sub>11</sub> … α<sub>15</sub></td><td>c<sub>1</sub></td></tr>
+<tr><td>2</td><td>transfarmar (input Naan)</td><td>α<sub>21</sub> … α<sub>25</sub></td><td>c<sub>2</sub></td></tr>
+<tr><td>3</td><td>padaththai</td><td>α<sub>31</sub> … α<sub>35</sub></td><td>c<sub>3</sub></td></tr>
+<tr><td>4</td><td>rasiththen</td><td>α<sub>41</sub> … α<sub>45</sub></td><td>c<sub>4</sub></td></tr></table></div>
+<h3>5.5 The alignment heatmap</h3>
+<p>Arrange the weights in a grid (rows: target words, columns: source words). Bright cells show the alignment the model learned. Illustrative numbers matching the slide's highlighted cells ($\alpha_{11}$, $\alpha_{25}$, $\alpha_{34}$, $\alpha_{42}$):</p>
+<div class="scroll"><table class="hm"><tr><th></th><th>I</th><th>enjoyed</th><th>the</th><th>film</th><th>transformers</th></tr>
+<tr><th>Naan</th><td style="background:#1f5fae;color:#fff">0.80</td><td style="background:#e3edfa">0.05</td><td style="background:#e3edfa">0.05</td><td style="background:#e3edfa">0.05</td><td style="background:#e3edfa">0.05</td></tr>
+<tr><th>transfarmar</th><td style="background:#e3edfa">0.02</td><td style="background:#e3edfa">0.03</td><td style="background:#e3edfa">0.05</td><td style="background:#e3edfa">0.10</td><td style="background:#1f5fae;color:#fff">0.80</td></tr>
+<tr><th>padaththai</th><td style="background:#e3edfa">0.02</td><td style="background:#e3edfa">0.03</td><td style="background:#8db4e6">0.40</td><td style="background:#6a9ddb">0.50</td><td style="background:#e3edfa">0.05</td></tr>
+<tr><th>rasiththen</th><td style="background:#e3edfa">0.05</td><td style="background:#1f5fae;color:#fff">0.80</td><td style="background:#e3edfa">0.05</td><td style="background:#e3edfa">0.05</td><td style="background:#e3edfa">0.05</td></tr></table></div>
+<p>Each row sums to 1. The pattern is not a straight diagonal: Tamil puts the verb (rasiththen = "enjoyed") at the end, so the attention jumps. Attention discovers this word-order difference automatically.</p></section>
+
+<section id="s6"><h2>6. What can and cannot be parallelized</h2>
+<div class="box idea"><b class="t">Q1. Can $\alpha_{ti}$ be computed in parallel for all $i$ at one step $t$?</b>Yes. All $h_i$ are already available and $s_{t-1}$ is fixed, so each $e_{ti}$ is independent. <b>Take-away: attention itself can be parallelized.</b></div>
+<div class="box warn"><b class="t">Q2. Can the encoder states $h_i$ be computed in parallel for all $i$?</b>No, each needs the previous one.</div>
+<div class="box warn"><b class="t">Q3. Can $\alpha_{ti}$ be computed for all decoder steps $t$ at once?</b>No. $\alpha_{t}$ needs $s_{t-1}$, which needs $c_{t-1}$, which needs $\alpha_{t-1}$. This is a chain.</div>
+<div class="diagram"><div class="flow"><div class="n b">α<sub>t-1</sub></div><span class="a">→</span><div class="n b">context c<sub>t-1</sub></div><span class="a">→</span><div class="n b">state s<sub>t-1</sub></div><span class="a">→</span><div class="n i">α<sub>t</sub> (must wait)</div></div><div class="cap">The recurrent dependency that blocks parallel decoding</div></div>
+<div class="box key"><b class="t">Wishlist (end of Module 1.1)</b>Design an architecture that (1) uses attention, (2) allows parallel computation across the sequence, and (3) avoids vanishing/exploding gradients. That architecture is the Transformer.</div></section>
+
+<section id="s7"><h2>7. Transformers: "Attention is all you need"</h2>
+<p>The Transformer (Vaswani et al., 2017) removes the RNN completely. Everything is attention plus feed-forward networks. Compare the two encoders:</p>
+<div class="diagram"><div class="flow"><div class="n s">RNN encoder</div><span class="a">:</span><div class="n b">X<sub>1..T</sub></div><span class="a">→ recurrent loop →</span><div class="n g">H<sub>1..T</sub></div></div>
+<div class="flow"><div class="n s">Transformer encoder</div><span class="a">:</span><div class="n b">X<sub>1..T</sub></div><span class="a">→ parallel self-attention →</span><div class="n g">Z<sub>1..T</sub></div></div></div>
+<p>Both turn input embeddings into context-aware vectors. The difference is <i>how</i> context is gathered: through a chain (RNN) or by letting all word pairs interact simultaneously (Transformer).</p>
+<h3>7.1 The overall architecture (preview)</h3>
+<div class="diagram"><div class="br">
+<div class="col"><div class="n s"><b>Encoder</b></div><div class="n b">Word embedding h<sub>1..5</sub></div><div class="n g">Self-attention → s<sub>1..5</sub></div><div class="n t">Feed-forward → z<sub>1..5</sub></div></div>
+<span class="a">→ passed to →</span>
+<div class="col"><div class="n s"><b>Decoder</b></div><div class="n g">Self-attention</div><div class="n g">Encoder-decoder (cross) attention</div><div class="n t">Feed-forward</div><div class="n i">Naan, transfarmar, ...</div></div></div><div class="cap">This week: the encoder. Decoder comes next week.</div></div>
+<h3>7.2 Why it is better (from the original paper)</h3>
+<div class="scroll"><table><tr><th class="l">Property</th><th>RNN</th><th>Self-attention</th></tr>
+<tr><td class="l">Sequential operations per layer</td><td>O(T)</td><td>O(1)</td></tr>
+<tr><td class="l">Max path between two words</td><td>O(T)</td><td>O(1)</td></tr>
+<tr><td class="l">Computation per layer</td><td>O(T·d²)</td><td>O(T²·d)</td></tr></table></div>
+<p>Any two words are connected directly (path length 1), so long-range dependencies are easy, and the depth of sequential steps does not grow with sentence length. The price is the $T\times T$ score table (quadratic in length), which becomes important for very long inputs.</p></section>
+
+<section id="s8"><h2>8. Self-attention: the motivation</h2>
+<h3>8.1 The pronoun puzzle</h3>
+<div class="box eq">"The animal didn't cross the street because <b>it</b> was too <b>tired</b>." → "it" = <b>animal</b><br>"The animal didn't cross the street because <b>it</b> was too <b>congested</b>." → "it" = <b>street</b></div>
+<p>Only one word changed (tired → congested) but the meaning of "it" flipped. A fixed embedding cannot do this. The model must connect "it" to the right word <i>based on context</i>. That is what attention does. Since the connection is between words of the <i>same</i> sentence, it is called <b>self</b>-attention (as opposed to <b>cross</b>-attention between two different sequences, e.g. decoder ↔ encoder, seen in section 5).</p>
+<h3>8.2 The goal: a relation table</h3>
+<p>For every word we want a score against every other word in the sentence, higher when they are contextually related. The slide's example (rows = current word, columns = other words):</p>
+<div class="scroll"><table class="hm"><tr><th></th><th>The</th><th>animal</th><th>didn't</th><th>cross</th><th>the</th><th>street</th><th>because</th><th>it</th></tr>
+<tr><th>The</th><td>0.6</td><td>0.1</td><td>0.05</td><td>0.05</td><td>0.02</td><td>0.02</td><td>0.02</td><td>0.1</td></tr>
+<tr><th>animal</th><td>0.02</td><td>0.5</td><td>0.06</td><td>0.15</td><td>0.02</td><td>0.05</td><td>0.01</td><td>0.12</td></tr>
+<tr><th>didn't</th><td>0.01</td><td>0.35</td><td>0.45</td><td>0.1</td><td>0.01</td><td>0.02</td><td>0.01</td><td>0.03</td></tr>
+<tr><th>...</th><td>.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><th>it</th><td>0.01</td><td style="background:#1f5fae;color:#fff">0.6</td><td>0.02</td><td>0.1</td><td>0.01</td><td style="background:#8db4e6">0.2</td><td>0.01</td><td>0.01</td></tr></table></div>
+<p>Look at the last row: "it" gives most weight to "animal" (0.6), some to "street" (0.2). The full 8×8 table is what self-attention computes.</p>
+<h3>8.3 Why it can be parallel</h3>
+<div class="box idea"><b class="t">Key difference from seq2seq attention</b>In seq2seq, all $h_j$ were known but the decoder states $s_i$ appeared one at a time. In self-attention both sides come from the same input, so <b>every</b> vector is available at time 0. All rows of the table can therefore be computed at the same time.</div></section>
+
+<section id="s9"><h2>9. Deriving Query, Key and Value</h2>
+<h3>9.1 The problem</h3>
+<p>The additive score used three vectors ($s$ = who is asking, $h$ = who is being compared, and $V_a$). In self-attention the layer only receives the word embeddings $h_j$. So we must obtain the needed vectors from each embedding.</p>
+<h3>9.2 The solution: linear projections</h3>
+<p>Multiply each embedding by three learnable matrices. Three matrices are needed because there are three roles:</p>
+<div class="box eq">$$q_j=W_Q\,h_j,\qquad k_j=W_K\,h_j,\qquad v_j=W_V\,h_j$$</div>
+<div class="scroll"><table><tr><th>Vector</th><th class="l">Role</th><th class="l">Intuition (library analogy)</th></tr>
+<tr><td>Query $q_j$</td><td class="l">What word $j$ is looking for</td><td class="l">Your search phrase</td></tr>
+<tr><td>Key $k_j$</td><td class="l">What word $j$ offers for matching</td><td class="l">The title/tag on each book</td></tr>
+<tr><td>Value $v_j$</td><td class="l">The information word $j$ passes on</td><td class="l">The book's content</td></tr></table></div>
+<div class="diagram"><div class="br"><div class="n g">embedding h<sub>j</sub></div><span class="a">→</span>
+<div class="col"><div class="flow"><div class="n b">W<sub>Q</sub></div><span class="a">→</span><div class="n t">query q<sub>j</sub></div></div><div class="flow"><div class="n b">W<sub>K</sub></div><span class="a">→</span><div class="n t">key k<sub>j</sub></div></div><div class="flow"><div class="n b">W<sub>V</sub></div><span class="a">→</span><div class="n t">value v<sub>j</sub></div></div></div></div><div class="cap">One embedding, three roles</div></div>
+<p>The entries of $W_Q,W_K,W_V$ are ordinary parameters, initialised randomly and learned by backpropagation. Sizes in the lecture: $h_j\in\mathbb R^{512}$ and $q_j,k_j,v_j\in\mathbb R^{64}$, so each $W$ is $64\times512$. (The slide draws small toy matrices; the point is that they are matrices.)</p>
+<div class="box def"><b class="t">Why separate roles help</b>If the same vector were used for matching and for content, a word would be forced to be equally good at "being found" and "giving information". With separate $W_Q,W_K,W_V$ the model can learn, for example, that a pronoun should <i>ask</i> for nouns, nouns should <i>advertise</i> themselves as nouns, and what they <i>pass on</i> is their meaning.</div>
+<h3>9.3 Dot product as the score function</h3>
+<p>The lecture replaces the tanh score by a plain dot product between a query and a key: $\text{score}(q_i,k_j)=q_i\cdot k_j$. It is large when the two vectors point in a similar direction. It is also just a matrix multiplication, which is very fast on GPUs. In the old formula "Fixed" was $s_{t-1}$ and "variable" was $h_j$; now Fixed is $q_i$ and variable is $k_j$.</p></section>
+
+<section id="s10"><h2>10. Computing self-attention: step by step with numbers</h2>
+<h3>10.1 The four steps for one word</h3>
+<p>Take word $i$ (say the first word, "I"). For an input $h_1..h_T$:</p>
+<ol>
+<li><b>Project</b> all words: $q_i=W_Qh_i$, $k_j=W_Kh_j$, $v_j=W_Vh_j$.</li>
+<li><b>Score</b> word $i$ against every word $j$: $e_{ij}=q_i\cdot k_j$ (so $e_{1j}=[q_1\!\cdot\!k_1,\ q_1\!\cdot\!k_2,\ \dots,\ q_1\!\cdot\!k_T]$).</li>
+<li><b>Normalise</b> with softmax: $\alpha_{ij}=\dfrac{\exp(e_{ij})}{\sum_{m=1}^{T}\exp(e_{im})}$, so $\sum_j\alpha_{ij}=1$.</li>
+<li><b>Mix the values</b>: $z_i=\sum_{j=1}^{T}\alpha_{ij}\,v_j$.</li></ol>
+<div class="diagram"><div class="flow"><div class="n b">q<sub>i</sub> · k<sub>j</sub></div><span class="a">→</span><div class="n s">scores e<sub>ij</sub></div><span class="a">→</span><div class="n g">softmax</div><span class="a">→</span><div class="n g">weights α<sub>ij</sub></div><span class="a">→</span><div class="n t">Σ α<sub>ij</sub> v<sub>j</sub></div><span class="a">→</span><div class="n i">z<sub>i</sub></div></div></div>
+<p>To get $z_2$, repeat with $q_2$ (the keys and values are the same). Repeat for every word.</p>
+<h3>10.2 Numbers from the slide</h3>
+<p>For "I" the slide shows $q_1=(-0.1,\ 0.25)$, $k_1=(0.3,\ 0.2)$ and, for "transformers", $k_5=(0.11,\ 0.89)$. Then:</p>
+<div class="box eq">$$e_{11}=(-0.1)(0.3)+(0.25)(0.2)=0.02,\qquad e_{15}=(-0.1)(0.11)+(0.25)(0.89)=0.2115$$</div>
+<p>"I" scores higher against "transformers" than against itself, so after softmax "transformers" gets more weight.</p>
+<h3>10.3 A complete tiny example (created for practice)</h3>
+<p>Let $T=3$, $d_k=2$. Suppose the projections gave: $q_1=(1,0)$; keys $k_1=(1,0),\,k_2=(0,1),\,k_3=(1,1)$; values $v_1=(1,2),\,v_2=(3,0),\,v_3=(0,1)$.</p>
+<div class="scroll"><table><tr><th>Step</th><th class="l">Working</th><th>Result</th></tr>
+<tr><td>Scores $q_1\cdot k_j$</td><td class="l">1·1+0·0, 1·0+0·1, 1·1+0·1</td><td>(1, 0, 1)</td></tr>
+<tr><td>Scale by $1/\sqrt2\approx0.707$</td><td class="l">divide each score</td><td>(0.707, 0, 0.707)</td></tr>
+<tr><td>exp</td><td class="l">e<sup>0.707</sup>=2.028, e<sup>0</sup>=1</td><td>(2.028, 1, 2.028); sum = 5.056</td></tr>
+<tr><td>Softmax α</td><td class="l">divide by 5.056</td><td>(0.401, 0.198, 0.401)</td></tr>
+<tr><td>Output $z_1$</td><td class="l">0.401·(1,2)+0.198·(3,0)+0.401·(0,1)</td><td>(0.995, 1.203)</td></tr></table></div>
+<p>Word 1 attends equally to words 1 and 3 (their keys match its query equally) and less to word 2. The output is a blend of their values.</p></section>
+
+<section id="s11"><h2>11. Vectorized self-attention (all words at once)</h2>
+<h3>11.1 Stack the inputs</h3>
+<p>Put the embeddings side by side as columns: $H=[h_1\ h_2\ \dots\ h_T]$, a $512\times T$ matrix. One matrix product projects every word simultaneously:</p>
+<div class="box eq">$$Q=W_QH,\qquad K=W_KH,\qquad V=W_VH\qquad\Rightarrow\quad Q,K,V\in\mathbb R^{64\times T}$$</div>
+<p>Shape check: $(64\times512)(512\times T)=64\times T$. Column $j$ of $Q$ is $q_j$, and so on. The slide asks "$Q\in\mathbb R^{?}$" and answers $64\times T$.</p>
+<h3>11.2 All scores in one product</h3>
+<p>The entry in row $i$, column $j$ of $Q^TK$ equals $q_i^Tk_j$. So the full score table is one matrix product:</p>
+<div class="box eq">$$E=Q^TK\in\mathbb R^{T\times T}\qquad A=\text{softmax}_{\text{row}}\!\Big(\tfrac{E}{\sqrt{d_k}}\Big)\qquad Z=A\,V^T\in\mathbb R^{T\times d_v}$$
+$$\boxed{Z=\text{softmax}\!\left(\frac{Q^TK}{\sqrt{d_k}}\right)V^T}$$</div>
+<p>Row $i$ of $AV^T$ is $\sum_j A_{ij}v_j^T$, which is exactly $z_i=\sum_j\alpha_{ij}v_j$ from section 10. So the vector formula and the matrix formula are the same thing.</p>
+<h3>11.3 Dimension trace</h3>
+<div class="scroll"><table><tr><th>Object</th><th>Shape</th><th class="l">Meaning</th></tr>
+<tr><td>$Q^T$</td><td>$T\times64$</td><td class="l">one query per row</td></tr>
+<tr><td>$K$</td><td>$64\times T$</td><td class="l">one key per column</td></tr>
+<tr><td>$Q^TK$</td><td>$T\times T$</td><td class="l">score of every word pair</td></tr>
+<tr><td>softmax(·)</td><td>$T\times T$</td><td class="l">each row is a probability distribution</td></tr>
+<tr><td>$V^T$</td><td>$T\times64$</td><td class="l">one value per row</td></tr>
+<tr><td>$Z$</td><td>$T\times64$</td><td class="l">one output vector per word</td></tr></table></div>
+<div class="diagram"><div class="br"><div class="col"><div class="n b">Q</div><div class="n b">K</div></div><span class="a">→</span><div class="n s">MatMul Q<sup>T</sup>K</div><span class="a">→</span><div class="n i">Scale 1/√d<sub>k</sub></div><span class="a">→</span><div class="n g">Softmax</div><span class="a">→</span><div class="n s">MatMul with V</div><span class="a">→</span><div class="n t">Z</div></div><div class="cap">Scaled dot-product attention block (V joins at the last MatMul)</div></div>
+<div class="box def"><b class="t">Notation note</b>The original paper writes $\text{softmax}(QK^T/\sqrt{d_k})V$ because it stores each embedding as a <i>row</i>. The lecture stores embeddings as <i>columns</i>, hence $Q^TK$ and $V^T$. The results are identical.</div>
+<p>The whole layer is just matrix multiplications and a softmax, with no loop over words. That is the source of the Transformer's parallelism. The block is called a <b>scaled dot-product attention head</b>; its inputs come from $H$ through $W_Q,W_K,W_V$.</p></section>
+
+<section id="s12"><h2>12. Why scale by $1/\sqrt{d_k}$? (full derivation)</h2>
+<h3>12.1 Step 1: how large do dot products get?</h3>
+<p>Assume each component of $q$ and $k$ is an independent random number with mean 0 and variance 1. The dot product is a sum of $d_k$ products:</p>
+<div class="box eq">$$q\cdot k=\sum_{l=1}^{d_k}q_lk_l$$</div>
+<p>Each term $q_lk_l$ has mean $0$ and variance $E[q_l^2]E[k_l^2]=1$. Variances of independent terms add, so</p>
+<div class="box eq">$$\text{Var}(q\cdot k)=d_k,\qquad \text{std}(q\cdot k)=\sqrt{d_k}$$</div>
+<p>For $d_k=64$ the typical score has size about 8. For larger $d_k$ it is even bigger. Dividing by $\sqrt{d_k}$ gives $\text{Var}\big(\tfrac{q\cdot k}{\sqrt{d_k}}\big)=\tfrac{d_k}{d_k}=1$.</p>
+<h3>12.2 Step 2: why big scores are a problem</h3>
+<p>Softmax on big numbers becomes nearly one-hot: the largest score takes weight almost 1 and the rest almost 0. The derivative of softmax $\alpha_i=\dfrac{e^{e_i}}{\sum_m e^{e_m}}$ is</p>
+<div class="box eq">$$\frac{\partial\alpha_i}{\partial e_j}=\alpha_i(\delta_{ij}-\alpha_j)$$</div>
+<p>If some $\alpha_i\to1$ then all other $\alpha_j\to0$, so every entry $\alpha_i(\delta_{ij}-\alpha_j)\to0$. The gradient vanishes, and the model can no longer learn to change which word it attends to.</p>
+<div class="box idea"><b class="t">Numeric feel ($d_k=64$)</b>Two scores that differ by 8 (typical unscaled gap) give weight ratio $e^{8}\approx2981$: almost hard selection. After scaling the gap is about 1, ratio $e\approx2.7$: soft, trainable weights.</div>
+<p>This is why the operation is named <b>scaled</b> dot-product attention: the scaling keeps the softmax input at unit variance for any $d_k$, giving stable gradient flow.</p></section>
+
+<section id="s13"><h2>13. Multi-head attention</h2>
+<h3>13.1 Motivation: the CNN analogy</h3>
+<p>Why does a CNN layer have many filters? Each filter learns a different pattern (edge, texture, shape); together they give richer abstract representations. Similarly, one attention head computes one weighted average per word, so it tends to focus on a single dominant relationship. We would like several different relationships at once. Solution: use several heads, each with its own $(W_Q^i,W_K^i,W_V^i)$, each computed independently and in parallel.</p>
+<h3>13.2 Evidence from the slides</h3>
+<div class="scroll"><table><tr><th class="l">Setup</th><th class="l">What "it" attends to</th></tr>
+<tr><td class="l">Single head</td><td class="l">"was" (strongly connected)</td></tr>
+<tr><td class="l">Two heads: head 1</td><td class="l">"was"</td></tr>
+<tr><td class="l">Two heads: head 2</td><td class="l">"animal" (the correct antecedent)</td></tr></table></div>
+<p>A single head found the grammatical link (it → was) but missed the meaning link (it → animal). Two heads capture both. Empirically, more than one head captures different contextual information.</p>
+<h3>13.3 The mechanism</h3>
+<div class="diagram"><div class="br"><div class="n g">H = {h<sub>1</sub>…h<sub>T</sub>}</div><span class="a">→</span>
+<div class="col"><div class="flow"><div class="n b">W<sub>Q</sub><sup>1</sup> W<sub>K</sub><sup>1</sup> W<sub>V</sub><sup>1</sup></div><span class="a">→</span><div class="n t">Head 1</div></div><div class="flow"><div class="n b">W<sub>Q</sub><sup>2</sup> W<sub>K</sub><sup>2</sup> W<sub>V</sub><sup>2</sup></div><span class="a">→</span><div class="n t">Head 2</div></div><div class="flow"><div class="n b">W<sub>Q</sub><sup>8</sup> W<sub>K</sub><sup>8</sup> W<sub>V</sub><sup>8</sup></div><span class="a">→</span><div class="n t">Head 8</div></div></div>
+<span class="a">→</span><div class="n i">Concatenate (T×512)</div><span class="a">→</span><div class="n s">Linear W<sub>O</sub></div><span class="a">→</span><div class="n g">Output T×512</div></div><div class="cap">Multi-head attention with 8 heads</div></div>
+<div class="box eq">$$\text{head}_i=\text{Attention}\big(QW_Q^{(i)},\,KW_K^{(i)},\,VW_V^{(i)}\big)=\text{softmax}\!\Big(\tfrac{(Q^{(i)})^TK^{(i)}}{\sqrt{d_k}}\Big)(V^{(i)})^T$$
+$$\text{MultiHead}(Q,K,V)=\text{Concat}(\text{head}_1,\dots,\text{head}_h)\,W^O$$</div>
+<h3>13.4 Dimensions ($d_{model}=512$, $h=8$)</h3>
+<ul><li>Each head projects 512 → $d_k=d_v=512/8=64$ (so each head's $Q,K,V$ are $64\times T$, as in section 11).</li>
+<li>Each head outputs $T\times64$. Concatenating 8 heads gives $T\times(8\cdot64)=T\times512$.</li>
+<li>$W^O\in\mathbb R^{512\times512}$ mixes information across heads and returns the size to $d_{model}=512$, so layers can be stacked.</li></ul>
+<div class="box key"><b class="t">Why split 512 into 8×64?</b>Total cost stays about the same as one 512-dimensional head, but you get 8 independent attention patterns. The heads are learned by training, not assigned by hand.</div></section>
+
+<section id="s14"><h2>14. Position-wise feed-forward network (FFN)</h2>
+<p>After attention, each output vector $z_i$ (size 512) goes through a small two-layer neural network:</p>
+<div class="box eq">$$\text{FFN}(z)=\max(0,\ zW_1+b_1)\,W_2+b_2,\qquad 512\ \to\ 2048\ \to\ 512$$</div>
+<ul><li><b>Expand</b> to 2048 numbers ($l=2048$ in the slide), apply the non-linearity (ReLU = max(0,·); the lecture summary also mentions GELU as a common choice), then <b>project back</b> to 512.</li>
+<li><b>Position-wise:</b> the identical network (same $W_1,b_1,W_2,b_2$) is applied to every position separately. In the slide FFN$_1$..FFN$_5$ are copies of one network applied to $z_1..z_5$ to give $o_1..o_5\in\mathbb R^{512}$.</li>
+<li>Because each position is processed independently, this step is also fully parallel.</li></ul>
+<div class="box def"><b class="t">Division of labour</b><b>Attention</b> = communication <i>between</i> words (mixing information). <b>FFN</b> = computation <i>within</i> each word (adds non-linearity and capacity). Attention alone is only a weighted average (a linear mix of values), so the FFN is needed for richer transformations.</div></section>
+
+<section id="s15"><h2>15. The encoder layer and the encoder stack</h2>
+<h3>15.1 One encoder layer</h3>
+<p>Terminology from the lecture: the two components together form an <b>encoder layer</b>, and each layer has two <b>sub-layers</b>: (1) multi-head attention and (2) feed-forward network. Input and output both have shape $T\times512$.</p>
+<div class="diagram"><div class="flow v"><div class="n t">Feed-forward network (each position)</div><span class="a">↑</span><div class="n g">Multi-head attention</div><span class="a">↑</span><div class="n b">Input: T × 512</div></div><div class="cap">One encoder layer</div></div>
+<h3>15.2 Stacking</h3>
+<p>The encoder is $N=6$ identical layers stacked. Layer 1 receives the word embeddings, each later layer receives the previous layer's output, and the last layer's outputs are the encoder outputs $e_1,\dots,e_T$ (each 512-d). Higher layers build more abstract, more contextual representations. (Residual connections, layer normalisation and positional encoding are added to this picture in Week 2.)</p>
+<div class="diagram"><div class="flow v"><div class="n g">Layer 6 → outputs e<sub>1</sub>…e<sub>T</sub> (T×512)</div><span class="a">↑ ⋮ ↑</span><div class="n g">Layer 2</div><span class="a">↑</span><div class="n g">Layer 1</div><span class="a">↑</span><div class="n b">I · enjoyed · the · movie · transformers (T×512)</div></div><div class="cap">The encoder stack</div></div>
+<h3>15.3 Parameter count</h3>
+<div class="scroll"><table><tr><th class="l">Part</th><th class="l">Calculation</th><th>Parameters</th></tr>
+<tr><td class="l">$W_Q,W_K,W_V$ for 8 heads</td><td class="l">$3\times8\times(512\times64)$</td><td>786,432</td></tr>
+<tr><td class="l">Output projection $W^O$</td><td class="l">$512\times512$</td><td>262,144</td></tr>
+<tr><td class="l">FFN weights + biases</td><td class="l">$512\!\cdot\!2048+2048\!\cdot\!512+2048+512$</td><td>2,099,712</td></tr>
+<tr><th class="l">Per layer</th><td></td><th>≈ 3.15 million</th></tr>
+<tr><th class="l">6 layers</th><td class="l">$6\times3$ million (slide)</td><th>≈ 18 million</th></tr></table></div>
+<p>The slide rounds to $N\times3\times10^6$. (This ignores small extras such as normalisation parameters.)</p>
+<h3>15.4 Where is it parallel and where is it not?</h3>
+<div class="box idea"><b class="t">Horizontal direction (across the $T$ words, within a layer): fully parallel</b>All $z_1..z_T$ come from a few matrix products, and the FFN is applied to each position independently. No recurrence.</div>
+<div class="box warn"><b class="t">Vertical direction (across layers): sequential</b>Layer $l+1$ needs the complete output of layer $l$. But the depth is only 6, a small fixed number, whereas an RNN's sequential chain is as long as the sentence.</div></section>
+
+<section id="s16"><h2>16. Revision</h2>
+<h3>16.1 RNN seq2seq + attention vs Transformer encoder</h3>
+<div class="scroll"><table><tr><th class="l">Aspect</th><th class="l">RNN seq2seq + attention</th><th class="l">Transformer encoder</th></tr>
+<tr><td class="l">Context gathering</td><td class="l">Recurrent state, word by word</td><td class="l">Self-attention, all pairs at once</td></tr>
+<tr><td class="l">Parallel over sequence</td><td class="l">No</td><td class="l">Yes (sequential only across 6 layers)</td></tr>
+<tr><td class="l">Score function</td><td class="l">$V_a^T\tanh(Us+Wh)$</td><td class="l">$q\cdot k/\sqrt{d_k}$</td></tr>
+<tr><td class="l">Path between far words</td><td class="l">Long (grows with distance)</td><td class="l">Direct (length 1)</td></tr>
+<tr><td class="l">Gradient problems</td><td class="l">Vanishing/exploding</td><td class="l">Greatly reduced</td></tr></table></div>
+<h3>16.2 Formula sheet</h3>
+<div class="box eq">$$H_t=f(H_{t-1},X_t)\qquad c_t=\sum_i\alpha_{ti}h_i\qquad \alpha_{ti}=\frac{e^{e_{ti}}}{\sum_{i'}e^{e_{ti'}}}$$
+$$q_j=W_Qh_j,\ k_j=W_Kh_j,\ v_j=W_Vh_j\qquad z_i=\sum_j\alpha_{ij}v_j,\ \ \alpha_{ij}=\text{softmax}_j(q_i\!\cdot\!k_j)$$
+$$Z=\text{softmax}\!\Big(\tfrac{Q^TK}{\sqrt{d_k}}\Big)V^T\qquad \text{MultiHead}=\text{Concat}(\text{head}_1..\text{head}_h)W^O\qquad \text{FFN}(z)=\max(0,zW_1+b_1)W_2+b_2$$</div>
+<h3>16.3 Key numbers</h3>
+<p>$d_{model}=512$ · heads $h=8$ · $d_k=d_v=64$ · FFN inner size 2048 · layers $N=6$ · ≈3M parameters per layer, ≈18M for the encoder · attention matrix $T\times T$.</p>
+<h3>16.4 Glossary</h3>
+<div class="scroll"><table><tr><th class="l">Term</th><th class="l">Meaning</th></tr>
+<tr><td class="l">Hidden state</td><td class="l">RNN's memory vector at a step</td></tr>
+<tr><td class="l">Concept / context vector</td><td class="l">Final encoder state $h_5$ in plain seq2seq; or $c_t$ in attention</td></tr>
+<tr><td class="l">Alignment</td><td class="l">Which source word matches which target word</td></tr>
+<tr><td class="l">Cross-attention / Self-attention</td><td class="l">Attention between two sequences / within one sequence</td></tr>
+<tr><td class="l">Query, Key, Value</td><td class="l">Three projections of each embedding: ask, match, give</td></tr>
+<tr><td class="l">Head</td><td class="l">One independent attention computation with its own $W_Q,W_K,W_V$</td></tr>
+<tr><td class="l">Position-wise FFN</td><td class="l">Same small network applied at every position</td></tr>
+<tr><td class="l">Sub-layer</td><td class="l">One of the two parts of an encoder layer (attention, FFN)</td></tr></table></div>
+<h3>16.5 Practice questions</h3>
+<ol>
+<li><b>Why is plain seq2seq limited?</b> It squeezes the whole input into one vector and has no word alignment.</li>
+<li><b>Which parts of RNN-attention can be parallel?</b> All $\alpha_{ti}$ for one step $t$; not across steps, because $s_{t-1}$ depends on earlier weights.</li>
+<li><b>Why do we need three matrices $W_Q,W_K,W_V$?</b> Each word must act as a searcher, as something searchable and as a content carrier, and only one embedding is given.</li>
+<li><b>Shape of $Q^TK$ and of $Z$?</b> $T\times T$ and $T\times64$ (per head).</li>
+<li><b>Why divide by $\sqrt{d_k}$?</b> Dot-product variance is $d_k$; unscaled scores saturate softmax and make gradients vanish.</li>
+<li><b>Why multi-head?</b> Different heads capture different relations (it → was, it → animal).</li>
+<li><b>What does $W^O$ do?</b> Combines the concatenated heads ($8\times64=512$) back to 512-d.</li>
+<li><b>Is the encoder parallel across layers?</b> No, only across positions; the 6 layers run one after another.</li>
+<li><b>How many parameters in the encoder?</b> About 3M per layer, ≈18M for 6 layers.</li></ol>
+<div class="box key"><b class="t">Next (Week 2)</b>Self-attention treats a sentence like a set: it does not know word order by itself. Positional encoding fixes this. Week 2 also covers the decoder (masked self-attention, cross-attention), teacher forcing and normalisation.</div></section>
+</main></body></html>
