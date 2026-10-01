@@ -1,88 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Add Note</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 500px; margin: 40px auto; padding: 0 16px; }
-    label { display: block; margin-top: 16px; font-size: 14px; }
-    input, button { width: 100%; padding: 10px; font-size: 16px; box-sizing: border-box; margin-top: 6px; }
-    button { margin-top: 24px; cursor: pointer; }
-    #status { margin-top: 16px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manage notes · ShrishtiVault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14110f;--k1:#c8a273;--k3:#dcc096;--card:#f5edda;--rule:#a8432f;--dim:#8f8272}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--ink);color:var(--k3);font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:520px;margin:0 auto;padding:40px 18px 56px}
+a.back{color:var(--dim);font-size:14px}
+h1{margin:18px 0 0;font-size:clamp(40px,10vw,64px);font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--k1)}
+.folder{position:relative;margin-top:56px;background:var(--k1);border-radius:6px 16px 16px 16px;padding:34px 18px 22px;color:var(--ink);
+  box-shadow:0 18px 28px rgba(0,0,0,.55)}
+.folder h2{position:absolute;top:-34px;left:0;margin:0;padding:8px 20px 6px;background:var(--k1);border-radius:12px 12px 0 0;font-size:17px;font-weight:800}
+label{display:block;margin-top:16px;font-weight:600;font-size:15px}
+label:first-of-type{margin-top:0}
+input[type=text],input[type=password]{width:100%;margin-top:6px;padding:12px 14px;font:400 16px "Special Elite",serif;color:var(--ink);
+  background:var(--card);border:0;border-top:3px solid var(--rule);outline:none}
+input:focus-visible,button:focus-visible{box-shadow:0 0 0 3px var(--ink)}
+.file{margin-top:6px;padding:14px;background:var(--card);border-top:3px solid var(--rule);font-weight:400;font-size:14px}
+.row{display:flex;gap:10px;align-items:center;margin-top:14px;font-size:14px}
+.row label{margin:0;font-weight:400}
+.row input{width:18px;height:18px;accent-color:var(--ink)}
+.forget{margin-left:auto;background:none;border:0;color:var(--ink);text-decoration:underline;cursor:pointer;font:inherit;font-size:14px}
+#go{width:100%;margin-top:22px;padding:15px;font:800 18px "Bricolage Grotesque",sans-serif;color:var(--k1);background:var(--ink);border:0;border-radius:10px;cursor:pointer}
+#go:active{transform:translateY(2px)}
+#go:disabled{opacity:.6;cursor:wait}
+#status{margin-top:22px;min-height:24px;font-size:16px;font-weight:600}
+.ok{color:var(--k1)}.err{color:#e0735c}
+</style>
 </head>
 <body>
-  <a href="index.html">← Back</a>
-  <h1>Add note</h1>
+<div class="wrap">
+  <a class="back" href="index.html">Back to the folders</a>
+  <h1>Add notes</h1>
+  <div class="folder">
+    <h2>New note</h2>
+    <label>Repo (owner/name)
+      <input type="text" id="repo" value="23f2004336/ShrishtiVault" autocomplete="off">
+    </label>
+    <label>GitHub token
+      <input type="password" id="token" autocomplete="off">
+    </label>
+    <div class="row">
+      <input type="checkbox" id="remember"><label for="remember">Remember on this device</label>
+      <button class="forget" id="forget" type="button">Forget token</button>
+    </div>
+    <label>Subject
+      <input type="text" id="subject" list="subjects" placeholder="e.g. deep-learning" autocomplete="off">
+      <datalist id="subjects"></datalist>
+    </label>
+    <label>Files (.html or .pdf)
+      <div class="file"><input type="file" id="file" accept=".html,.pdf" multiple></div>
+    </label>
+    <button id="go">File it</button>
+  </div>
+  <div id="status" role="status"></div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const say = (msg, cls = "") => { $("status").className = cls; $("status").textContent = msg; };
 
-  <label>GitHub repo (owner/name)
-    <input id="repo" value="23f2004336/my-notes">
-  </label>
-  <label>GitHub token (saved in this browser only)
-    <input id="token" type="password">
-  </label>
-  <label>Subject
-    <input id="subject" list="subjects" placeholder="e.g. deep-learning">
-    <datalist id="subjects"></datalist>
-  </label>
-  <label>File (.html or .pdf)
-    <input id="file" type="file" accept=".html,.pdf" multiple>
-  </label>
-  <button id="go">Upload</button>
-  <div id="status"></div>
+// The token is only stored if "Remember" is ticked. It is never in the page itself.
+$("token").value = localStorage.getItem("gh_token") || "";
+$("remember").checked = !!localStorage.getItem("gh_token");
+$("repo").value = localStorage.getItem("gh_repo") || $("repo").value;
 
-  <script>
-    const $ = id => document.getElementById(id);
-    $("token").value = localStorage.getItem("gh_token") || "";
-    $("repo").value = localStorage.getItem("gh_repo") || $("repo").value;
+$("forget").onclick = () => {
+  localStorage.removeItem("gh_token");
+  $("token").value = "";
+  $("remember").checked = false;
+  say("Token removed from this browser.", "ok");
+};
 
-    fetch("notes.json").then(r => r.json()).then(d => {
-      $("subjects").innerHTML = Object.keys(d)
-        .map(s => `<option value="${s.toLowerCase().replace(/ /g, "-")}">`).join("");
-    });
+fetch("notes.json").then(r => r.json()).then(d => {
+  $("subjects").innerHTML = Object.keys(d).map(s => `<option value="${s.toLowerCase().replace(/ /g, "-")}">`).join("");
+}).catch(() => {});
 
-    const slug = s => s.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    const toB64 = f => new Promise((res, rej) => {
-      const r = new FileReader();
-      r.onload = () => res(r.result.split(",")[1]);
-      r.onerror = rej;
-      r.readAsDataURL(f);
-    });
+const slug = s => s.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+const toB64 = f => new Promise((res, rej) => {
+  const r = new FileReader();
+  r.onload = () => res(r.result.split(",")[1]);
+  r.onerror = rej;
+  r.readAsDataURL(f);
+});
 
-    $("go").onclick = async () => {
-      const repo = $("repo").value.trim(), token = $("token").value.trim();
-      const subject = slug($("subject").value), files = [...$("file").files];
-      if (!repo || !token || !subject || !files.length) {
-        $("status").textContent = "Fill everything in.";
-        return;
-      }
-      localStorage.setItem("gh_token", token);
-      localStorage.setItem("gh_repo", repo);
-      $("status").textContent = "Uploading...";
+$("go").onclick = async () => {
+  const repo = $("repo").value.trim(), token = $("token").value.trim();
+  const subject = slug($("subject").value), files = [...$("file").files];
+  if (!repo || !token || !subject || !files.length) return say("Fill in every field and pick at least one file.", "err");
 
-      try {
-        for (const f of files) {
-          const name = f.name.toLowerCase().replace(/\s+/g, "-");
-          const url = `https://api.github.com/repos/${repo}/contents/notes/${subject}/${name}`;
-          const headers = { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" };
+  localStorage.setItem("gh_repo", repo);
+  if ($("remember").checked) localStorage.setItem("gh_token", token);
+  else localStorage.removeItem("gh_token");
 
-          let sha;
-          const existing = await fetch(url, { headers });
-          if (existing.ok) sha = (await existing.json()).sha;
-
-          const res = await fetch(url, {
-            method: "PUT",
-            headers,
-            body: JSON.stringify({ message: `add ${subject}/${name}`, content: await toB64(f), sha })
-          });
-          if (!res.ok) throw new Error((await res.json()).message);
-        }
-        $("status").textContent = "Done! The list updates in about a minute.";
-      } catch (e) {
-        $("status").textContent = "Failed: " + e.message;
-      }
-    };
-  </script>
+  $("go").disabled = true;
+  try {
+    const headers = { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json" };
+    let n = 0;
+    for (const f of files) {
+      say(`Uploading ${++n} of ${files.length}...`);
+      const name = f.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-");
+      const url = `https://api.github.com/repos/${repo}/contents/notes/${subject}/${name}`;
+      const old = await fetch(url, { headers });
+      const sha = old.ok ? (await old.json()).sha : undefined;
+      const res = await fetch(url, {
+        method: "PUT", headers,
+        body: JSON.stringify({ message: `add ${subject}/${name}`, content: await toB64(f), sha })
+      });
+      if (!res.ok) throw new Error((await res.json()).message);
+    }
+    say("Filed. The folders update in about a minute.", "ok");
+    $("file").value = "";
+  } catch (e) {
+    say("Failed: " + e.message, "err");
+  }
+  $("go").disabled = false;
+};
+</script>
 </body>
 </html>
