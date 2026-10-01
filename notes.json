@@ -1,1 +1,8 @@
-{}
+{
+  "Llm": [
+    {
+      "title": "llm week 1  attention and the transformer encoder",
+      "path": "notes/llm/llm-week-1_-attention-and-the-transformer-encoder.html"
+    }
+  ]
+}
