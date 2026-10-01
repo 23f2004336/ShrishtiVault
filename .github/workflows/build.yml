@@ -1,0 +1,17 @@
+name: Build notes list
+on:
+  push:
+    paths: ["notes/**"]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python build.py
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add notes.json
+          git diff --cached --quiet || (git commit -m "update notes list" && git push)

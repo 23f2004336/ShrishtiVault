@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Notes</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 16px; }
+    input { width: 100%; padding: 10px; margin-bottom: 24px; font-size: 16px; box-sizing: border-box; }
+    h2 { margin-top: 28px; }
+    li { margin: 6px 0; }
+    .top { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+  <div class="top"><h1>My Notes</h1><a href="add.html">+ Add note</a></div>
+  <input id="search" placeholder="Search notes...">
+  <div id="list"></div>
+
+  <script>
+    let notes = {};
+    const list = document.getElementById("list");
+
+    function render(filter = "") {
+      list.innerHTML = "";
+      for (const [subject, items] of Object.entries(notes)) {
+        const matches = items.filter(n => n.title.toLowerCase().includes(filter.toLowerCase()));
+        if (!matches.length) continue;
+        list.innerHTML += `<h2>${subject}</h2><ul>` +
+          matches.map(n => `<li><a href="${n.path}">${n.title}</a></li>`).join("") + `</ul>`;
+      }
+      if (!list.innerHTML) list.textContent = "No notes yet.";
+    }
+
+    document.getElementById("search").addEventListener("input", e => render(e.target.value));
+    fetch("notes.json?t=" + Date.now()).then(r => r.json()).then(d => { notes = d; render(); });
+  </script>
+</body>
+</html>
