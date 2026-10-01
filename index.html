@@ -1,39 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Notes</title>
-  <style>
-    body { font-family: system-ui, sans-serif; max-width: 700px; margin: 40px auto; padding: 0 16px; }
-    input { width: 100%; padding: 10px; margin-bottom: 24px; font-size: 16px; box-sizing: border-box; }
-    h2 { margin-top: 28px; }
-    li { margin: 6px 0; }
-    .top { display: flex; justify-content: space-between; align-items: center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ShrishtiVault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14110f;--k1:#c8a273;--k2:#b78a5c;--k3:#dcc096;--card:#f5edda;--rule:#a8432f;--dim:#8f8272}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--ink);color:var(--k3);font-family:"Bricolage Grotesque",system-ui,sans-serif}
+.wrap{max-width:1020px;margin:0 auto;padding:64px 18px 48px}
+h1{margin:0;font-size:clamp(44px,10vw,96px);font-weight:800;letter-spacing:-.04em;line-height:.95;color:var(--k1)}
+.meta{margin:14px 0 30px;color:var(--dim);font-size:18px}
+#search{width:min(100%,440px);padding:14px 18px;font:600 17px "Bricolage Grotesque",sans-serif;color:var(--ink);background:var(--k3);
+  border:0;border-radius:10px;outline:none}
+#search::placeholder{color:#7d6a4d}
+#search:focus-visible{box-shadow:0 0 0 3px var(--k1)}
+#list{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:56px 28px;margin-top:62px}
+.folder{position:relative;background:var(--f);border-radius:6px 16px 16px 16px;padding:30px 16px 20px;box-shadow:0 18px 28px rgba(0,0,0,.55)}
+.folder h2{position:absolute;top:-34px;left:var(--tab);max-width:78%;margin:0;padding:8px 20px 6px;background:var(--f);color:var(--ink);
+  border-radius:12px 12px 0 0;font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.count{margin:0 0 4px;color:rgba(20,17,15,.65);font-size:14px;font-weight:600}
+.card{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px;padding:12px 14px;background:var(--card);
+  color:var(--ink);border-top:3px solid var(--rule);text-decoration:none;font:400 16px "Special Elite",serif;text-transform:capitalize;
+  box-shadow:0 2px 0 rgba(0,0,0,.25);transition:transform .15s}
+.card:hover,.card:focus-visible{transform:translateY(-3px) rotate(-.4deg);outline:none}
+.card:focus-visible{box-shadow:0 0 0 3px var(--ink)}
+.card b{font:400 11px "Special Elite",serif;letter-spacing:.08em;padding:1px 7px;border:1.5px solid var(--ink);transform:rotate(-4deg);text-transform:uppercase}
+.empty{grid-column:1/-1;font-size:20px;color:var(--dim)}
+footer{margin-top:64px}
+footer a{color:var(--dim);font-size:13px}
+@media (prefers-reduced-motion:reduce){.card{transition:none}}
+</style>
 </head>
 <body>
-  <div class="top"><h1>My Notes</h1><a href="add.html">+ Add note</a></div>
-  <input id="search" placeholder="Search notes...">
+<div class="wrap">
+  <h1>Shrishti<br>Vault</h1>
+  <p class="meta" id="meta">Notes, filed by subject.</p>
+  <input id="search" placeholder="Search notes or folders" aria-label="Search notes">
   <div id="list"></div>
+  <footer><a href="add.html">Manage notes</a></footer>
+</div>
+<script>
+const BROWNS = ["var(--k1)", "var(--k2)", "var(--k3)"];
+const TABS = ["0%", "24%", "48%"];
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let notes = {};
+const list = document.getElementById("list");
 
-  <script>
-    let notes = {};
-    const list = document.getElementById("list");
+function render(q = "") {
+  q = q.toLowerCase();
+  let html = "", i = 0;
+  for (const [subject, items] of Object.entries(notes)) {
+    const shown = subject.toLowerCase().includes(q) ? items : items.filter(n => n.title.toLowerCase().includes(q));
+    if (!shown.length) continue;
+    html += `<section class="folder" style="--f:${BROWNS[i % 3]};--tab:${TABS[(i * 2 + 1) % 3]}">
+      <h2>${esc(subject)}</h2>
+      <p class="count">${items.length} note${items.length === 1 ? "" : "s"} inside</p>` +
+      shown.map(n => `<a class="card" href="${encodeURI(n.path)}"><span>${esc(n.title)}</span><b>${n.path.split(".").pop()}</b></a>`).join("") +
+      `</section>`;
+    i++;
+  }
+  list.innerHTML = html || `<p class="empty">${Object.keys(notes).length ? "Nothing filed under that." : "The drawer is empty. Add your first note from Manage notes."}</p>`;
+}
 
-    function render(filter = "") {
-      list.innerHTML = "";
-      for (const [subject, items] of Object.entries(notes)) {
-        const matches = items.filter(n => n.title.toLowerCase().includes(filter.toLowerCase()));
-        if (!matches.length) continue;
-        list.innerHTML += `<h2>${subject}</h2><ul>` +
-          matches.map(n => `<li><a href="${n.path}">${n.title}</a></li>`).join("") + `</ul>`;
-      }
-      if (!list.innerHTML) list.textContent = "No notes yet.";
-    }
-
-    document.getElementById("search").addEventListener("input", e => render(e.target.value));
-    fetch("notes.json?t=" + Date.now()).then(r => r.json()).then(d => { notes = d; render(); });
-  </script>
+document.getElementById("search").addEventListener("input", e => render(e.target.value));
+fetch("notes.json?t=" + Date.now()).then(r => r.json()).then(d => {
+  notes = d;
+  const total = Object.values(d).reduce((a, v) => a + v.length, 0), folders = Object.keys(d).length;
+  if (total) document.getElementById("meta").textContent = `${total} note${total === 1 ? "" : "s"} in ${folders} folder${folders === 1 ? "" : "s"}.`;
+  render();
+}).catch(() => render());
+</script>
 </body>
 </html>
