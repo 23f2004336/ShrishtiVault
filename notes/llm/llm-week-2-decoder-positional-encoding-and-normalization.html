@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LLM Week 2: Decoder, Positional Encoding and Normalization (Complete Notes)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f5f8fc;--fg:#17202e;--card:#fff;--mut:#52607a;--line:#d6dfec;--acc:#1f5fae;--code:#eaf1fb;
+--kb:#e6f0fd;--kbd:#1f5fae;--gb:#e5f6ee;--gbd:#1d8a5c;--ib:#ebe9fb;--ibd:#4b45b5;--tb:#e2f5f6;--tbd:#16808a;--sb:#eef1f5;--sbd:#6b778c}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1622;--fg:#e6ecf5;--card:#172131;--mut:#9fb0c9;--line:#2a3a52;--acc:#6aa8f0;--code:#1d2b40;--kb:#16294a;--gb:#123528;--ib:#25234f;--tb:#123a3f;--sb:#222c3a}}
+:root[data-theme="dark"]{--bg:#0f1622;--fg:#e6ecf5;--card:#172131;--mut:#9fb0c9;--line:#2a3a52;--acc:#6aa8f0;--code:#1d2b40;--kb:#16294a;--gb:#123528;--ib:#25234f;--tb:#123a3f;--sb:#222c3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:#14304f;color:#fff;padding:34px 20px;text-align:center}
+header h1{margin:0 0 6px;font-size:clamp(1.5rem,5vw,2.2rem)}header p{margin:0;color:#c5d5ea}
+main{max-width:920px;margin:0 auto;padding:14px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+nav a{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:.82rem;color:var(--acc);text-decoration:none}
+section{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:10px;padding:6px 20px 18px;margin:22px 0}
+h2{color:var(--acc);margin:14px 0 6px;font-size:1.4rem}h3{margin:20px 0 4px;border-bottom:2px solid var(--line);padding-bottom:2px}
+.box{border-radius:8px;padding:10px 14px;margin:12px 0;border:1px solid;border-left-width:5px}
+.box>b.t{display:block;margin-bottom:2px}
+.key{background:var(--kb);border-color:var(--kbd)}.idea{background:var(--gb);border-color:var(--gbd)}.warn{background:var(--ib);border-color:var(--ibd)}.def{background:var(--tb);border-color:var(--tbd)}.eq{background:var(--code);border-color:var(--line);overflow-x:auto}
+.scroll{overflow-x:auto}table{border-collapse:collapse;margin:10px 0;font-size:.92rem}th,td{border:1px solid var(--line);padding:5px 10px;text-align:center}th{background:var(--code)}
+td.l,th.l{text-align:left}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;justify-content:center}
+.flow.v{flex-direction:column}
+.n{border:2px solid;border-radius:8px;padding:6px 11px;font-size:.88rem;text-align:center;background:var(--card);line-height:1.35}
+.n.b{border-color:var(--kbd);background:var(--kb)}.n.g{border-color:var(--gbd);background:var(--gb)}.n.i{border-color:var(--ibd);background:var(--ib)}.n.t{border-color:var(--tbd);background:var(--tb)}.n.s{border-color:var(--sbd);background:var(--sb)}
+.a{color:var(--mut);font-weight:700;font-size:1.1rem}
+.diagram{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:10px;margin:14px 0}
+.diagram .cap{text-align:center;font-size:.85rem;color:var(--mut);margin-top:4px}
+.br{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:6px;align-items:center}
+.mask td{min-width:52px}.mask td.z{background:#dff3e8}.mask td.n0{background:#dfe6f3;color:#3b4a66}
+.hm td[style]{color:#17202e}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}canvas{max-width:100%;border-radius:6px}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},svg:{fontCache:'global'}}</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header><h1>Week 2: The Decoder, Positional Encoding and Normalization</h1><p>Introduction to Large Language Models · IIT Madras · Complete notes from the slides (Lectures 49–77) and lecture summary (Lectures 5–10)</p></header>
+<main>
+<nav><a href="#s0">Roadmap</a><a href="#s1">1 Recap</a><a href="#s2">2 Decoder</a><a href="#s3">3 Teacher forcing</a><a href="#s4">4 Masked attention</a><a href="#s5">5 Cross-attention</a><a href="#s6">6 Decoder layer</a><a href="#s7">7 Why positions</a><a href="#s8">8 PE options</a><a href="#s9">9 Sinusoidal PE</a><a href="#s10">10 Residuals</a><a href="#s11">11 BN vs LN</a><a href="#s12">12 Pre/Post-norm</a><a href="#s13">13 Full model</a><a href="#s14">14 Revision</a></nav>
+
+<section id="s0"><h2>0. Roadmap of the week</h2>
+<p>Week 1 built the <b>encoder</b>. Week 2 finishes the Transformer in four steps: (1) build the <b>decoder</b>, which generates the output one word at a time; (2) solve a hidden flaw, that self-attention cannot see word <b>order</b>, using <b>positional encoding</b>; (3) make very deep stacks trainable using <b>residual connections</b> and <b>layer normalization</b>; (4) join everything into the <b>complete Transformer</b>.</p>
+<div class="diagram"><div class="flow"><div class="n b">Encoder (Week 1)</div><span class="a">→</span><div class="n g">Decoder: masked self-attn + cross-attn + FFN</div><span class="a">→</span><div class="n t">Teacher forcing + causal mask</div><span class="a">→</span><div class="n i">Positional encoding</div><span class="a">→</span><div class="n s">Residual + LayerNorm</div><span class="a">→</span><div class="n g">Complete Transformer</div></div><div class="cap">The story of Week 2</div></div>
+<div class="box key"><b class="t">How to read these notes</b>Each idea is introduced as a problem first, then the fix, then the maths with worked numbers. Worked examples marked "created for practice" are mine (the slides give only pictures there); they are computed exactly.</div></section>
+
+<section id="s1"><h2>1. Quick recap from Week 1</h2>
+<ul><li>A sentence of $T$ words is a matrix of embeddings $H$ ($d_{model}=512$ each).</li>
+<li>Self-attention: $q=W_Qh,\ k=W_Kh,\ v=W_Vh$ and $Z=\text{softmax}\!\big(\tfrac{Q^TK}{\sqrt{d_k}}\big)V^T$. Output is $T\times d_v$.</li>
+<li>Multi-head: 8 heads of size 64, concatenated to 512 and mixed by $W^O$.</li>
+<li>Encoder layer = multi-head attention + position-wise FFN ($512\to2048\to512$); the encoder is a stack of $N=6$ layers, giving outputs $e_1..e_T$ of size $T\times512$.</li></ul>
+<div class="box def"><b class="t">Conventions</b>The slides continue with columns-as-vectors notation ($Q^TK$). Where a formula is written for row-vectors ($QK^T$), it is the same computation. $T$ = source length, $T_{dec}$ = target length.</div></section>
+
+<section id="s2"><h2>2. The decoder: overview</h2>
+<h3>2.1 What is the decoder's job?</h3>
+<p>The encoder's output $e_1..e_T$ ($T\times512$) is a rich, context-aware description of the source sentence. The decoder must turn it into the <b>target sentence</b> (for example the Tamil translation) by predicting one word at a time, each word depending on the words already produced. This is called <b>autoregressive</b> generation:</p>
+<div class="box eq">$$P(y_1,\dots,y_U\mid X)=\prod_{t=1}^{U}P(y_t\mid y_{<t},X)$$</div>
+<div class="diagram"><div class="flow"><div class="n b">I enjoyed the movie transformers</div><span class="a">→</span><div class="n g">Encoder (T×512)</div><span class="a">→ e<sub>j</sub> →</span><div class="n t">Decoder</div><span class="a">→</span><div class="n i">Naan transfarmar padaththai rasithen</div></div><div class="cap">Encoder output is shared with the decoder</div></div>
+<h3>2.2 Decoder stack</h3>
+<p>The decoder is a stack of $N=6$ layers. Unlike an encoder layer (2 sub-layers), <b>each decoder layer has three sub-layers</b>:</p>
+<ol><li><b>Masked multi-head (self) attention</b> over the target words generated so far.</li>
+<li><b>Multi-head (cross) attention</b> that looks at the encoder output.</li>
+<li><b>Feed-forward network</b> (same as the encoder's).</li></ol>
+<div class="diagram"><div class="flow v"><div class="n t">Feed Forward Network</div><span class="a">↑</span><div class="n g">Multi-Head (Cross) Attention ← e (encoder output)</div><span class="a">↑</span><div class="n i">Masked Multi-Head (Self) Attention</div><span class="a">↑</span><div class="n b">Target words: &lt;Go&gt; Naan transfarmar padaththai (shifted right)</div></div><div class="cap">One decoder layer (repeated 6 times)</div></div>
+<h3>2.3 Final output</h3>
+<p>The top decoder layer produces a vector of size 512 for each target position. A linear layer $W_D\in\mathbb R^{512\times|V|}$ followed by softmax turns each into a probability distribution over the vocabulary. In the slides' example the vocabulary is about 37,000 words, so the output dimension per position is $1\times37000$ (the slide question "what will be the output dimension?" has this answer). Details in section 6.</p></section>
+
+<section id="s3"><h2>3. Teacher forcing</h2>
+<h3>3.1 Why is the target sentence an input to the decoder?</h3>
+<p>Usually, to predict word $t$ the decoder uses its <i>own previous prediction</i> as input. The drawback: if the first prediction is wrong, the next prediction is conditioned on a wrong word and is likely wrong too (because of conditional probability), and so on. Errors <b>accumulate</b> ("garbage in, garbage out"). An untrained model is wrong most of the time, so learning would be very slow.</p>
+<div class="box def"><b class="t">Teacher forcing</b>During <b>training</b>, feed the decoder the <b>correct</b> previous word from the ground truth at every step, whatever the model predicted. The "teacher" forces the right context.</div>
+<p>Slide example (English target): ground truth "I enjoyed the film transformers"; the decoder $D$ at each step receives the true previous word, not its own guess.</p>
+<h3>3.2 Shifted-right input</h3>
+<div class="scroll"><table><tr><th class="l">Decoder step</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+<tr><td class="l">Input (target shifted right)</td><td>&lt;Go&gt;</td><td>Naan</td><td>transfarmar</td><td>padaththai</td></tr>
+<tr><td class="l">Label to predict</td><td>Naan</td><td>transfarmar</td><td>padaththai</td><td>rasithen</td></tr></table></div>
+<p>The loss is the cross-entropy between the predicted distribution and the true word, summed over positions:</p>
+<div class="box eq">$$\mathcal L=-\sum_{t=1}^{U}\log P\big(y_t^*\mid y^*_{<t},X\big)$$</div>
+<h3>3.3 Training vs inference</h3>
+<div class="diagram"><div class="flow v">
+<div class="flow"><div class="n g"><b>Training</b></div><div class="n b">&lt;Go&gt; y*<sub>1</sub> y*<sub>2</sub> y*<sub>3</sub> (true words, all known)</div><span class="a">→ one parallel pass →</span><div class="n t">predict y<sub>1</sub> y<sub>2</sub> y<sub>3</sub> y<sub>4</sub> at once</div></div>
+<div class="flow"><div class="n i"><b>Inference</b></div><div class="n b">&lt;Go&gt;</div><span class="a">→</span><div class="n t">ŷ<sub>1</sub></div><span class="a">feed back →</span><div class="n t">ŷ<sub>2</sub></div><span class="a">feed back →</span><div class="n t">ŷ<sub>3</sub></div><span class="a">→ … stop at &lt;End&gt;</span></div></div><div class="cap">Teacher forcing is used only in training</div></div>
+<div class="box warn"><b class="t">Exposure bias</b>At test time no ground truth exists, so the decoder must feed on its own outputs, unlike during training. The model was never "exposed" to its own mistakes. This train/test mismatch is called exposure bias. The slides note: "we can't use teacher forcing during inference; instead the decoder acts as an auto-regressor."</div>
+<div class="box key"><b class="t">Big consequence</b>Because all true target words are known during training, all positions can be processed <b>in parallel</b> in one pass (as in the encoder). But this creates a new problem: position $t$ must not peek at words $t+1, t+2,\dots$, which are sitting right there in the input. The fix is the causal mask (next section).</div></section>
+
+<section id="s4"><h2>4. Masked (causal) self-attention</h2>
+<h3>4.1 The setting</h3>
+<p>Masked self-attention is the same as encoder self-attention: $Q=W_QH,\ K=W_KH,\ V=W_VH$ where $H$ now holds the <i>target</i> word embeddings ($\langle Go\rangle$, Naan, transfarmar, ...). The <b>one important difference</b>: implement teacher forcing without leaking the future, by adding a mask.</p>
+<p>In the score matrix $A=Q^TK$ (row $t$ = query of word $t$, column $j$ = key of word $j$), entry $(t,j)$ is how much position $t$ wants to look at $j$. For a language model, position $t$ may look only at $j\le t$.</p>
+<h3>4.2 The mask matrix</h3>
+<p>Slide questions: <i>how do we create the mask, and where do we put it: input, output, or in between?</i> Answer: <b>add a matrix $M$ to the scores, before the softmax</b>.</p>
+<div class="box eq">$$M_{t,j}=\begin{cases}0 & j\le t\\ -\infty & j>t\end{cases}\qquad Z=\text{softmax}\!\Big(\frac{Q^TK}{\sqrt{d_k}}+M\Big)V^T$$</div>
+<p>$M$ is triangular: zeros on and below the diagonal, $-\infty$ above (slide: "one half all zeros and the other half all negative infinity"). Example for the 5 target words:</p>
+<div class="scroll"><table class="mask"><tr><th></th><th>&lt;Go&gt;</th><th>Naan</th><th>transfarmar</th><th>padaththai</th><th>rasithen</th></tr>
+<tr><th>&lt;Go&gt;</th><td class="z">0</td><td class="n0">−∞</td><td class="n0">−∞</td><td class="n0">−∞</td><td class="n0">−∞</td></tr>
+<tr><th>Naan</th><td class="z">0</td><td class="z">0</td><td class="n0">−∞</td><td class="n0">−∞</td><td class="n0">−∞</td></tr>
+<tr><th>transfarmar</th><td class="z">0</td><td class="z">0</td><td class="z">0</td><td class="n0">−∞</td><td class="n0">−∞</td></tr>
+<tr><th>padaththai</th><td class="z">0</td><td class="z">0</td><td class="z">0</td><td class="z">0</td><td class="n0">−∞</td></tr>
+<tr><th>rasithen</th><td class="z">0</td><td class="z">0</td><td class="z">0</td><td class="z">0</td><td class="z">0</td></tr></table></div>
+<h3>4.3 Why this makes the weights exactly zero</h3>
+<div class="box eq">$$\alpha_{t,j}=\frac{\exp(e_{t,j}+M_{t,j})}{\sum_{k=1}^{T}\exp(e_{t,k}+M_{t,k})},\qquad j>t:\ \ \exp(e_{t,j}-\infty)=0\ \Rightarrow\ \alpha_{t,j}=0$$</div>
+<p>So the value vectors $v_j$ of future words receive weight 0 and contribute nothing to $z_t$, while the remaining weights still sum to 1 (the denominator only counts allowed positions).</p>
+<h3>4.4 Worked example (created for practice)</h3>
+<p>Row $t=2$ of a 3-word score matrix is $(e_{21},e_{22},e_{23})=(1,2,3)$. Without the mask: $\exp=(2.718,\ 7.389,\ 20.086)$, sum 30.19, weights $(0.090,\ 0.245,\ 0.665)$: word 2 pays most attention to the <i>future</i> word 3. With the mask, row is $(1,\ 2,\ -\infty)$:</p>
+<div class="scroll"><table><tr><th>Step</th><th>Values</th></tr><tr><td class="l">exp</td><td>(2.718, 7.389, 0)</td></tr><tr><td class="l">sum</td><td>10.107</td></tr><tr><td class="l">weights</td><td><b>(0.269, 0.731, 0)</b></td></tr></table></div>
+<p>The future word gets exactly 0 and the rest is renormalised to sum to 1.</p>
+<div class="box idea"><b class="t">Why not mask the input or output?</b>Setting an embedding to 0 does <i>not</i> remove a word: its score becomes $e=0$ and $\exp(0)=1$, still a non-zero weight. Zeroing the weights <i>after</i> softmax breaks the sum-to-1 property. Adding $-\infty$ to the scores <i>before</i> softmax is the clean way. (In code, $-\infty$ is a very large negative number such as $-10^9$; every row keeps its diagonal entry, so a row is never all $-\infty$.)</div>
+<h3>4.5 Masking is needed in every decoder layer</h3>
+<p>Suppose layer 1 masks correctly, so $S^{(1)}_{t+1}$ contains information from words $1..t+1$ (its own word included). If layer 2 did <i>not</i> mask, position $t$ in layer 2 could attend to $S^{(1)}_{t+1}$, and through it learn about word $t+1$: the future leaks in <b>indirectly</b>. Therefore the causal mask is required in the masked self-attention of <b>every</b> decoder layer.</p>
+<div class="box def"><b class="t">Masks in the encoder too</b>The slide notes the encoder also uses masking in practice, but for a different reason: to mask the <b>padding tokens</b> in sentences shorter than the longest sentence in a batch (length $&lt;T$). Padding positions get $-\infty$ so nobody attends to them. This is a padding mask, not a causal mask.</div></section>
+
+<section id="s5"><h2>5. Multi-head cross-attention (encoder-decoder attention)</h2>
+<h3>5.1 Idea</h3>
+<p>Masked self-attention lets the decoder relate target words to each other. But translation needs the <i>source</i>. Cross-attention is exactly the Week 1 seq2seq attention, upgraded to Q/K/V: each target position asks a question about the source and receives a weighted mix of source information.</p>
+<h3>5.2 Where Q, K, V come from</h3>
+<div class="scroll"><table><tr><th>Item</th><th class="l">Source</th><th class="l">Meaning</th></tr>
+<tr><td>Queries $Q_2$</td><td class="l">Decoder vectors $s_1..s_{T_{dec}}$ from the masked self-attention sub-layer</td><td class="l">"What target content am I trying to generate?"</td></tr>
+<tr><td>Keys $K_2$</td><td class="l">Encoder output $e_1..e_T$</td><td class="l">"What does each source word offer for matching?"</td></tr>
+<tr><td>Values $V_2$</td><td class="l">Encoder output $e_1..e_T$</td><td class="l">"What source information can be passed on?"</td></tr></table></div>
+<div class="box eq">$$Q_2=W_{Q_2}S,\qquad K_2=W_{K_2}E,\qquad V_2=W_{V_2}E$$
+$$\text{CrossAttention}=\text{softmax}\!\Big(\frac{Q_2^TK_2}{\sqrt{d_k}}\Big)V_2^T$$</div>
+<p>(The slide writes the formula without the $\sqrt{d_k}$ for brevity; the scaling is still applied.) This is called <b>encoder-decoder attention</b> or <b>cross-attention</b> because the sequence supplying queries differs from the one supplying keys/values. It is done with multiple heads (8), the head outputs are concatenated, and the result is passed through the feed-forward network to give output vectors $O$.</p>
+<h3>5.3 Dimension trace (row-vector form from the summary)</h3>
+<div class="scroll"><table><tr><th>Object</th><th>Shape</th><th class="l">Comment</th></tr>
+<tr><td>$Q_{dec}=SW_Q$</td><td>$T_{dec}\times d_k$</td><td class="l">one query per target word</td></tr>
+<tr><td>$K_{enc}=EW_K$</td><td>$T_{enc}\times d_k$</td><td class="l">one key per source word</td></tr>
+<tr><td>$V_{enc}=EW_V$</td><td>$T_{enc}\times d_v$</td><td class="l">one value per source word</td></tr>
+<tr><td>$Q_{dec}K_{enc}^T$</td><td>$T_{dec}\times T_{enc}$</td><td class="l">score of every (target, source) pair; not square!</td></tr>
+<tr><td>softmax(·)$V_{enc}$</td><td>$T_{dec}\times d_v$</td><td class="l">each target word gets a source-weighted summary</td></tr></table></div>
+<div class="diagram"><div class="br"><div class="col"><div class="n i">Decoder s<sub>1..T</sub></div><div class="n g">Encoder e<sub>1..T</sub> (top layer)</div></div><span class="a">→</span><div class="col"><div class="n b">Q<sub>2</sub> = W<sub>Q2</sub>S</div><div class="n b">K<sub>2</sub> = W<sub>K2</sub>E, V<sub>2</sub> = W<sub>V2</sub>E</div></div><span class="a">→</span><div class="n s">softmax(Q<sub>2</sub><sup>T</sup>K<sub>2</sub>/√d<sub>k</sub>)V<sub>2</sub><sup>T</sup></div><span class="a">→ concat heads →</span><div class="n t">FFN → O</div></div><div class="cap">Cross-attention. The same encoder output E feeds every decoder layer.</div></div>
+<div class="box key"><b class="t">Links to Week 1</b>The softmax weights here are the alignment matrix of the seq2seq attention heatmap (target words × source words). No mask is needed in cross-attention (except padding), because the whole source sentence is legitimately known; only the target future is hidden.</div></section>
+
+<section id="s6"><h2>6. Decoder layer wiring, parameters and output layer</h2>
+<h3>6.1 The first decoder layer, end to end</h3>
+<div class="diagram"><div class="flow v">
+<div class="n t">Feed Forward Network → O</div><span class="a">↑</span>
+<div class="n g">Multi-Head Cross Attention (Q from S, K and V from e)</div><span class="a">↑ S</span>
+<div class="n i">Masked Multi-Head Self-Attention (uses M)</div><span class="a">↑</span>
+<div class="n b">Embeddings h of &lt;Go&gt;, Naan, transfarmar, padaththai, rasithen (+ positional encoding)</div></div><div class="cap">Information flow in decoder layer 1 (residual/norm blocks added in section 10 to 12)</div></div>
+<h3>6.2 Parameter count per decoder layer</h3>
+<div class="scroll"><table><tr><th class="l">Sub-layer</th><th class="l">Calculation</th><th>≈ Parameters</th></tr>
+<tr><td class="l">Masked multi-head attention</td><td class="l">$W_Q,W_K,W_V$ for 8 heads ($3\times512\times512$) + $W_O$ ($512\times512$)</td><td>1 million</td></tr>
+<tr><td class="l">Cross-attention</td><td class="l">same structure: $W_{Q_2},W_{K_2},W_{V_2},W_{O_2}$</td><td>1 million</td></tr>
+<tr><td class="l">Feed-forward network</td><td class="l">$2\times(512\times2048)+2048+512=2{,}099{,}712$</td><td>2 million</td></tr>
+<tr><th class="l">Per decoder layer</th><td></td><th>≈ 4 million</th></tr></table></div>
+<p>Six decoder layers give about $6\times4=24$ million parameters (compare ≈ 3M per encoder layer, 18M for the encoder). A decoder layer is bigger because it has an extra attention sub-layer.</p>
+<h3>6.3 Output projection and softmax</h3>
+<div class="box eq">$$P(y_t\mid y_{<t},X)=\text{softmax}\big(S_{final,t}\,W_D+b\big),\qquad W_D\in\mathbb R^{512\times|V|}$$</div>
+<p>For $|V|\approx37000$ this matrix alone has $512\times37000\approx19$ million parameters, out of about <b>65 million</b> for the whole architecture (the slide's figure). The layer counts above (≈18M + 24M + 19M ≈ 61M) leave a few million for parts the slide does not itemise, such as the embedding tables and normalization parameters.</p>
+<div class="diagram"><div class="flow"><div class="n b">S<sub>final</sub> (T<sub>dec</sub>×512)</div><span class="a">→ W<sub>D</sub> (512×|V|) →</span><div class="n s">scores (T<sub>dec</sub>×37000)</div><span class="a">→ softmax →</span><div class="n g">probabilities; pick the word with highest probability</div></div></div></section>
+
+<section id="s7"><h2>7. Why we need positional encoding</h2>
+<h3>7.1 The problem</h3>
+<p>In an RNN, word order was built into the hidden states: $h_t$ is computed after $h_{t-1}$. In a Transformer, all words enter at once and are combined by dot products. Neither the encoder nor the decoder has any information about which word came first. The slide states that the output of self-attention is <b>permutation-invariant</b> (more precisely, <b>permutation-equivariant</b>: shuffling the input shuffles the output identically).</p>
+<p>Example: "I am home today" versus "I today home am". Without extra information the contextual vector for "home" is the same in both; only its position in the output list moves.</p>
+<h3>7.2 Proof</h3>
+<p>Let $P\in\mathbb R^{T\times T}$ be a permutation matrix (each row and column has a single 1), so $P^TP=I$. Use row-vector form with $H\in\mathbb R^{T\times d}$ and $Q=HW_Q$, etc. Shuffle the input: $\tilde H=PH$.</p>
+<ol>
+<li><b>Projections</b> are row-wise linear maps, so they permute rows: $\tilde Q=PHW_Q=PQ$, $\tilde K=PK$, $\tilde V=PV$.</li>
+<li><b>Scores:</b> $\tilde Q\tilde K^T=(PQ)(PK)^T=PQK^TP^T$. The rows <i>and</i> columns of the score matrix are permuted the same way.</li>
+<li><b>Softmax</b> acts on each row independently and is unaffected by column order, so $\text{softmax}(PSP^T)=P\,\text{softmax}(S)\,P^T$. Therefore $\tilde A=PAP^T$.</li>
+<li><b>Output:</b> $\tilde Z=\tilde A\tilde V=(PAP^T)(PV)=PA(P^TP)V=PAV=PZ$.</li></ol>
+<div class="box eq">$$\tilde Z=PZ\quad\Rightarrow\quad\text{shuffled input}\ \Rightarrow\ \text{identically shuffled output, same numbers}$$</div>
+<p>The model literally cannot tell "dog bites man" from "man bites dog". Since word order carries meaning, we must inject it explicitly.</p>
+<div class="box key"><b class="t">The plan</b>Give each position $p$ its own vector $PE_p\in\mathbb R^{512}$ and <b>add</b> it to the word embedding: $X_{final,p}=X_{word,p}+PE_p$. Now the same word at two positions gets two different inputs, which breaks the symmetry. (The slide shows the position vector being added to the 512-d embedding, element by element.)</div>
+<div class="diagram"><div class="flow v"><div class="n b">word embedding x<sub>1</sub>, x<sub>2</sub>, x<sub>3</sub>, … , x<sub>512</sub></div><span class="a">+ (element-wise)</span><div class="n t">positional vector pe<sub>1</sub>, pe<sub>2</sub>, pe<sub>3</sub>, … , pe<sub>512</sub></div><span class="a">=</span><div class="n g">combined input z<sub>1</sub>, z<sub>2</sub>, … , z<sub>512</sub></div></div></div></section>
+
+<section id="s8"><h2>8. How could we build a positional vector? Candidate methods</h2>
+<p>The slide asks: how do we fill the elements of $p_j$? Could it be a constant? One-hot? Learned? Each has a flaw.</p>
+<div class="scroll"><table><tr><th class="l">Method</th><th class="l">Idea</th><th class="l">Problem</th></tr>
+<tr><td class="l">Scalar counter</td><td class="l">Every element of $p_j$ equals $j$ (0,1,2,…)</td><td class="l">Values grow without bound for long sentences and swamp the word embedding. Dividing by a constant (e.g. $10^{-3}$) causes numerical-precision issues.</td></tr>
+<tr><td class="l">One-hot</td><td class="l">$p_j=e_j\in\mathbb R^T$</td><td class="l">Very sparse; length must be fixed in advance. Distance between any two positions is always $\sqrt2$, so position 1 is no "closer" to 2 than to 100.</td></tr>
+<tr><td class="l">Learned table</td><td class="l">A matrix $PE\in\mathbb R^{T_{max}\times d}$ trained by SGD</td><td class="l">Cannot handle positions beyond $T_{max}$ seen in training; not suitable if sentence length is dynamic.</td></tr>
+<tr><td class="l">Sinusoidal (fixed)</td><td class="l">Sines and cosines of many frequencies</td><td class="l">None of the above: bounded, works for any length, encodes relative distance (next section).</td></tr></table></div>
+<h3>8.1 What do we want from a good positional code?</h3>
+<p>The slide illustrates the target with a <b>distance matrix</b> for the sentence "I Enjoyed the film transformer":</p>
+<div class="scroll"><table class="hm"><tr><th></th><th>I</th><th>Enjoyed</th><th>the</th><th>film</th><th>transformer</th></tr>
+<tr><th>I</th><td style="background:#e3edfa">0</td><td style="background:#c5d9f5">1</td><td style="background:#a3c2ee">2</td><td style="background:#7da6e4">3</td><td style="background:#5a8bd6">4</td></tr>
+<tr><th>Enjoyed</th><td style="background:#c5d9f5">1</td><td style="background:#e3edfa">0</td><td style="background:#c5d9f5">1</td><td style="background:#a3c2ee">2</td><td style="background:#7da6e4">3</td></tr>
+<tr><th>the</th><td style="background:#a3c2ee">2</td><td style="background:#c5d9f5">1</td><td style="background:#e3edfa">0</td><td style="background:#c5d9f5">1</td><td style="background:#a3c2ee">2</td></tr>
+<tr><th>film</th><td style="background:#7da6e4">3</td><td style="background:#a3c2ee">2</td><td style="background:#c5d9f5">1</td><td style="background:#e3edfa">0</td><td style="background:#c5d9f5">1</td></tr>
+<tr><th>transformer</th><td style="background:#5a8bd6">4</td><td style="background:#7da6e4">3</td><td style="background:#a3c2ee">2</td><td style="background:#c5d9f5">1</td><td style="background:#e3edfa">0</td></tr></table></div>
+<p>Desired behaviour: distance grows smoothly as you move away from a word in either direction, and it is <b>symmetric</b> (distance to the word 2 places left equals distance to the word 2 places right). One-hot fails this (all distances equal $\sqrt2$). Sinusoidal encoding will satisfy it.</p></section>
+
+<section id="s9"><h2>9. Sinusoidal positional encoding</h2>
+<h3>9.1 Definition</h3>
+<p><b>Hypothesis (slide):</b> embed a unique pattern of features for each position $j$, and the model will learn to attend by relative position. The features are sines and cosines:</p>
+<div class="box eq">$$PE_{(p,2i)}=\sin\!\Big(\frac{p}{10000^{2i/d_{model}}}\Big),\qquad PE_{(p,2i+1)}=\cos\!\Big(\frac{p}{10000^{2i/d_{model}}}\Big)$$</div>
+<ul><li>$p$ = position of the word ($p=0,1,2,\dots,T-1$; the slide calls it $j$).</li>
+<li>$i=0,1,\dots,\tfrac{d_{model}}2-1$ = index of a <b>pair</b> of dimensions (for $d_{model}=512$: $i=0..255$, which is the range written on the slide).</li>
+<li>Even dimensions $2i$ use <b>sin</b>; odd dimensions $2i+1$ use <b>cos</b> of the same angle.</li>
+<li>Define the frequency $\omega_i=\dfrac{1}{10000^{2i/d_{model}}}$, so the pair is $(\sin\omega_ip,\ \cos\omega_ip)$.</li></ul>
+<h3>9.2 Position 0</h3>
+<p>At $p=0$: $\sin0=0$, $\cos0=1$, so $PE_0=[0,1,0,1,\dots,0,1]$, alternating 0's and 1's (slide). This vector is added to the first word of every sentence.</p>
+<h3>9.3 Tiny worked example (created for practice, $d_{model}=4$)</h3>
+<p>Two pairs: $i=0$: $\omega_0=10000^0=1$; $i=1$: $\omega_1=10000^{-2/4}=0.01$. Then $PE_p=[\sin p,\ \cos p,\ \sin0.01p,\ \cos0.01p]$.</p>
+<div class="scroll"><table><tr><th>p</th><th>dim 0 (sin p)</th><th>dim 1 (cos p)</th><th>dim 2 (sin 0.01p)</th><th>dim 3 (cos 0.01p)</th></tr>
+<tr><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td></tr>
+<tr><td>1</td><td>0.841</td><td>0.540</td><td>0.010</td><td>1.000</td></tr>
+<tr><td>2</td><td>0.909</td><td>−0.416</td><td>0.020</td><td>1.000</td></tr>
+<tr><td>3</td><td>0.141</td><td>−0.990</td><td>0.030</td><td>1.000</td></tr></table></div>
+<p>The first pair changes quickly with $p$, the second changes very slowly. Every position gets a distinct combination.</p>
+<h3>9.4 Fast and slow waves: wavelength</h3>
+<p>The wave $\sin(\omega_ip)$ repeats every $\lambda_i=\dfrac{2\pi}{\omega_i}=2\pi\cdot10000^{2i/d_{model}}$ positions.</p>
+<ul><li>Low $i$ (near 0): denominator $\approx10000^0=1$, wavelength $\approx2\pi\approx6.3$: a <b>high-frequency</b> wave that changes rapidly between neighbouring words.</li>
+<li>High $i$ (near $d/2$): denominator $\to10000$, wavelength up to $\approx2\pi\cdot10000\approx62{,}800$: a <b>low-frequency</b> wave that changes slowly and separates far-apart positions.</li>
+<li>Wavelengths form a geometric progression from $2\pi$ to $10000\cdot2\pi$.</li></ul>
+<div class="diagram"><svg viewBox="0 0 640 300" width="100%" role="img" aria-label="sine waves of different frequency"><line x1="20" y1="40" x2="620" y2="40" stroke="#9fb0c9" stroke-width="1"/><polyline fill="none" stroke="#1f5fae" stroke-width="2" points="20.0,40.0 26.0,19.0 32.0,17.3 38.0,36.5 44.0,58.9 50.0,64.0 56.0,47.0 62.0,23.6 68.0,15.3 74.0,29.7 80.0,53.6 86.0,65.0 92.0,53.4 98.0,29.5 104.0,15.2 110.0,23.7 116.0,47.2 122.0,64.0 128.0,58.8 134.0,36.3 140.0,17.2 146.0,19.1 152.0,40.2 158.0,61.2 164.0,62.6 170.0,43.3 176.0,20.9 182.0,16.1 188.0,33.2 194.0,56.6 200.0,64.7 206.0,50.1 212.0,26.2 218.0,15.0 224.0,26.8 230.0,50.7 236.0,64.8 242.0,56.1 248.0,32.6 254.0,15.9 260.0,21.4 266.0,44.0 272.0,62.9 278.0,60.8 284.0,39.6 290.0,18.7 296.0,17.5 302.0,36.9 308.0,59.2 314.0,63.8 320.0,46.6 326.0,23.2 332.0,15.3 338.0,30.1 344.0,54.0 350.0,65.0 356.0,53.0 362.0,29.1 368.0,15.2 374.0,24.1 380.0,47.6 386.0,64.2 392.0,58.5 398.0,35.8 404.0,17.0 410.0,19.3 416.0,40.7 422.0,61.4 428.0,62.4 434.0,42.9 440.0,20.7 446.0,16.2 452.0,33.7 458.0,56.9 464.0,64.6 470.0,49.7 476.0,25.8 482.0,15.0 488.0,27.2 494.0,51.1 500.0,64.8 506.0,55.7 512.0,32.2 518.0,15.8 524.0,21.7 530.0,44.4 536.0,63.1 542.0,60.5 548.0,39.1 554.0,18.5 560.0,17.7 566.0,37.4 572.0,59.5 578.0,63.7 584.0,46.1 590.0,22.9 596.0,15.4 602.0,30.5 608.0,54.3 614.0,65.0 620.0,52.7"/><text x="24" y="12" font-size="11" fill="currentColor">dim pair i=0 (fastest)</text><line x1="20" y1="110" x2="620" y2="110" stroke="#9fb0c9" stroke-width="1"/><polyline fill="none" stroke="#16808a" stroke-width="2" points="20.0,110.0 26.0,93.0 32.0,85.1 38.0,90.5 44.0,106.5 50.0,124.3 56.0,134.4 62.0,131.5 68.0,117.0 74.0,98.8 80.0,86.6 86.0,86.9 92.0,99.7 98.0,118.0 104.0,132.0 110.0,134.2 116.0,123.5 122.0,105.5 128.0,89.9 134.0,85.2 140.0,93.7 146.0,111.0 152.0,127.8 158.0,135.0 164.0,128.8 170.0,112.6 176.0,94.9 182.0,85.4 188.0,89.0 194.0,104.0 200.0,122.1 206.0,133.8 212.0,132.7 218.0,119.4 224.0,101.1 230.0,87.6 236.0,86.1 242.0,97.4 248.0,115.5 254.0,130.6 260.0,134.7 266.0,125.5 272.0,108.0 278.0,91.6 284.0,85.0 290.0,91.9 296.0,108.4 302.0,125.9 308.0,134.8 314.0,130.4 320.0,115.1 326.0,97.0 332.0,85.9 338.0,87.8 344.0,101.5 350.0,119.8 356.0,132.9 362.0,133.6 368.0,121.7 374.0,103.5 380.0,88.8 386.0,85.5 392.0,95.3 398.0,113.0 404.0,129.1 410.0,135.0 416.0,127.4 422.0,110.6 428.0,93.4 434.0,85.1 440.0,90.2 446.0,105.9 452.0,123.8 458.0,134.3 464.0,131.8 470.0,117.5 476.0,99.3 482.0,86.8 488.0,86.7 494.0,99.2 500.0,117.4 506.0,131.7 512.0,134.3 518.0,123.9 524.0,106.0 530.0,90.3 536.0,85.1 542.0,93.3 548.0,110.4 554.0,127.4 560.0,135.0 566.0,129.2 572.0,113.1 578.0,95.4 584.0,85.5 590.0,88.7 596.0,103.4 602.0,121.6 608.0,133.6 614.0,132.9 620.0,119.9"/><text x="24" y="82" font-size="11" fill="currentColor">i=8</text><line x1="20" y1="180" x2="620" y2="180" stroke="#9fb0c9" stroke-width="1"/><polyline fill="none" stroke="#4b45b5" stroke-width="2" points="20.0,180.0 26.0,172.2 32.0,165.2 38.0,159.7 44.0,156.2 50.0,155.0 56.0,156.3 62.0,160.0 68.0,165.6 74.0,172.7 80.0,180.5 86.0,188.3 92.0,195.2 98.0,200.6 104.0,204.0 110.0,205.0 116.0,203.5 122.0,199.7 128.0,193.9 134.0,186.8 140.0,179.0 146.0,171.2 152.0,164.4 158.0,159.1 164.0,155.9 170.0,155.0 176.0,156.7 182.0,160.6 188.0,166.5 194.0,173.7 200.0,181.6 206.0,189.2 212.0,196.0 218.0,201.2 224.0,204.3 230.0,204.9 236.0,203.1 242.0,199.0 248.0,193.1 254.0,185.8 260.0,177.9 266.0,170.3 272.0,163.6 278.0,158.5 284.0,155.6 290.0,155.1 296.0,157.1 302.0,161.3 308.0,167.4 314.0,174.7 320.0,182.6 326.0,190.2 332.0,196.8 338.0,201.7 344.0,204.5 350.0,204.8 356.0,202.7 362.0,198.4 368.0,192.2 374.0,184.8 380.0,176.9 386.0,169.3 392.0,162.8 398.0,158.0 404.0,155.4 410.0,155.2 416.0,157.5 422.0,162.0 428.0,168.3 434.0,175.7 440.0,183.6 446.0,191.1 452.0,197.5 458.0,202.2 464.0,204.7 470.0,204.7 476.0,202.3 482.0,197.6 488.0,191.3 494.0,183.8 500.0,175.9 506.0,168.4 512.0,162.1 518.0,157.6 524.0,155.2 530.0,155.4 536.0,158.0 542.0,162.7 548.0,169.2 554.0,176.8 560.0,184.6 566.0,192.0 572.0,198.3 578.0,202.7 584.0,204.8 590.0,204.5 596.0,201.8 602.0,196.9 608.0,190.3 614.0,182.7 620.0,174.9"/><text x="24" y="152" font-size="11" fill="currentColor">i=32</text><line x1="20" y1="250" x2="620" y2="250" stroke="#9fb0c9" stroke-width="1"/><polyline fill="none" stroke="#1d8a5c" stroke-width="2" points="20.0,250.0 26.0,249.8 32.0,249.5 38.0,249.3 44.0,249.0 50.0,248.8 56.0,248.5 62.0,248.3 68.0,248.0 74.0,247.8 80.0,247.5 86.0,247.3 92.0,247.0 98.0,246.8 104.0,246.5 110.0,246.3 116.0,246.0 122.0,245.8 128.0,245.5 134.0,245.3 140.0,245.0 146.0,244.8 152.0,244.5 158.0,244.3 164.0,244.1 170.0,243.8 176.0,243.6 182.0,243.3 188.0,243.1 194.0,242.9 200.0,242.6 206.0,242.4 212.0,242.1 218.0,241.9 224.0,241.7 230.0,241.4 236.0,241.2 242.0,241.0 248.0,240.7 254.0,240.5 260.0,240.3 266.0,240.0 272.0,239.8 278.0,239.6 284.0,239.4 290.0,239.1 296.0,238.9 302.0,238.7 308.0,238.5 314.0,238.2 320.0,238.0 326.0,237.8 332.0,237.6 338.0,237.4 344.0,237.1 350.0,236.9 356.0,236.7 362.0,236.5 368.0,236.3 374.0,236.1 380.0,235.9 386.0,235.7 392.0,235.5 398.0,235.3 404.0,235.1 410.0,234.9 416.0,234.7 422.0,234.5 428.0,234.3 434.0,234.1 440.0,233.9 446.0,233.7 452.0,233.5 458.0,233.3 464.0,233.1 470.0,233.0 476.0,232.8 482.0,232.6 488.0,232.4 494.0,232.2 500.0,232.1 506.0,231.9 512.0,231.7 518.0,231.6 524.0,231.4 530.0,231.2 536.0,231.1 542.0,230.9 548.0,230.7 554.0,230.6 560.0,230.4 566.0,230.3 572.0,230.1 578.0,230.0 584.0,229.8 590.0,229.7 596.0,229.5 602.0,229.4 608.0,229.2 614.0,229.1 620.0,229.0"/><text x="24" y="222" font-size="11" fill="currentColor">i=128 (slowest)</text><text x="320" y="296" font-size="11" text-anchor="middle" fill="currentColor">position p = 0 … 100</text></svg><div class="cap">Sine curves for four dimension pairs (computed for $d_{model}=512$): fast waves resolve neighbours, slow waves resolve long distances</div></div>
+<div class="box idea"><b class="t">Analogy: a clock</b>The seconds hand spins fast, the minute hand slower, the hour hand slowest. Reading all hands together gives a unique time. Likewise, the many sine/cosine pairs together give each position a unique fingerprint, and it works for any length because nothing is learned or capped.</div>
+<h3>9.5 The heat map from the slide</h3>
+<p>The slide evaluates $PE_{(j,i)}$ for a few positions and 64 dimensions and shows it as a heat map (rows = positions $j$, columns = dimensions). Here is the same computed for 20 positions × 64 dimensions ($d_{model}=512$):</p>
+<div class="diagram"><canvas id="hm" width="640" height="200"></canvas><div class="cap">Rows: positions 0–19 (top to bottom). Columns: dimensions 0–63. Dark blue = −1, white = 0, green = +1. Left columns change from row to row; right columns are nearly constant because their waves are very slow.</div></div>
+<h3>9.6 Key properties (with proofs)</h3>
+<p><b>(a) Bounded.</b> Every entry lies in $[-1,1]$, so $PE$ can be added to embeddings without overwhelming them (unlike a raw counter). Also, since $\sin^2+\cos^2=1$ for each pair, $\|PE_p\|^2=d_{model}/2=256$ for every position, so all positional vectors have the same length 16.</p>
+<p><b>(b) Relative position is a linear operation.</b> Using the angle-addition formulas, the pair at position $p+k$ is a fixed rotation of the pair at position $p$:</p>
+<div class="box eq">$$\begin{pmatrix}\sin\omega(p+k)\\ \cos\omega(p+k)\end{pmatrix}=\begin{pmatrix}\cos\omega k & \sin\omega k\\ -\sin\omega k & \cos\omega k\end{pmatrix}\begin{pmatrix}\sin\omega p\\ \cos\omega p\end{pmatrix}$$</div>
+<p>The rotation matrix depends only on the offset $k$, not on $p$. So $PE_{p+k}=R_k\,PE_p$ for a fixed matrix $R_k$. Attention (which is built from linear maps) can therefore learn to look "$k$ words back" by learning a suitable weight matrix. This is why the hypothesis says the model "will learn to attend by relative position".</p>
+<p><b>(c) Distance depends only on the offset, and is symmetric.</b> For one pair, $(\sin a-\sin b)^2+(\cos a-\cos b)^2=2-2\cos(a-b)$. Summing over all pairs with $a=\omega_ip$, $b=\omega_i(p+k)$:</p>
+<div class="box eq">$$\|PE_p-PE_{p+k}\|^2=\sum_{i=0}^{d/2-1}2\big(1-\cos(\omega_ik)\big)$$</div>
+<p>The right side does not contain $p$: the distance between two positions depends only on how far apart they are. And because $\cos$ is even, replacing $k$ by $-k$ changes nothing: distance to $p+k$ equals distance to $p-k$ (<b>symmetry</b>). For $k=0$ it is 0.</p>
+<p>The slide plots the distance from position 0 to every other position: it rises quickly at first (nearby positions are close, and distance increases as we move away) and then flattens, since the slow waves change little. Computing the exact formula above for $d_{model}=512$ gives distance 3.7 at $p=1$, 12.8 at $p=10$ and 17.0 at $p=100$:</p>
+<div class="diagram"><svg viewBox="0 0 640 260" width="100%" role="img" aria-label="distance from position 0"><line x1="50" y1="220" x2="620" y2="220" stroke="#9fb0c9"/><line x1="50" y1="20" x2="50" y2="220" stroke="#9fb0c9"/><polyline fill="none" stroke="#1f5fae" stroke-width="2" points="50.0,220.0 55.7,197.9 61.4,178.6 67.1,164.1 72.8,155.3 78.5,151.6 84.2,150.9 89.9,150.7 95.6,149.2 101.3,146.5 107.0,143.9 112.7,142.3 118.4,141.9 124.1,141.8 129.8,141.3 135.5,139.9 141.2,138.4 146.9,137.3 152.6,137.0 158.3,137.0 164.0,136.7 169.7,135.9 175.4,134.8 181.1,134.0 186.8,133.7 192.5,133.7 198.2,133.5 203.9,133.0 209.6,132.2 215.3,131.5 221.0,131.2 226.7,131.2 232.4,131.1 238.1,130.7 243.8,130.1 249.5,129.5 255.2,129.2 260.9,129.2 266.6,129.2 272.3,128.9 278.0,128.4 283.7,127.9 289.4,127.6 295.1,127.5 300.8,127.5 306.5,127.4 312.2,127.0 317.9,126.5 323.6,126.2 329.3,126.1 335.0,126.2 340.7,126.0 346.4,125.7 352.1,125.3 357.8,125.0 363.5,124.9 369.2,124.9 374.9,124.9 380.6,124.6 386.3,124.2 392.0,123.9 397.7,123.8 403.4,123.9 409.1,123.8 414.8,123.6 420.5,123.3 426.2,123.0 431.9,122.9 437.6,122.9 443.3,122.9 449.0,122.7 454.7,122.4 460.4,122.1 466.1,122.0 471.8,122.0 477.5,122.0 483.2,121.9 488.9,121.6 494.6,121.4 500.3,121.2 506.0,121.2 511.7,121.2 517.4,121.2 523.1,120.9 528.8,120.6 534.5,120.5 540.2,120.5 545.9,120.5 551.6,120.5 557.3,120.3 563.0,120.0 568.7,119.8 574.4,119.8 580.1,119.8 585.8,119.8 591.5,119.7 597.2,119.4 602.9,119.2 608.6,119.1 614.3,119.2 620.0,119.2"/><text x="44" y="224" font-size="10" text-anchor="end" fill="currentColor">0</text><text x="44" y="176" font-size="10" text-anchor="end" fill="currentColor">8</text><text x="44" y="129" font-size="10" text-anchor="end" fill="currentColor">16</text><text x="44" y="82" font-size="10" text-anchor="end" fill="currentColor">24</text><text x="44" y="34" font-size="10" text-anchor="end" fill="currentColor">32</text><text x="50" y="236" font-size="10" text-anchor="middle" fill="currentColor">0</text><text x="164" y="236" font-size="10" text-anchor="middle" fill="currentColor">20</text><text x="278" y="236" font-size="10" text-anchor="middle" fill="currentColor">40</text><text x="392" y="236" font-size="10" text-anchor="middle" fill="currentColor">60</text><text x="506" y="236" font-size="10" text-anchor="middle" fill="currentColor">80</text><text x="620" y="236" font-size="10" text-anchor="middle" fill="currentColor">100</text><text x="335" y="254" font-size="11" text-anchor="middle" fill="currentColor">position p</text><text x="14" y="120" font-size="11" fill="currentColor" transform="rotate(-90 14 120)">||PE_0 − PE_p||</text></svg><div class="cap">Distance from PE<sub>0</sub> to PE<sub>p</sub> (computed from the formula). The vertical scale on the lecture slide is different because of its plotting code; the shape is the point.</div></div>
+<p>By contrast, one-hot vectors always have distance $\sqrt2$, independent of position, so they carry no notion of "nearer".</p>
+<div class="box warn"><b class="t">Do not confuse</b>The distance matrix in section 8 (0,1,2,3,4) is the wish-list. The real PE distances are not equal to word counts; they grow smoothly with the offset and flatten for large offsets. What matters is that they depend only on the offset and are symmetric.</div>
+<h3>9.7 Practical notes</h3>
+<ul><li>PE is <b>added</b> (not concatenated) to the embedding, keeping size 512.</li>
+<li>The input word embeddings are <b>learned</b> during training (no pretrained Word2Vec), which is an extra set of weights; the positional function can also be parameterised (learned) instead of sinusoidal.</li>
+<li>PE is added at the bottom of both the encoder input and the decoder input.</li></ul></section>
+
+<section id="s10"><h2>10. Training deep Transformers: residual connections</h2>
+<h3>10.1 How deep is the network?</h3>
+<p>Slide's rough count: think of the Transformer as attention layers and hidden (linear) layers. One encoder layer = 1 attention layer + 2 hidden layers (the two FFN matrices) = 3. One decoder layer = 2 attention layers + 2 hidden layers = 4.</p>
+<div class="box eq">$$6\times3\ (\text{encoder})+6\times4\ (\text{decoder})=18+24=\mathbf{42}\ \text{layers deep}$$</div>
+<p>(The summary counts sub-layers: $6\times2=12$ in the encoder and $6\times3=18$ in the decoder, and notes over 42 weight operations when the FFN's two matrices are counted.) Two questions arise: <b>how do we make gradients flow across 42 layers?</b> and <b>how do we speed up training?</b> Answers: residual connections and normalization.</p>
+<h3>10.2 Residual (skip) connection</h3>
+<p>Wrap each sub-layer with a shortcut that adds the input to its output:</p>
+<div class="box eq">$$\text{Output}=x+\text{SubLayer}(x)$$</div>
+<div class="diagram"><div class="br"><div class="n b">x</div><span class="a">→</span><div class="n g">SubLayer(x)<br>(attention or FFN)</div><span class="a">→</span><div class="n s">+</div><span class="a">→</span><div class="n t">Output</div></div><div class="flow"><span class="a">x ————————— skip path —————————→ +</span></div><div class="cap">The skip path carries x unchanged around the sub-layer</div></div>
+<h3>10.3 Why it fixes vanishing gradients</h3>
+<p>Backpropagation multiplies gradients layer by layer. With residuals:</p>
+<div class="box eq">$$\frac{\partial\mathcal L}{\partial x}=\frac{\partial\mathcal L}{\partial\text{Output}}\Big(I+\frac{\partial\,\text{SubLayer}(x)}{\partial x}\Big)$$</div>
+<p>The identity $I$ passes the upstream gradient through untouched. Even if $\partial\text{SubLayer}/\partial x$ is tiny, the gradient does not vanish. Across $L$ layers the product $\prod_l(I+J_l)$ expands to $I+\sum_lJ_l+\dots$, which always contains the direct term $I$: a clear path from the loss to the earliest layer, regardless of depth. (Contrast with Week 1's RNN product of Jacobians without $I$, which shrinks or explodes.)</p>
+<p>A second benefit: each sub-layer only has to learn a <i>correction</i> to its input, which is easier to optimise.</p></section>
+
+<section id="s11"><h2>11. Normalization: Batch Norm vs Layer Norm</h2>
+<h3>11.1 Why normalize?</h3>
+<p>As layers change during training, the scale and distribution of activations drift, which slows and destabilises learning. Normalization re-centres and re-scales activations to keep them well behaved and to <b>speed up training</b>.</p>
+<h3>11.2 Batch normalization (BN)</h3>
+<p>Let $x_i^j$ = activation of neuron $i$ for training sample $j$ in layer $l$. Three variables are involved ($l$, $i$, $j$): the layer, the neuron, and the sample. BN normalizes neuron $i$ <b>across the $m$ samples of the batch</b>:</p>
+<div class="box eq">$$\mu_i=\frac1m\sum_{j=1}^{m}x_i^j,\qquad\sigma_i^2=\frac1m\sum_{j=1}^{m}(x_i^j-\mu_i)^2,\qquad\hat x_i=\frac{x_i-\mu_i}{\sqrt{\sigma_i^2+\epsilon}},\qquad\hat y_i=\gamma\hat x_i+\beta$$</div>
+<p>$\epsilon$ is a tiny constant preventing division by zero; $\gamma,\beta$ are learned scale and shift so the network can undo the normalization if that is better. In the lecture picture, an accumulator stores the activations of the batch as a grid and the statistics are taken down each column (neuron), one neuron at a time.</p>
+<h3>11.3 Why BN is a poor fit for Transformers/NLP</h3>
+<ul><li><b>Depends on batch size $m$.</b> Mean and variance estimates are accurate only if $m$ is large; small $m$ gives high error. With $m=1$: $\mu_i=x_i$, $\sigma_i=0$, so $\hat x_i=0$ for every input: all information is erased. Inference on a single sentence is therefore a problem.</li>
+<li><b>Variable sequence lengths and padding</b> distort the statistics (sentences in a batch have different lengths).</li>
+<li><b>Empirical degradation:</b> naive BN was found to hurt performance on language tasks. A systematic study confirmed this and proposed a modified BN called <b>PowerNorm</b>.</li></ul>
+<p>Numeric illustration (created for practice): a neuron has activation 1, 2, 3 in a batch of 3. $\mu=2$, $\sigma^2=\tfrac{(1+0+1)}3=0.667$. Fine. In a batch of 1 with activation 5: $\mu=5$, $\sigma^2=0$, $\hat x=0$.</p>
+<h3>11.4 Layer normalization (LN)</h3>
+<p>LN takes the statistics <b>across the hidden units of one token</b>, not across the batch. In the Transformer, for token $t$ of sample $b$ with $d_{model}$ features:</p>
+<div class="box eq">$$\mu_{b,t}=\frac1{d}\sum_{i=1}^{d}X_{b,t,i},\qquad\sigma_{b,t}^2=\frac1{d}\sum_{i=1}^{d}(X_{b,t,i}-\mu_{b,t})^2$$
+$$\text{LN}(X_{b,t})=\gamma\odot\frac{X_{b,t}-\mu_{b,t}}{\sqrt{\sigma_{b,t}^2+\epsilon}}+\beta,\qquad\gamma,\beta\in\mathbb R^{d}\ \text{(learned)}$$</div>
+<p>Each token is normalised on its own, so the result <b>does not depend on batch size or on the other sentences</b>. It works with batch size 1 (needed for RNNs, and for autoregressive decoding one token at a time) and is unaffected by padding.</p>
+<div class="diagram"><div class="flow"><div class="n g"><b>Batch Norm</b>: for each feature column, average over batch samples (down the column)</div><div class="n t"><b>Layer Norm</b>: for each token row, average over its d features (along the row)</div></div>
+<div class="scroll"><table><tr><th></th><th colspan="4">features 1 … d →</th></tr>
+<tr><th>sample 1</th><td style="background:#e2f5f6">▬▬▬▬ row</td><td style="background:#e2f5f6">▬▬▬</td><td style="background:#e2f5f6">▬▬▬</td><td style="background:#e2f5f6">▬▬</td></tr>
+<tr><th>sample 2</th><td style="background:#e2f5f6">▬▬▬▬ row</td><td style="background:#e2f5f6">▬▬▬</td><td style="background:#e2f5f6">▬▬▬</td><td style="background:#e2f5f6">▬▬</td></tr>
+<tr><th>sample 3</th><td style="background:#e2f5f6">▬▬▬▬ row</td><td style="background:#e2f5f6">▬▬▬</td><td style="background:#e2f5f6">▬▬▬</td><td style="background:#e2f5f6">▬▬</td></tr>
+<tr><th>BN averages</th><td style="background:#e6f0fd">↑ column</td><td style="background:#e6f0fd">↑ column</td><td style="background:#e6f0fd">↑ column</td><td style="background:#e6f0fd">↑ column</td></tr></table></div><div class="cap">LN uses each row (sample/token), BN uses each column (feature) across the batch</div></div>
+<h3>11.5 Worked LN example (created for practice)</h3>
+<p>A token with $d=4$ features $x=(2,4,6,8)$ (take $\gamma=1,\beta=0$, ignore $\epsilon$):</p>
+<div class="scroll"><table><tr><th>Step</th><th class="l">Calculation</th><th>Result</th></tr>
+<tr><td>Mean</td><td class="l">$(2+4+6+8)/4$</td><td>5</td></tr>
+<tr><td>Variance</td><td class="l">$((-3)^2+(-1)^2+1^2+3^2)/4=20/4$</td><td>5</td></tr>
+<tr><td>Std</td><td class="l">$\sqrt5$</td><td>2.236</td></tr>
+<tr><td>Normalised</td><td class="l">$(x-5)/2.236$</td><td>(−1.342, −0.447, 0.447, 1.342)</td></tr></table></div>
+<p>The output has mean 0 and variance 1 whatever the input scale; then $\gamma,\beta$ rescale it.</p>
+<div class="scroll"><table><tr><th class="l">Aspect</th><th class="l">Batch Norm</th><th class="l">Layer Norm</th></tr>
+<tr><td class="l">Statistics over</td><td class="l">Batch (per feature)</td><td class="l">Features (per token)</td></tr>
+<tr><td class="l">Needs large batch</td><td class="l">Yes; fails at batch size 1</td><td class="l">No</td></tr>
+<tr><td class="l">Padding / varying length</td><td class="l">Distorts statistics</td><td class="l">Not affected</td></tr>
+<tr><td class="l">Train vs test behaviour</td><td class="l">Differs (needs running averages)</td><td class="l">Same</td></tr>
+<tr><td class="l">Used in Transformers</td><td class="l">No</td><td class="l">Yes</td></tr></table></div></section>
+
+<section id="s12"><h2>12. Putting Add & Norm in the layer: PostNorm vs PreNorm</h2>
+<p>The slide "the complete layer": add a <b>residual connection and layer norm after every</b> multi-head attention, feed-forward network and cross-attention block. There are two ways to arrange the pieces.</p>
+<div class="diagram"><div class="flow"><div class="n s"><b>PostNorm</b> (original Transformer)</div><div class="n b">X</div><span class="a">→</span><div class="n g">SubLayer</div><span class="a">→</span><div class="n s">Add (X + …)</div><span class="a">→</span><div class="n t">LayerNorm</div><span class="a">→</span><div class="n b">Output</div></div>
+<div class="flow"><div class="n s"><b>PreNorm</b> (LLaMA, GPT-3 style)</div><div class="n b">X</div><span class="a">→</span><div class="n t">LayerNorm</div><span class="a">→</span><div class="n g">SubLayer</div><span class="a">→</span><div class="n s">Add (X + …)</div><span class="a">→</span><div class="n b">Output</div></div></div>
+<div class="box eq"><b>PostNorm:</b> $X_1=\text{LN}(X+\text{MHA}(X)),\quad X_2=\text{LN}(X_1+\text{FFN}(X_1))$<br><b>PreNorm:</b> $X_1=X+\text{MHA}(\text{LN}(X)),\quad X_2=X_1+\text{FFN}(\text{LN}(X_1))$</div>
+<div class="box key"><b class="t">Why PreNorm is popular in modern LLMs</b>In PostNorm the residual signal passes through a LayerNorm in every layer, which can damp the backpropagated gradient in deep stacks. PreNorm normalizes only the branch that goes through the sub-layer and leaves the main skip path (the "highway") untouched, so gradients flow cleanly. This allows stable training without a learning-rate warm-up schedule.</div></section>
+
+<section id="s13"><h2>13. The complete Transformer</h2>
+<div class="diagram"><div class="flow v">
+<div class="flow"><div class="n g"><b>ENCODER</b></div><div class="n b">Inputs</div><span class="a">→</span><div class="n b">Input embedding + Positional encoding</div></div>
+<div class="n g">Encoder layer × N: [Multi-Head Self-Attn → Add & Norm] → [FFN → Add & Norm]</div>
+<span class="a">↓ E = e<sub>1..T</sub> (T×512), used as K and V in every decoder layer</span>
+<div class="flow"><div class="n i"><b>DECODER</b></div><div class="n b">Outputs (shifted right)</div><span class="a">→</span><div class="n b">Output embedding + Positional encoding</div></div>
+<div class="n i">Decoder layer × N: [Masked Multi-Head Self-Attn → Add & Norm] → [Cross-Attn (Q: dec; K,V: enc) → Add & Norm] → [FFN → Add & Norm]</div>
+<span class="a">↓</span>
+<div class="flow"><div class="n s">Linear (512 → |V|)</div><span class="a">→</span><div class="n t">Softmax</div><span class="a">→</span><div class="n g">Output probabilities</div></div></div><div class="cap">The original Transformer (PostNorm), N = 6</div></div>
+<h3>13.1 One full training step, in words</h3>
+<ol><li>Embed source words, add $PE$, run the 6 encoder layers to get $E$.</li>
+<li>Take the target sentence, shift right (start with &lt;Go&gt;), embed, add $PE$.</li>
+<li>Decoder layer: masked self-attention (with $M$) → cross-attention to $E$ → FFN, each followed by Add & LayerNorm.</li>
+<li>Linear + softmax at every position at once; compare with the true next words; sum the cross-entropy; backpropagate through everything (residual paths keep gradients healthy).</li>
+<li>At inference, generate one word at a time, feeding each output back as the next input, until an end token.</li></ol>
+<h3>13.2 Parallelism summary</h3>
+<div class="scroll"><table><tr><th class="l">Stage</th><th class="l">Across words</th><th class="l">Across layers</th></tr>
+<tr><td class="l">Encoder (train/inference)</td><td class="l">Parallel</td><td class="l">Sequential (6)</td></tr>
+<tr><td class="l">Decoder, training (teacher forcing + mask)</td><td class="l">Parallel</td><td class="l">Sequential (6)</td></tr>
+<tr><td class="l">Decoder, inference</td><td class="l">Sequential: one new word per pass</td><td class="l">Sequential (6)</td></tr></table></div></section>
+
+<section id="s14"><h2>14. Revision</h2>
+<h3>14.1 Formula sheet</h3>
+<div class="box eq">$$PE_{(p,2i)}=\sin\tfrac{p}{10000^{2i/d}},\quad PE_{(p,2i+1)}=\cos\tfrac{p}{10000^{2i/d}},\quad X=X_{word}+PE$$
+$$Z_{masked}=\text{softmax}\!\Big(\tfrac{Q^TK}{\sqrt{d_k}}+M\Big)V^T,\qquad M_{t,j}=\begin{cases}0&j\le t\\-\infty&j>t\end{cases}$$
+$$Q_2=W_{Q_2}S,\ K_2=W_{K_2}E,\ V_2=W_{V_2}E,\qquad \text{Output}=x+\text{SubLayer}(x)$$
+$$\text{LN}(x)=\gamma\tfrac{x-\mu}{\sqrt{\sigma^2+\epsilon}}+\beta,\quad\text{BN uses }\mu,\sigma^2\text{ over the batch},\ \text{LN over the features}$$
+$$P(y_t\mid y_{<t},X)=\text{softmax}(S_tW_D+b)$$</div>
+<h3>14.2 Key numbers</h3>
+<p>$N=6$ decoder layers · 3 sub-layers per decoder layer · ≈4M parameters per decoder layer · $W_D$: $512\times|V|$, $|V|\approx37000$ ⇒ ≈19M · whole model ≈65M · depth ≈ 42 layers (18 encoder + 24 decoder) · $d_{model}=512$ · cross-attention score matrix $T_{dec}\times T_{enc}$.</p>
+<h3>14.3 Glossary</h3>
+<div class="scroll"><table><tr><th class="l">Term</th><th class="l">Meaning</th></tr>
+<tr><td class="l">Autoregressive</td><td class="l">Generating one token at a time, each conditioned on earlier ones</td></tr>
+<tr><td class="l">Teacher forcing</td><td class="l">Training with ground-truth previous words as decoder input</td></tr>
+<tr><td class="l">Exposure bias</td><td class="l">Train/test mismatch: real outputs are fed back only at test time</td></tr>
+<tr><td class="l">Causal mask</td><td class="l">Upper-triangular −∞ matrix blocking attention to future tokens</td></tr>
+<tr><td class="l">Cross-attention</td><td class="l">Queries from decoder, keys/values from encoder output</td></tr>
+<tr><td class="l">Permutation equivariance</td><td class="l">Shuffling inputs shuffles outputs identically (self-attention without PE)</td></tr>
+<tr><td class="l">Positional encoding</td><td class="l">Vector added to each embedding to inject word order</td></tr>
+<tr><td class="l">Residual connection</td><td class="l">Adding a sub-layer's input to its output; gives gradients a direct path</td></tr>
+<tr><td class="l">Layer normalization</td><td class="l">Normalizing each token's features to zero mean, unit variance, then scale/shift</td></tr>
+<tr><td class="l">PreNorm / PostNorm</td><td class="l">LN before the sub-layer / after the residual add</td></tr></table></div>
+<h3>14.4 Practice questions</h3>
+<ol>
+<li><b>Why does the decoder have three sub-layers?</b> Masked self-attention (relate target words), cross-attention (use the source), FFN (per-word non-linearity).</li>
+<li><b>What is teacher forcing and what problem does it solve?</b> Feeding true previous words in training; stops one early mistake from corrupting all later predictions and speeds up learning.</li>
+<li><b>Where is the causal mask applied and why is $-\infty$ used?</b> Added to the scaled scores before softmax; $\exp(-\infty)=0$ gives exact zero weight while the other weights still sum to 1.</li>
+<li><b>Why mask in every decoder layer?</b> Otherwise layer-2 position $t$ can read layer-1 state $t+1$, which already contains word $t+1$: indirect leakage.</li>
+<li><b>Which sequence supplies Q, and which K and V, in cross-attention? Score matrix shape?</b> Q: decoder; K, V: encoder output; $T_{dec}\times T_{enc}$.</li>
+<li><b>Prove that self-attention alone cannot see word order.</b> Show $\tilde Z=PZ$ for input $PH$ (section 7.2).</li>
+<li><b>Why do one-hot and counter encodings fail?</b> One-hot: all distances $\sqrt2$, fixed length. Counter: unbounded values. Learned: cannot extrapolate.</li>
+<li><b>Why does the sinusoidal PE encode relative position?</b> $PE_{p+k}=R_kPE_p$ with $R_k$ a rotation depending only on $k$; distances depend only on $k$ and are symmetric.</li>
+<li><b>How do residual connections stop vanishing gradients?</b> Gradient contains $I+\partial\text{Sub}/\partial x$, so the identity path always survives.</li>
+<li><b>Why Layer Norm, not Batch Norm?</b> BN needs large batches, breaks at batch size 1, is hurt by padding/variable length, and degrades NLP performance; LN normalizes per token, independent of batch.</li>
+<li><b>PreNorm vs PostNorm?</b> PreNorm keeps the residual path clean, stable for deep models without warm-up.</li></ol>
+<div class="box key"><b class="t">Where this leads</b>With the encoder, decoder, positional encoding and normalization in place, the architecture is complete. Later weeks use variants of it (for example decoder-only models for language modelling and GPT).</div></section>
+</main>
+<script>
+(function(){var c=document.getElementById('hm');if(!c)return;var x=c.getContext('2d'),d=512,cw=9,ch=9,L=28;
+x.fillStyle='#888';x.font='9px sans-serif';
+function col(v){var r,g,b;if(v>=0){r=255+(29-255)*v;g=255+(138-255)*v;b=255+(92-255)*v}else{v=-v;r=255+(20-255)*v;g=255+(48-255)*v;b=255+(79-255)*v}return 'rgb('+(r|0)+','+(g|0)+','+(b|0)+')'}
+for(var p=0;p<20;p++){x.fillStyle='#888';x.fillText(p,2,p*ch+ch+10);for(var k=0;k<64;k++){var i=k>>1,w=1/Math.pow(10000,2*i/d),v=(k%2==0)?Math.sin(p*w):Math.cos(p*w);x.fillStyle=col(v);x.fillRect(L+k*cw,p*ch+10,cw,ch)}}
+for(var k=0;k<64;k+=8){x.fillStyle='#888';x.fillText(k,L+k*cw,8)}})();
+</script>
+</body></html>
