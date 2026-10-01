@@ -3,6 +3,10 @@
     {
       "title": "llm week 1  attention and the transformer encoder",
       "path": "notes/llm/llm-week-1_-attention-and-the-transformer-encoder.html"
+    },
+    {
+      "title": "llm week 2 decoder positional encoding and normalization",
+      "path": "notes/llm/llm-week-2-decoder-positional-encoding-and-normalization.html"
     }
   ]
 }
