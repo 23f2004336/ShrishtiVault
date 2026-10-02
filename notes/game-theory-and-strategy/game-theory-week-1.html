@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Game Theory and Strategy: Week 1 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--mute:#5b6678;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--mute:#9aa6bb;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#4f46e5,#0d9488);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.92}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem;margin-right:2px}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--def);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.box>b:first-child{display:block;margin-bottom:2px}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card)}
+th,td{border:1px solid var(--line);padding:8px 14px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}
+.best{color:#b45309;font-weight:700}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+ul,ol{padding-left:22px}li{margin:3px 0}
+.q li{margin:8px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+</style></head><body>
+<header><h1>Game Theory and Strategy: Week 1</h1><p>Foundations: what a game is, how to write one down, dominance, Nash equilibrium, and what players must know</p></header>
+<nav><a href="#s1">1 Decisions</a><a href="#s2">2 Dinner game</a><a href="#s3">3 Examples</a><a href="#s4">4 Types of games</a><a href="#s5">5 Prisoner's Dilemma</a><a href="#s6">6 Dominance</a><a href="#s7">7 Nash</a><a href="#s8">8 Assumptions</a><a href="#s9">9 Cooperative</a><a href="#s10">10 Recap</a></nav>
+<main>
+<div class="box def"><b>Colour key</b>Blue = definition. Green = derivation (every step shown). Orange = worked example. Red = common trap.</div>
+
+<section id="s1"><h2>1. From one decision-maker to many</h2>
+<p><b>Single-person decision.</b> You have a set of choices. Each choice leads to an outcome. You pick the outcome you like most. Nothing anyone else does changes your result.</p>
+<h3>Valuation, price and net gain</h3>
+<div class="box def"><b>Valuation (willingness to pay)</b>Raise a price step by step (800, 900, 950, 999, 1000...). The price where you stop caring whether you buy is your valuation. Above it you refuse, below it you gain.<span class="eq">Net gain = Valuation − Price</span></div>
+<div class="box ex"><b>Eating out alone</b>Cheap dish (C): value 1000, price 500. Expensive dish (E): value 2500, price 3000.
+<span class="eq">Net(C) = 1000 − 500 = <b>+500</b> &nbsp;&nbsp; Net(E) = 2500 − 3000 = <b>−500</b></span>You pick C. Simple, because the answer depends only on you.</div>
+<h3>What does "preference" mean? Two rules</h3>
+<p>Let <span class="m">A ≻ B</span> mean "A is strictly preferred to B" and <span class="m">A ∼ B</span> mean "indifferent".</p>
+<div class="box def"><b>1. Completeness</b>For any two outcomes you can compare them. Exactly one of these holds: A ≻ B, B ≻ A, or A ∼ B. No "I can't decide".
+<b style="margin-top:8px">2. Transitivity</b><span class="eq">A ≻ B and B ≻ C ⟹ A ≻ C</span></div>
+<div class="box warn"><b>Why transitivity matters: the fruit cycle</b>Suppose you prefer Mango ≻ Banana, Banana ≻ Guava, but Guava ≻ Mango. Offer Guava vs Mango and you pick Guava. Offer Banana vs Guava... you swap again. Round and round, because there is no best fruit. Your choice would depend on the order shown, not on what you actually like. No model can predict this person, so we rule it out.</div>
+<svg viewBox="0 0 400 130" width="400" role="img" aria-label="Preference cycle"><circle class="n" cx="200" cy="25" r="22"/><text x="200" y="30" text-anchor="middle">Mango</text><circle class="n" cx="90" cy="100" r="22"/><text x="90" y="105" text-anchor="middle">Banana</text><circle class="n" cx="310" cy="100" r="22"/><text x="310" y="105" text-anchor="middle">Guava</text>
+<g stroke="#e11d48" stroke-width="2" fill="none"><path d="M185 44 L105 82"/><path d="M113 100 L285 100"/><path d="M295 82 L215 44"/></g><text x="125" y="55" font-size="12">M ≻ B</text><text x="188" y="118" font-size="12">B ≻ G</text><text x="265" y="55" font-size="12">G ≻ M</text></svg>
+<h3>Game = decision with other minds involved</h3>
+<div class="box def"><b>Game</b>A situation where the outcome for each person depends on their own action <i>and</i> the choices of others. Now you must guess what others will do, and they are guessing about you.</div></section>
+
+<section id="s2"><h2>2. The restaurant dinner game</h2>
+<p>Two friends dine together and <b>split the bill 50-50</b>. Same dishes and prices as before. Each picks C or E.</p>
+<h3>Deriving every payoff</h3>
+<div class="box der"><b>(C, C)</b>Bill = 500 + 500 = 1000. Each pays 500. Each net = 1000 − 500 = <b>500</b>.</div>
+<div class="box der"><b>(C, E)</b>Bill = 500 + 3000 = 3500. Each pays 3500 ÷ 2 = 1750.<br>Player 1 (cheap): 1000 − 1750 = <b>−750</b>. Player 2 (expensive): 2500 − 1750 = <b>+750</b>.</div>
+<div class="box der"><b>(E, C)</b>Same bill, mirror image: Player 1 gets <b>+750</b>, Player 2 gets <b>−750</b>.</div>
+<div class="box der"><b>(E, E)</b>Bill = 3000 + 3000 = 6000. Each pays 3000. Net = 2500 − 3000 = <b>−500</b>.</div>
+<table><tr><th>P1 \ P2</th><th>Cheap (C)</th><th>Expensive (E)</th></tr><tr><th>Cheap (C)</th><td>500, 500</td><td>−750, <span class="best">750</span></td></tr><tr><th>Expensive (E)</th><td><span class="best">750</span>, −750</td><td class="nash">−500, −500</td></tr></table>
+<p>First number is the row player (Player 1), second is the column player.</p>
+<h3>What should Player 1 do?</h3>
+<ul><li>If P2 picks C: compare 500 (play C) with 750 (play E). E is better.</li><li>If P2 picks E: compare −750 (play C) with −500 (play E). E is better.</li></ul>
+<p>E wins in both cases, so E is the sensible choice <i>whatever</i> the friend does. P2 reasons the same way. Both end at (E, E) with −500 each, although (C, C) gave both +500.</p>
+<div class="box warn"><b>The big lesson</b>Everyone acting in their own interest can make everyone worse off. The split bill means you pay only half the cost of your fancy dish, so you over-order.</div></section>
+
+<section id="s3"><h2>3. Four motivating examples</h2>
+<h3>3.1 Traffic problem</h3>
+<table><tr><th>P1 \ P2</th><th>Follow (F)</th><th>Disobey (D)</th></tr><tr><th>Follow (F)</th><td>3, 3</td><td>0, 4</td></tr><tr><th>Disobey (D)</th><td>4, 0</td><td class="nash">1, 1</td></tr></table>
+<p>Against F, D gives 4 &gt; 3. Against D, D gives 1 &gt; 0. So D always wins and both end at (1, 1) gridlock, worse than (3, 3).</p>
+
+<h3>3.2 Braess's paradox: a new road makes everyone slower</h3>
+<p>4000 drivers go from A to B. Roads A→C and D→B always take 45 min. Roads C→B and A→D take <span class="m">x/100</span> min, where x is the number of cars on that road.</p>
+<svg viewBox="0 0 420 200" width="420" role="img" aria-label="Braess network"><g stroke="var(--def)" stroke-width="2.5" fill="none"><path d="M60 100 L200 30"/><path d="M60 100 L200 170"/><path d="M200 30 L350 100"/><path d="M200 170 L350 100"/></g><path d="M200 170 L200 36" stroke="#e11d48" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
+<circle class="n" cx="60" cy="100" r="16"/><text x="60" y="105" text-anchor="middle">A</text><circle class="n" cx="350" cy="100" r="16"/><text x="350" y="105" text-anchor="middle">B</text><circle class="n" cx="200" cy="25" r="16"/><text x="200" y="30" text-anchor="middle">C</text><circle class="n" cx="200" cy="175" r="16"/><text x="200" y="180" text-anchor="middle">D</text>
+<text x="95" y="55" font-size="13">A→C: 45 min</text><text x="262" y="55" font-size="13">C→B: x/100</text><text x="90" y="160" font-size="13">A→D: x/100</text><text x="262" y="160" font-size="13">D→B: 45 min</text><text x="208" y="105" font-size="13" fill="#e11d48">new D→C: 1 min</text></svg>
+<div class="box der"><b>Before the bridge</b>By symmetry 2000 take ACB and 2000 take ADB.<span class="eq">T(ACB) = 45 + 2000/100 = 65 &nbsp;&nbsp; T(ADB) = 2000/100 + 45 = 65</span>Nobody gains by switching, so 65 min is the equilibrium.</div>
+<div class="box der"><b>After the 1-minute bridge D→C: new route ADCB</b><span class="eq">T(ADCB) = x<sub>AD</sub>/100 + 1 + x<sub>CB</sub>/100</span>
+<b>Step 1: one driver tries it.</b> Leaving ACB, he now adds a car to AD (2001) and CB stays 2000 (he left it and rejoined). T = 20.01 + 1 + 20 = <b>41.01</b> min. That is far below 65, so everyone wants to switch.<br>
+<b>Step 2: ADCB beats ACB for any traffic.</b> Compare 45 + x<sub>CB</sub>/100 with x<sub>AD</sub>/100 + 1 + x<sub>CB</sub>/100. The x<sub>CB</sub> terms cancel. ADCB is better when x<sub>AD</sub>/100 + 1 &lt; 45, i.e. x<sub>AD</sub>/100 &lt; 44. Since x<sub>AD</sub> ≤ 4000, x<sub>AD</sub>/100 ≤ 40 &lt; 44. Always true.<br>
+<b>Step 3: ADCB beats ADB.</b> Compare x<sub>AD</sub>/100 + 45 with x<sub>AD</sub>/100 + 1 + x<sub>CB</sub>/100. Now x<sub>AD</sub> cancels. Need x<sub>CB</sub>/100 + 1 &lt; 45, true since x<sub>CB</sub>/100 ≤ 40.<br>
+<b>Step 4: result.</b> ADCB is the best route for every driver, so all 4000 use it:<span class="eq">T = 4000/100 + 1 + 4000/100 = 40 + 1 + 40 = <b>81 min</b></span></div>
+<div class="box warn"><b>Paradox</b>65 → 81 minutes. Adding a road made every driver slower, because self-interested choices overload the two shared roads.</div>
+
+<h3>3.3 Adverse selection: the acquirer game</h3>
+<p>Firm T is worth <span class="m">x</span> under its own owners. Only T knows x. Firm A thinks x is spread evenly between 0 and 100. Under A, T is worth 1.5x. A bids <span class="m">y</span>. T accepts if y ≥ x. If accepted, A earns 1.5x − y.</p>
+<div class="box der"><b>Derivation (continuous case, x uniform on [0, 100])</b>
+<b>1.</b> T accepts only when x ≤ y. So given acceptance, x is uniform on [0, y].<br>
+<b>2.</b> The average of a uniform number on [0, y] is the midpoint: <span class="m">E[x | x ≤ y] = y/2</span>.<br>
+<b>3.</b> A's expected profit given acceptance:<span class="eq">1.5·(y/2) − y = 0.75y − y = <b>−0.25y</b></span>
+<b>4.</b> This is negative for every y &gt; 0. (Including the chance of acceptance, y/100, the overall expected profit is −0.25y²/100, still negative.)<br>
+<b>5.</b> So A bids 0 and no deal happens, even though the deal creates 50% extra value.</div>
+<div class="box warn"><b>Why?</b> A only wins when T is willing to sell, and T is willing only when the firm is worth less than the bid. Winning is bad news. This is the "winner's curse" or adverse selection.</div>
+<div class="box ex"><b>Discrete version: x is 50 or 100, each with probability 0.5</b>T accepts if y ≥ x.<br>
+Bid y = 50: if x = 50, accepted, A gets 1.5(50) − 50 = 25. If x = 100, rejected, A gets 0. <span class="eq">E = 0.5(25) + 0.5(0) = <b>12.5 &gt; 0</b></span>
+Bid y = 75: if x = 50, accepted, A gets 75 − 75 = 0. If x = 100, rejected, 0. E = 0. So y = 50 is best here. With only two possible values, a bid can catch the low type without overpaying for the high type.</div>
+
+<h3>3.4 War game (sequential)</h3>
+<p>Country 1 chooses Attack or Not Attack. If it attacks, Country 2 <i>sees this</i> and chooses Fight or Retreat. Both prefer holding the island to not holding it, and a fight is worst for both.</p>
+<svg viewBox="0 0 400 190" width="400" role="img" aria-label="War game tree"><g stroke="var(--def)" stroke-width="2" fill="none"><path d="M200 25 L110 80"/><path d="M200 25 L310 80"/><path d="M110 80 L60 140"/><path d="M110 80 L160 140"/></g>
+<circle class="n" cx="200" cy="25" r="16"/><text x="200" y="30" text-anchor="middle">1</text><circle class="n" cx="110" cy="80" r="16"/><text x="110" y="85" text-anchor="middle">2</text>
+<text x="130" y="46" font-size="13">Attack</text><text x="262" y="46" font-size="13">Not attack</text><text x="318" y="105" font-size="13" text-anchor="middle">(0, Occupy)</text><text x="45" y="112" font-size="13">Fight</text><text x="150" y="112" font-size="13">Retreat</text><text x="60" y="160" text-anchor="middle" font-size="13">(−10, −10)</text><text x="160" y="160" text-anchor="middle" font-size="13">(10, 0)</text></svg>
+<p>Payoffs are (Country 1, Country 2). Country 2's choice depends on what it saw. This is why trees are used for sequential games. (Solved by backward induction in a later week.)</p></section>
+
+<section id="s4"><h2>4. Classifying games</h2>
+<h3>Static vs dynamic</h3>
+<ul><li><b>Static (simultaneous):</b> players choose without seeing others' choices. "Simultaneous" is about <i>information</i>, not the clock. Written as a <b>table</b> (normal / strategic / tabular form).</li><li><b>Dynamic (sequential):</b> the game unfolds over time and players see earlier moves. Written as a <b>game tree</b> (extensive form), which also shows how much each player knows when moving.</li></ul>
+<h3>Complete vs incomplete information</h3>
+<p><b>Complete:</b> everyone knows the players, actions and all payoffs. <b>Incomplete:</b> someone is unsure about another's payoff or type (like the acquirer not knowing x).</p>
+<svg viewBox="0 0 640 230" width="640" role="img" aria-label="Game classification flowchart"><g stroke="var(--def)" stroke-width="2" fill="none"><path d="M320 40 L180 80"/><path d="M320 40 L460 80"/><path d="M180 120 L110 160"/><path d="M180 120 L260 160"/><path d="M460 120 L390 160"/><path d="M460 120 L540 160"/></g>
+<rect class="n" x="230" y="10" width="180" height="30" rx="8"/><text x="320" y="30" text-anchor="middle">Games</text>
+<rect class="n" x="95" y="80" width="170" height="40" rx="8" style="stroke:#0d9488"/><text x="180" y="105" text-anchor="middle">Static (table)</text>
+<rect class="n" x="375" y="80" width="170" height="40" rx="8" style="stroke:#d97706"/><text x="460" y="105" text-anchor="middle">Dynamic (tree)</text>
+<text x="110" y="180" text-anchor="middle" font-size="12">Complete info</text><text x="110" y="196" text-anchor="middle" font-size="12" fill="#0d9488">Nash equilibrium</text>
+<text x="260" y="180" text-anchor="middle" font-size="12">Incomplete info</text><text x="260" y="196" text-anchor="middle" font-size="12" fill="#0d9488">Bayesian Nash</text>
+<text x="390" y="180" text-anchor="middle" font-size="12">Complete info</text><text x="390" y="196" text-anchor="middle" font-size="12" fill="#d97706">Subgame perfect</text>
+<text x="540" y="180" text-anchor="middle" font-size="12">Incomplete info</text><text x="540" y="196" text-anchor="middle" font-size="12" fill="#d97706">Perfect Bayesian</text></svg>
+<h3>Non-cooperative vs cooperative</h3>
+<table><tr><th></th><th>Non-cooperative</th><th>Cooperative</th></tr><tr><th>Focus</th><td>Detailed model of moves and procedure</td><td>Which coalitions form, how to split the gain</td></tr><tr><th>Agreements</th><td>Not enforceable unless the game enforces them</td><td>Binding, with free communication</td></tr><tr><th>Question</th><td>What outcome will happen?</td><td>Who teams up, who gets what?</td></tr></table>
+<p>Cooperative games split into <b>TU</b> (transferable utility: side payments are possible) and <b>NTU</b> (not transferable).</p>
+<h3>Formal description of a static game</h3>
+<div class="box def"><b>Normal form: three ingredients</b>
+<span class="eq">Γ = ( N, {A<sub>i</sub>}, {u<sub>i</sub>} )</span>
+<b>N</b> = {1, ..., n}, the players. <b>A<sub>i</sub></b> = actions of player i; an <b>action profile</b> is a = (a<sub>1</sub>, ..., a<sub>n</sub>) in A = A<sub>1</sub> × ... × A<sub>n</sub>. <b>u<sub>i</sub> : A → ℝ</b> gives player i a number for each profile.</div>
+<p><b>Course map.</b> Weeks 1-6 (Prof. Vimal Kumar): normal and extensive form, incomplete information, cooperative games. Weeks 7-12: matching, voting, Shapley value, fair division, auctions, networks.</p></section>
+
+<section id="s5"><h2>5. The Prisoner's Dilemma</h2>
+<p>Ranga and Billa are held in separate cells. Police can prove only a minor crime (1 year) unless someone confesses.</p>
+<ul><li>Both confess: 5 years each. Both deny: 1 year each.</li><li>One confesses, one denies: confessor goes free (0), the other gets 20.</li></ul>
+<p>Payoff = −(years in jail), so less jail means a higher number.</p>
+<table><tr><th>Ranga \ Billa</th><th>Confess (C)</th><th>Deny (D)</th></tr><tr><th>Confess (C)</th><td class="nash">−5, −5</td><td>0, −20</td></tr><tr><th>Deny (D)</th><td>−20, 0</td><td>−1, −1</td></tr></table>
+<p><b>Rules of this game:</b> one shot (no repeat), moves hidden from each other, and any pre-arrest promise is cheap talk because nobody can enforce it.</p>
+<div class="box def"><b>Formal version</b>Players {Ranga, Billa}. A₁ = A₂ = {C, D}. Outcomes {(C,C), (C,D), (D,C), (D,D)}. Payoffs as in the table.</div>
+<p><b>More players?</b> With 3 players, Player 3 picks the table: draw one 2×2 table for each of Player 3's actions and put three payoffs in each cell. With continuous actions (like a bid y), a table is impossible, so use a payoff formula u<sub>i</sub>(a<sub>1</sub>, ..., a<sub>n</sub>).</p></section>
+
+<section id="s6"><h2>6. Dominance</h2>
+<div class="box def"><b>Notation</b><b>a<sub>−i</sub></b> ("deleted profile") = what everyone <i>except</i> i plays. So a profile is written (a<sub>i</sub>, a<sub>−i</sub>).
+<b>Pure action:</b> one definite choice. <b>Mixed action σ<sub>i</sub>:</b> a probability over pure actions, with every probability ≥ 0 and the sum = 1. A pure action is a mix that puts probability 1 on one action.</div>
+<div class="box def"><b>Strict dominance</b>a<sub>i</sub> strictly dominates a′<sub>i</sub> if it is better against <i>every</i> a<sub>−i</sub>:<span class="eq">u<sub>i</sub>(a<sub>i</sub>, a<sub>−i</sub>) &gt; u<sub>i</sub>(a′<sub>i</sub>, a<sub>−i</sub>) for all a<sub>−i</sub></span>
+<b>Weak dominance</b><span class="eq">u<sub>i</sub>(a<sub>i</sub>, a<sub>−i</sub>) ≥ u<sub>i</sub>(a′<sub>i</sub>, a<sub>−i</sub>) for all a<sub>−i</sub>, and &gt; for at least one</span>
+A <b>dominant action</b> dominates all the player's other actions.</div>
+<div class="box ex"><b>Prisoner's Dilemma check (Ranga)</b>Billa plays C: u(C,C) = −5 &gt; u(D,C) = −20. Billa plays D: u(C,D) = 0 &gt; u(D,D) = −1. C wins both ways, so Confess is strictly dominant. Same for Billa. Result: (C, C), even though (D, D) gives both −1.</div>
+<h3>A mix can dominate a pure action</h3>
+<table><tr><th>P1 \ P2</th><th>L</th><th>R</th></tr><tr><th>U</th><td>3, 2</td><td>0, 5</td></tr><tr><th>M</th><td>0, 5</td><td>3, 2</td></tr><tr><th>D</th><td>1, 1</td><td>1, 1</td></tr></table>
+<p>U vs D: vs L, 3 &gt; 1, but vs R, 0 &lt; 1. M vs D: vs L, 0 &lt; 1, but vs R, 3 &gt; 1. No single action beats D everywhere. Now mix: play U with probability ½ and M with probability ½.</p>
+<div class="box der"><b>Expected payoff of ½U + ½M</b>Expected payoff = (probability) × (payoff), added up.<br>Against L: ½(3) + ½(0) = <b>1.5</b>. Against R: ½(0) + ½(3) = <b>1.5</b>.<br>Both beat D's sure 1. So the mix strictly dominates D and D is never sensible.<br><b>Which mixes work?</b> Play U with probability p, M with 1−p. Against L: 3p &gt; 1 gives p &gt; 1/3. Against R: 3(1−p) &gt; 1 gives p &lt; 2/3. Any p between 1/3 and 2/3 dominates D.</div></section>
+
+<section id="s7"><h2>7. Solving games: Nash equilibrium</h2>
+<div class="box def"><b>Equilibrium</b>A state where nobody wants to change. In a game: nobody has regret.
+<b>Pure-strategy Nash equilibrium:</b> a profile a* where for every player i<span class="eq">u<sub>i</sub>(a*<sub>i</sub>, a*<sub>−i</sub>) ≥ u<sub>i</sub>(a<sub>i</sub>, a*<sub>−i</sub>) for every a<sub>i</sub> in A<sub>i</sub></span>
+In words: hold everyone else fixed, and your action is a best response. Test one player at a time (a <i>unilateral</i> deviation).</div>
+<h3>Checking all four cells of the Prisoner's Dilemma</h3>
+<table><tr><th>Cell</th><th>Who can gain by deviating?</th><th>Nash?</th></tr>
+<tr><td>(D, D) = −1, −1</td><td>Ranga: D→C gives 0 &gt; −1</td><td>No</td></tr>
+<tr><td>(D, C) = −20, 0</td><td>Ranga: D→C gives −5 &gt; −20</td><td>No</td></tr>
+<tr><td>(C, D) = 0, −20</td><td>Billa: D→C gives −5 &gt; −20</td><td>No</td></tr>
+<tr><td>(C, C) = −5, −5</td><td>Ranga: C→D gives −20 &lt; −5. Billa: same. Nobody gains.</td><td class="nash">Yes</td></tr></table>
+<div class="box warn"><b>Careful</b>Nash does not mean "best for the group". (C, C) is the equilibrium but both would prefer (D, D). A dominant-strategy outcome is always a Nash equilibrium, but not every Nash equilibrium comes from dominance.</div>
+<h3>Matching pennies: no pure equilibrium</h3>
+<p>P1 wins if the coins match, P2 wins if they differ. Zero-sum: u₁ + u₂ = 0 everywhere.</p>
+<table><tr><th>P1 \ P2</th><th>H</th><th>T</th></tr><tr><th>H</th><td>1, −1</td><td>−1, 1</td></tr><tr><th>T</th><td>−1, 1</td><td>1, −1</td></tr></table>
+<p>In every cell someone is losing and can flip to win. E.g. at (H, H), P2 loses and switches to T. At (H, T), P1 loses and switches to T. And so on around the table, so no cell is stable. (Mixed strategies fix this, in a later week.)</p></section>
+
+<section id="s8"><h2>8. Assumptions behind the theory</h2>
+<h3>Rationality</h3>
+<ul><li>Preferences are complete and transitive (Section 1).</li><li>Players maximise their payoff u<sub>i</sub>.</li><li><b>Perfect recall:</b> they never forget what happened.</li><li><b>Perfect calculator:</b> they can work out even huge trees instantly.</li></ul>
+<div class="box ex"><b>What if a player is kind?</b>"Altruism" does not break the theory; it changes the payoffs. Let Ranga count Billa's sentence too: u<sub>R</sub> = Sentence<sub>R</sub> + Sentence<sub>B</sub>, and Billa stays selfish.
+<table><tr><th>Ranga \ Billa</th><th>C</th><th>D</th></tr><tr><th>C</th><td class="nash">−10, −5</td><td>−20, −20</td></tr><tr><th>D</th><td>−20, 0</td><td>−2, −1</td></tr></table>
+Ranga's cell (C,C): −5 + −5 = −10. (C,D): 0 + −20 = −20. (D,C): −20 + 0 = −20. (D,D): −1 + −1 = −2. Now Ranga's best reply depends on Billa (vs C he plays C, vs D he plays D), so C is no longer dominant for him. But Billa still has dominant C (−5 &gt; −20, 0 &gt; −1), so Ranga best-replies with C. Equilibrium is still (C, C), payoffs (−10, −5).</div>
+<h3>Common knowledge</h3>
+<div class="box def"><b>Levels of knowing a fact X</b><b>Knowledge:</b> I know X. <b>Mutual knowledge E¹:</b> everyone knows X. <b>E²:</b> everyone knows that everyone knows X. <b>E³:</b> everyone knows E². And so on.<span class="eq">Common knowledge CK(X) = E¹(X) and E²(X) and E³(X) and ... forever</span></div>
+<div class="box ex"><b>The text-message story: where it breaks</b>Ranga and Billa planned to meet at India Gate. It closes. Ranga texts "Meet at Rajiv Chowk Gate 1". Billa replies "Yes". Ranga never confirms he got the reply. Billa goes to Rajiv Chowk; Ranga does not.<br>
+<b>E¹:</b> both know the new plan. ✔<br>
+<b>E²:</b> Ranga knows Billa knows (he saw the reply). Billa knows Ranga knows (Ranga wrote it). ✔<br>
+<b>E³:</b> Ranga knows Billa knows that Ranga knows. ✔<br>
+<b>E⁴:</b> Does Billa know that Ranga knows that Billa knows that Ranga knows? <b>No.</b> Billa cannot be sure his "Yes" arrived, so Ranga might think Billa never got the news.<br>
+One missing level means CK fails, and with it the coordination.</div></section>
+
+<section id="s9"><h2>9. Cooperative game: the shoe game</h2>
+<p>P1 owns a right shoe. P2 and P3 each own a left shoe. A matching pair is worth 1. Nothing else is worth anything.</p>
+<div class="box def"><b>Characteristic function v(S)</b>A coalition S is any non-empty group of players. With n players there are <span class="m">2ⁿ − 1</span> of them, so here 2³ − 1 = 7. v(S) is the total value group S can create alone.</div>
+<table><tr><th>Coalition</th><th>{1}</th><th>{2}</th><th>{3}</th><th>{1,2}</th><th>{1,3}</th><th>{2,3}</th><th>{1,2,3}</th></tr><tr><th>v</th><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td></tr></table>
+<p>{2,3} has two left shoes and no pair, so 0. {1,2,3} still makes only one pair, so 1.</p>
+<div class="box der"><b>Marginal contribution:</b> Δᵢv(S) = v(S ∪ {i}) − v(S) (how much i adds to group S)<br>
+Player 3 joining {1,2}: v({1,2,3}) − v({1,2}) = 1 − 1 = <b>0</b>.<br>
+Player 1 joining {2,3}: v({1,2,3}) − v({2,3}) = 1 − 0 = <b>1</b>.<br>
+<b>Meaning:</b> Players 2 and 3 are identical and compete to partner with P1. P3 adds nothing to {1,2}, so P3 has no bargaining power, and the same logic pushes P2 down too. Competition leaves P1 with the whole unit: split (1, 0, 0).</div></section>
+
+<section id="s10"><h2>10. Week 1 recap</h2>
+<div class="scroll"><table><tr><th>Game</th><th>Type</th><th>Key result</th></tr>
+<tr><td>Dinner</td><td>Static</td><td>E dominant; (E,E) = −500 each vs (C,C) = +500</td></tr>
+<tr><td>Traffic</td><td>Static</td><td>D dominant; (1,1) vs (3,3)</td></tr>
+<tr><td>Braess</td><td>Routing</td><td>New 1-min bridge: 65 → 81 min</td></tr>
+<tr><td>Acquirer</td><td>Incomplete info</td><td>Continuous: profit −0.25y, no trade. Discrete: y = 50 gives 12.5</td></tr>
+<tr><td>War</td><td>Dynamic</td><td>Tree; second mover sees first move</td></tr>
+<tr><td>Prisoner's Dilemma</td><td>Static</td><td>C dominant; unique Nash (C,C)</td></tr>
+<tr><td>Matching pennies</td><td>Zero-sum</td><td>No pure Nash equilibrium</td></tr>
+<tr><td>Shoe game</td><td>Cooperative</td><td>v values above; P1 takes all</td></tr></table></div>
+<h3>Practice (tap to reveal)</h3>
+<ol class="q"><li>Why is (E,E) in the dinner game not what the friends would choose if they could agree?
+<details><summary>Answer</summary>Both get −500, but (C,C) gives both +500. Without a way to enforce the promise, each is tempted to switch to E.</details></li>
+<li>In the 3×2 table, show that D is not dominated by U alone.
+<details><summary>Answer</summary>U gives 0 against R, while D gives 1. So U fails to beat D when P2 plays R.</details></li>
+<li>In the acquirer game, why is "bid higher" worse, not better?
+<details><summary>Answer</summary>Higher y only adds more of the high-value firms to the pool that accept, so the average accepted firm is y/2 and the profit per deal is −0.25y, which gets worse as y rises.</details></li>
+<li>Find the Nash equilibria of the traffic game.
+<details><summary>Answer</summary>Only (D, D). In every other cell one driver can gain by switching to D.</details></li></ol>
+</section></main></body></html>
