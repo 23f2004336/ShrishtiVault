@@ -11,6 +11,10 @@
     {
       "title": "llm week 3 language modelling gpt and decoding",
       "path": "notes/llm/llm-week-3-language-modelling-gpt-and-decoding.html"
+    },
+    {
+      "title": "llm week 4 decoding strategies and bert",
+      "path": "notes/llm/llm-week-4-decoding-strategies-and-bert.html"
     }
   ]
 }
