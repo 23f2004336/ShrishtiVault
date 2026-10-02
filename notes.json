@@ -7,6 +7,10 @@
     {
       "title": "llm week 2 decoder positional encoding and normalization",
       "path": "notes/llm/llm-week-2-decoder-positional-encoding-and-normalization.html"
+    },
+    {
+      "title": "llm week 3 language modelling gpt and decoding",
+      "path": "notes/llm/llm-week-3-language-modelling-gpt-and-decoding.html"
     }
   ]
 }
