@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LLM Week 3: Language Modelling, GPT and Decoding (Complete Notes)</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f5f8fc;--fg:#17202e;--card:#fff;--mut:#52607a;--line:#d6dfec;--acc:#1f5fae;--code:#eaf1fb;
+--kb:#e6f0fd;--kbd:#1f5fae;--gb:#e5f6ee;--gbd:#1d8a5c;--ib:#ebe9fb;--ibd:#4b45b5;--tb:#e2f5f6;--tbd:#16808a;--sb:#eef1f5;--sbd:#6b778c}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1622;--fg:#e6ecf5;--card:#172131;--mut:#9fb0c9;--line:#2a3a52;--acc:#6aa8f0;--code:#1d2b40;--kb:#16294a;--gb:#123528;--ib:#25234f;--tb:#123a3f;--sb:#222c3a}}
+:root[data-theme="dark"]{--bg:#0f1622;--fg:#e6ecf5;--card:#172131;--mut:#9fb0c9;--line:#2a3a52;--acc:#6aa8f0;--code:#1d2b40;--kb:#16294a;--gb:#123528;--ib:#25234f;--tb:#123a3f;--sb:#222c3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:#14304f;color:#fff;padding:34px 20px;text-align:center}
+header h1{margin:0 0 6px;font-size:clamp(1.5rem,5vw,2.2rem)}header p{margin:0;color:#c5d5ea}
+main{max-width:920px;margin:0 auto;padding:14px}
+nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+nav a{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:.82rem;color:var(--acc);text-decoration:none}
+section{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--acc);border-radius:10px;padding:6px 20px 18px;margin:22px 0}
+h2{color:var(--acc);margin:14px 0 6px;font-size:1.4rem}h3{margin:20px 0 4px;border-bottom:2px solid var(--line);padding-bottom:2px}
+.box{border-radius:8px;padding:10px 14px;margin:12px 0;border:1px solid;border-left-width:5px}
+.box>b.t{display:block;margin-bottom:2px}
+.key{background:var(--kb);border-color:var(--kbd)}.idea{background:var(--gb);border-color:var(--gbd)}.warn{background:var(--ib);border-color:var(--ibd)}.def{background:var(--tb);border-color:var(--tbd)}.eq{background:var(--code);border-color:var(--line);overflow-x:auto}
+.scroll{overflow-x:auto}table{border-collapse:collapse;margin:10px 0;font-size:.92rem}th,td{border:1px solid var(--line);padding:5px 10px;text-align:center}th{background:var(--code)}
+td.l,th.l{text-align:left}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0;justify-content:center}
+.flow.v{flex-direction:column}
+.n{border:2px solid;border-radius:8px;padding:6px 11px;font-size:.88rem;text-align:center;background:var(--card);line-height:1.35}
+.n.b{border-color:var(--kbd);background:var(--kb)}.n.g{border-color:var(--gbd);background:var(--gb)}.n.i{border-color:var(--ibd);background:var(--ib)}.n.t{border-color:var(--tbd);background:var(--tb)}.n.s{border-color:var(--sbd);background:var(--sb)}
+.a{color:var(--mut);font-weight:700;font-size:1.1rem}
+.diagram{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:10px;margin:14px 0}
+.diagram .cap{text-align:center;font-size:.85rem;color:var(--mut);margin-top:4px}
+.br{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}.col{display:flex;flex-direction:column;gap:6px;align-items:center}
+.three{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}.three>div{text-align:center}
+.vis td{width:26px;height:22px;padding:0;font-size:.7rem}.vis td.y{background:#1f5fae;color:#fff}.vis td.x{background:#dfe6f3;color:#8a98b2}
+.hm td[style]{color:#17202e}
+code{background:var(--code);padding:1px 5px;border-radius:4px}
+mjx-container{overflow-x:auto;overflow-y:hidden;max-width:100%}
+</style>
+<script>window.MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},svg:{fontCache:'global'}}</script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.js"></script>
+</head><body>
+<header><h1>Week 3: Language Modelling, GPT and Decoding Strategies</h1><p>Introduction to Large Language Models · IIT Madras · Complete notes from the slides (Modules 2.1–2.3) and lecture summary (Lectures 11–16)</p></header>
+<main>
+<nav><a href="#s0">Roadmap</a><a href="#s1">1 Motivation</a><a href="#s2">2 Language model</a><a href="#s3">3 Free labels</a><a href="#s4">4 Which architecture</a><a href="#s5">5 Causal LM</a><a href="#s6">6 Loss</a><a href="#s7">7 GPT</a><a href="#s8">8 Parameters</a><a href="#s9">9 Pre-training</a><a href="#s10">10 Fine-tuning</a><a href="#s11">11 Generation</a><a href="#s12">12 Revision</a></nav>
+
+<section id="s0"><h2>0. Roadmap of the week</h2>
+<p>Weeks 1 and 2 built the Transformer for <b>machine translation</b>. Week 3 asks a bigger question: can one model learn language <i>in general</i> from plain, unlabelled text, and then be adapted cheaply to many tasks? The answer is <b>language modelling</b> (predicting the next word), the <b>GPT</b> architecture (a decoder-only Transformer), the <b>pre-train then fine-tune</b> recipe, and <b>decoding strategies</b> that decide how text is generated.</p>
+<div class="diagram"><div class="flow"><div class="n s">Few labels, many tasks</div><span class="a">→</span><div class="n b">Idea: learn from raw text</div><span class="a">→</span><div class="n g">Language modelling (chain rule)</div><span class="a">→</span><div class="n t">Decoder-only = GPT</div><span class="a">→</span><div class="n i">Pre-train (next-word loss)</div><span class="a">→</span><div class="n g">Fine-tune (small head)</div><span class="a">→</span><div class="n b">Generate (temperature, top-k, top-p)</div></div><div class="cap">The story of Week 3</div></div>
+<div class="box key"><b class="t">How to read these notes</b>Every idea starts with the problem it solves, then the maths, then a worked number example. Examples marked "created for practice" are mine (the slides only describe them), and all are computed exactly. At the end is a formula sheet, glossary and practice questions.</div></section>
+
+<section id="s1"><h2>1. Motivation: why not train one model per task?</h2>
+<h3>1.1 The Week 1–2 situation</h3>
+<p>So far the Transformer was an encoder-decoder machine: text in the source language goes in, translated text comes out. At a higher level it is a black box that takes an input and produces an output. What if we want other NLP tasks?</p>
+<div class="scroll"><table><tr><th class="l">Task</th><th class="l">Input</th><th class="l">Output</th></tr>
+<tr><td class="l">Sentiment analysis</td><td class="l">Input text</td><td class="l">A class: positive / negative / neutral</td></tr>
+<tr><td class="l">Summarization</td><td class="l">Long document</td><td class="l">Short text</td></tr>
+<tr><td class="l">Question answering</td><td class="l">Passage + question</td><td class="l">Answer</td></tr></table></div>
+<div class="box warn"><b class="t">Two problems with training from scratch for each task</b><b>(1) Slow and data-hungry.</b> A Transformer has millions to billions of randomly initialised parameters; trained from scratch on a small dataset it converges slowly and overfits. <b>(2) Labels are expensive.</b> Labelled data (medical QA, translation for a regional language) is scarce, costly and slow to create. On the other hand, <b>unlabelled text</b> is available in huge amounts on the internet.</div>
+<p>So the slides ask: can we use this unlabelled text to train a model? What would the training objective be? And would that help adapt the model to downstream tasks with minimal fine-tuning (zero or a few samples)?</p>
+<h3>1.2 The lay-person intuition</h3>
+<p>Ask an ordinary person: "<i>Wow, India has now reached the moon</i>: positive or negative?", or "<i>Did the lander use AI for soft landing?</i>" after reading an excerpt, or "<i>Are these meaningful sentences: 'He likes to stay / stray / sway'?</i>". They will answer all of them, even though they were never trained on those exact tasks. Why? Over a lifetime of listening and reading, they built a strong understanding of language <b>without explicit supervision</b>.</p>
+<div class="box def"><b class="t">The idea of the week</b>Can a model develop a basic understanding of language by being exposed to a large amount of raw text? <b>[Pre-training]</b> And after that, can it do well on downstream tasks with minimum supervision? <b>[Supervised fine-tuning]</b></div>
+<h3>1.3 The two-stage recipe</h3>
+<div class="diagram"><div class="flow v"><div class="n b"><b>Stage 1: Pre-training (language modelling)</b><br>Huge raw, unlabelled text (Wikipedia, web, books) → next-word prediction → base model with parameters $\hat\theta$</div><span class="a">↓ initialise from $\hat\theta$</span><div class="n g"><b>Stage 2: Supervised fine-tuning (downstream tasks)</b><br>Small labelled dataset (text, label) → small change to the architecture → task-adapted model (sentiment, entailment, multiple choice, ...)</div></div><div class="cap">Learn language once, adapt many times</div></div>
+<p>The slide's evidence: with this representation, a simple <b>linear model</b> classifies reviews with <b>91.8%</b> accuracy, beating the state of the art at the time, and the approach matches earlier supervised systems using <b>30 to 100 times fewer labelled examples</b>.</p></section>
+
+<section id="s2"><h2>2. What is a language model?</h2>
+<h3>2.1 Setup</h3>
+<p>Let $V$ be the <b>vocabulary</b>: the collection of all unique tokens (words or sub-words). A text is a sequence $X=(x_1,x_2,\dots,x_T)$ with each $x_i\in V$. Example: if $V=\{\text{an, apple, ate, I}\}$ then some possible sequences (not all grammatical) are:</p>
+<ol type="a"><li>an apple ate I</li><li>I ate an apple</li><li>I ate apple</li><li>an apple</li></ol>
+<p>Intuitively, some are more probable than others. By "probable" we mean: given a very large corpus, some sequences would appear more often. A <b>language model</b> is a function that takes a sequence and assigns it a probability:</p>
+<div class="box eq">$$f:(x_1,\dots,x_T)\ \longrightarrow\ [0,1]$$</div>
+<p>(Here "I ate an apple" should get a larger value than "an apple ate I".)</p>
+<h3>2.2 Why we cannot model the joint probability directly</h3>
+<p>The most direct way is a table with one probability per possible sequence. But the number of sequences of length $T$ is $|V|^T$. For our toy vocabulary and $T=4$ that is $4^4=256$, but for a real vocabulary $|V|=40{,}478$ even $T=2$ gives $40478^2\approx1.6\times10^9$ entries, and $T=512$ is astronomically large. We can neither store nor estimate such a table. We need a smarter factorisation.</p>
+<h3>2.3 The chain rule of probability</h3>
+<p>From the product rule $P(A,B)=P(A)\,P(B\mid A)$, applying it repeatedly gives (derivation step by step):</p>
+<div class="box eq">$$P(x_1,x_2)=P(x_1)P(x_2\mid x_1)$$
+$$P(x_1,x_2,x_3)=P(x_1,x_2)\,P(x_3\mid x_1,x_2)=P(x_1)P(x_2\mid x_1)P(x_3\mid x_1,x_2)$$
+$$\boxed{P(x_1,\dots,x_T)=\prod_{i=1}^{T}P(x_i\mid x_1,\dots,x_{i-1})}$$</div>
+<p>This is <b>exact</b>, not an approximation. It turns one impossible job (a probability for each whole sequence) into $T$ smaller jobs: predict each word given the words before it.</p>
+<div class="diagram"><div class="flow v"><div class="n s">Joint P(x<sub>1</sub>, x<sub>2</sub>, …, x<sub>T</sub>) over |V|<sup>T</sup> sequences: intractable</div><span class="a">↓ chain rule</span><div class="flow"><div class="n b">P(x<sub>1</sub>)</div><span class="a">×</span><div class="n b">P(x<sub>2</sub>|x<sub>1</sub>)</div><span class="a">×</span><div class="n b">P(x<sub>3</sub>|x<sub>1</sub>,x<sub>2</sub>)</div><span class="a">× … ×</span><div class="n b">P(x<sub>T</sub>|x<sub>1</sub>…x<sub>T-1</sub>)</div></div></div><div class="cap">Chain rule decomposition</div></div>
+<h3>2.4 Worked example (created for practice)</h3>
+<p>Sentence "I ate an apple". Suppose a model gives: $P(\text{I})=0.3$, $P(\text{ate}\mid\text{I})=0.2$, $P(\text{an}\mid\text{I ate})=0.5$, $P(\text{apple}\mid\text{I ate an})=0.4$. Then $P(\text{I ate an apple})=0.3\times0.2\times0.5\times0.4=0.012$. A bad word order such as "an apple ate I" would get much smaller conditionals (for instance $P(\text{ate}\mid\text{an apple})$ is small), and so a smaller product.</p>
+<h3>2.5 The naive independence assumption and why it fails</h3>
+<p>The simplest assumption is that words are independent: $P(x_1,\dots,x_T)=\prod_iP(x_i)$. Then the order would not matter at all. But words depend on what came before:</p>
+<div class="box eq">(a) I enjoyed reading a <b>book</b> &nbsp;&nbsp; (b) I enjoyed reading a <b>thermometer</b></div>
+<p>The presence of "enjoyed reading a" makes "book" far more likely than "thermometer". Under independence both would just have their general word frequencies. So we keep the conditionals $P(x_i\mid x_1..x_{i-1})$: <b>the current word depends on all previous words</b>.</p>
+<h3>2.6 How do we estimate the conditionals?</h3>
+<p>Counting is hopeless for long contexts, so we use an <b>autoregressive model</b>: a parameterised function with a <i>fixed</i> number of parameters $\theta$ that outputs the conditional distribution. Written as:</p>
+<div class="box eq">$$P(x_i\mid x_1,\dots,x_{i-1})=f_\theta(x_i\mid x_1,\dots,x_{i-1})$$</div>
+<p>Can $f_\theta$ be a Transformer? Yes: it takes $x_1..x_{i-1}$ and outputs a distribution over $V$ for $x_i$. This task is called <b>causal language modelling (CLM)</b>: "causal" because each prediction depends only on the past.</p></section>
+
+<section id="s3"><h2>3. Labels for free: self-supervised learning</h2>
+<p>Normally supervised learning needs (input, label) pairs made by humans. Next-word prediction creates them <b>automatically</b> from raw text:</p>
+<ol><li>Take any document (Wikipedia, news, books) and split it into tokens $x_1..x_T$.</li>
+<li>For each position $k$, the prefix $(x_1..x_k)$ is the <b>input</b> and the next token $x_{k+1}$ is the <b>label</b>.</li></ol>
+<div class="diagram"><div class="flow v"><div class="n s">Raw text: "IIT Madras is an educational institution" (6 tokens)</div>
+<div class="scroll"><table><tr><th>Sample</th><th class="l">Input (prefix)</th><th></th><th class="l">Target label</th></tr>
+<tr><td>1</td><td class="l">IIT</td><td>→</td><td class="l">Madras</td></tr>
+<tr><td>2</td><td class="l">IIT Madras</td><td>→</td><td class="l">is</td></tr>
+<tr><td>3</td><td class="l">IIT Madras is</td><td>→</td><td class="l">an</td></tr>
+<tr><td>4</td><td class="l">IIT Madras is an</td><td>→</td><td class="l">educational</td></tr>
+<tr><td>5</td><td class="l">IIT Madras is an educational</td><td>→</td><td class="l">institution</td></tr></table></div></div><div class="cap">One sentence of 6 tokens gives 5 training pairs. (The lecture summary lists only the first four.)</div></div>
+<div class="box idea"><b class="t">Why this is powerful</b>A document of length $T$ gives $T-1$ training examples, with <b>no human annotation</b>. Billions of words on the web turn into billions of training examples. To predict the next word well, the model has to pick up grammar, facts and some reasoning; that is how it "develops a basic understanding of language".</div></section>
+
+<section id="s4"><h2>4. Three ways to use a Transformer for language modelling</h2>
+<p>The slide shows three "possibilities" for $f_\theta$, depending on which part of the Transformer is used and which attention mask is applied:</p>
+<div class="three">
+<div><b>Encoder-only</b><br>(e.g. BERT)<br><table class="vis" style="margin:6px auto"><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr></table><div class="cap">every word sees every word</div></div>
+<div><b>Decoder-only</b><br>(e.g. GPT, LLaMA)<br><table class="vis" style="margin:6px auto"><tr><td class="y"></td><td class="x"></td><td class="x"></td><td class="x"></td><td class="x"></td><td class="x"></td></tr><tr><td class="y"></td><td class="y"></td><td class="x"></td><td class="x"></td><td class="x"></td><td class="x"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="x"></td><td class="x"></td><td class="x"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="x"></td><td class="x"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="x"></td></tr><tr><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td><td class="y"></td></tr></table><div class="cap">word t sees only words ≤ t</div></div>
+<div><b>Encoder-decoder</b><br>(e.g. T5, BART)<br>encoder: full grid; decoder: triangular grid plus cross-attention<div class="cap">source fully visible, target causal</div></div></div>
+<p style="text-align:center;font-size:.85rem">(Blue = can attend, grey = hidden)</p>
+<div class="scroll"><table><tr><th class="l"></th><th class="l">Encoder-only</th><th class="l">Decoder-only</th><th class="l">Encoder-decoder</th></tr>
+<tr><td class="l">Attention</td><td class="l">Bi-directional (past and future)</td><td class="l">Causal / masked (past and present)</td><td class="l">Bi-directional encoder + causal decoder with cross-attention</td></tr>
+<tr><td class="l">Pre-training task</td><td class="l">Masked language modelling: hide a word (⟨mask⟩), predict it from both sides, e.g. $x_1,\langle mask\rangle,\dots,x_T$ → $P(\langle mask\rangle)$</td><td class="l">Next-word prediction (causal LM): $x_1..x_{i-1}$ → $P(x_i)$</td><td class="l">Source → target sequence</td></tr>
+<tr><td class="l">Good for</td><td class="l">Understanding: classification, features</td><td class="l">Generating text</td><td class="l">Translation, summarization</td></tr></table></div>
+<div class="box key"><b class="t">Focus this week</b>The slides and the rest of these notes follow the <b>decoder-only</b> family, because it matches the chain rule exactly (predict next word from the past) and can generate text. This is the GPT family.</div></section>
+
+<section id="s5"><h2>5. Causal language modelling with a decoder-only Transformer</h2>
+<h3>5.1 What changes from the Week 2 decoder</h3>
+<p>The Week 2 decoder had three sub-layers: masked self-attention, <b>cross-attention to the encoder</b>, and FFN. With no encoder there is nothing to cross-attend to, so the decoder-only block keeps only:</p>
+<div class="diagram"><div class="flow v"><div class="n t">Feed Forward Network (+ Add & LayerNorm)</div><span class="a">↑</span><div class="n g">Masked Multi-Head Self-Attention (+ Add & LayerNorm)</div><span class="a">↑</span><div class="n b">Token embeddings + positional embeddings</div></div><div class="cap">One decoder-only block (cross-attention removed)</div></div>
+<p>The input is the sequence, starting with a <code>⟨go⟩</code> token: $\langle go\rangle,x_1,x_2,x_3$. The output at each position is a probability distribution over the vocabulary.</p>
+<h3>5.2 The causal mask</h3>
+<p>We want the model to see only the <b>present and past</b> inputs. We add the mask matrix $M$ to the scaled scores before the softmax (same as Week 2):</p>
+<div class="box eq">$$M_{t,j}=\begin{cases}0&j\le t\\-\infty&j>t\end{cases}\qquad A_{masked}=\text{softmax}\!\Big(\frac{QK^T}{\sqrt{d_k}}+M\Big)V$$</div>
+<div class="scroll"><table class="hm"><tr><th></th><th>⟨go⟩</th><th>x<sub>1</sub></th><th>x<sub>2</sub></th><th>x<sub>3</sub></th></tr>
+<tr><th>⟨go⟩</th><td>0</td><td>−∞</td><td>−∞</td><td>−∞</td></tr><tr><th>x<sub>1</sub></th><td>0</td><td>0</td><td>−∞</td><td>−∞</td></tr><tr><th>x<sub>2</sub></th><td>0</td><td>0</td><td>0</td><td>−∞</td></tr><tr><th>x<sub>3</sub></th><td>0</td><td>0</td><td>0</td><td>0</td></tr></table></div>
+<p><b>Why exactly zero weight?</b> For a future position $j>t$:</p>
+<div class="box eq">$$\alpha_{t,j}=\frac{\exp(e_{t,j}+M_{t,j})}{\sum_{m}\exp(e_{t,m}+M_{t,m})}=\frac{\exp(-\infty)}{\text{Sum}}=\frac{0}{\text{Sum}}=0$$</div>
+<p>The denominator contains only the allowed positions, so the remaining weights still add up to 1. <i>Worked example (created for practice):</i> the row of scores for position 2 is $(1,2,3)$. Masked, it becomes $(1,2,-\infty)$, $\exp\to(2.718,\ 7.389,\ 0)$, sum 10.107, weights $\approx(0.269,\ 0.731,\ 0)$. The future word is ignored.</p>
+<h3>5.3 Every output is one factor of the chain rule</h3>
+<p>This is the neat part. Feed $\langle go\rangle,x_1,x_2,x_3$ in <b>one pass</b>. Because of the mask, output $i$ depends only on earlier inputs. So:</p>
+<div class="diagram"><div class="scroll"><table><tr><th class="l">Input at position</th><td>⟨go⟩</td><td>x<sub>1</sub></td><td>x<sub>2</sub></td><td>x<sub>3</sub></td></tr>
+<tr><th class="l">Output (prediction)</th><td>$p(x_1)$</td><td>$p(x_2\mid x_1)$</td><td>$p(x_3\mid x_2,x_1)$</td><td>$p(x_4\mid x_3,x_2,x_1)$</td></tr></table></div><div class="cap">The four outputs are the four terms of the chain rule</div></div>
+<div class="box eq">$$P(x_1,..,x_4)=P(x_1;\theta)\,P(x_2\mid x_1;\theta)\,P(x_3\mid x_2,x_1;\theta)\,P(x_4\mid x_3,x_2,x_1;\theta)$$</div>
+<p>The only difference from the abstract chain rule: now each probability is determined by the model parameters $\theta$. The objective is to <b>maximise the likelihood</b> $L(\theta)$ of the training text. A single pass computes all $T$ terms at once (parallel), which is why training is fast.</p></section>
+
+<section id="s6"><h2>6. The training objective: likelihood, log-likelihood, cross-entropy</h2>
+<h3>6.1 From likelihood to loss (step by step)</h3>
+<ol>
+<li><b>Likelihood</b> of the data under the model: $L(\theta)=\prod_{i=1}^{T}P(x_i\mid x_1..x_{i-1};\theta)$. Larger is better.</li>
+<li>A product of many numbers below 1 underflows to nearly 0 and is awkward to optimise. Take the <b>log</b> (it is monotonic, so the maximiser does not change): $\log L=\sum_i\log P(x_i\mid x_{<i};\theta)$.</li>
+<li>Optimisers <i>minimise</i>, so flip the sign, and average over tokens:</li></ol>
+<div class="box eq">$$\mathcal L_{pre}(\theta)=-\frac1T\sum_{t=1}^{T}\log P_\theta(x_t\mid x_1,\dots,x_{t-1})$$</div>
+<p>This is the <b>negative log-likelihood</b>. (The slide writes the sum without the $\frac1T$, as $\sum\log P$ to be maximised.)</p>
+<h3>6.2 It is the cross-entropy loss</h3>
+<p>At position $i$ the model outputs $\hat y_i=\text{softmax}(h^n[i]W_v)$, a distribution over $|V|$ words, and the true word is a one-hot vector $y_i$ (a 1 at the correct word, 0 elsewhere). Then</p>
+<div class="box eq">$$-\sum_{v\in V}y_{i,v}\log\hat y_{i,v}=-\log\hat y_{i,x_i}$$</div>
+<p>because every term except the correct word's is multiplied by 0. So "cross-entropy with a one-hot target" = "minus log-probability of the correct next word". The slide's loss $L=-\sum_{x\in\mathcal X}\sum_{i=1}^{T}y_i\log\hat y_i$ is this, summed over all sequences.</p>
+<h3>6.3 Worked example (created for practice)</h3>
+<p>Use the probabilities from section 2.4 for "I ate an apple": $-\ln0.3=1.204$, $-\ln0.2=1.609$, $-\ln0.5=0.693$, $-\ln0.4=0.916$. Sum $=4.423=-\ln0.012$ ✓. Average loss $=4.423/4\approx1.106$.</p>
+<div class="box def"><b class="t">Perplexity (a common way to read the loss)</b>$\text{PPL}=e^{\mathcal L}$. Here $e^{1.106}\approx3.02$: the model is, on average, as unsure as if it were choosing between about 3 equally likely words at each step. Lower is better; a perfect model has perplexity 1.</div>
+<h3>6.4 Teacher forcing in language modelling</h3>
+<p>During training the input at each position is the <b>true</b> previous word from the text (not the model's own guess), exactly as in Week 2. The slide says this is used "instead of auto-regressive training for quicker and stable convergence": all positions are processed in parallel in one forward pass. Only at generation time (section 11) is the model run one token at a time.</p></section>
+
+<section id="s7"><h2>7. GPT: Generative Pre-trained Transformer</h2>
+<p>GPT-1 is a stack of $n=12$ modified decoder layers (the paper calls them <b>transformer blocks</b>).</p>
+<h3>7.1 The computation, in formulas</h3>
+<div class="box eq">$$h_0=X\in\mathbb R^{T\times d_{model}}\quad(\text{token embeddings + position embeddings})$$
+$$h_l=\text{transformer\_block}(h_{l-1}),\qquad l=1,\dots,n$$
+$$P(x_i)=\text{softmax}\big(h_n[i]\,W_v\big)\qquad\text{where }h_n[i]\text{ is the }i\text{-th output vector of the last block}$$</div>
+<div class="diagram"><div class="flow v"><div class="n g">Softmax(h<sub>12</sub>[i] W<sub>v</sub>) → p(x<sub>1</sub>) … p(x<sub>4</sub>|x<sub>3</sub>,x<sub>2</sub>,x<sub>1</sub>)</div><span class="a">↑</span><div class="n t">Block 12</div><span class="a">↑ ⋮</span><div class="n t">Block 2</div><span class="a">↑</span><div class="n t">Block 1</div><span class="a">↑ h<sub>0</sub></span><div class="n b">Token embedding (40478×768) + Positional embedding (512×768)</div><span class="a">↑</span><div class="n s">⟨go⟩ x<sub>1</sub> x<sub>2</sub> x<sub>3</sub> (token IDs)</div></div><div class="cap">GPT-1 end to end</div></div>
+<h3>7.2 Specification</h3>
+<div class="scroll"><table><tr><th class="l">Setting</th><th>Value</th><th class="l">Comment</th></tr>
+<tr><td class="l">Layers (blocks) $n$</td><td>12</td><td class="l">decoder-only, no cross-attention</td></tr>
+<tr><td class="l">Context size $T_{max}$</td><td>512</td><td class="l">max tokens in one sequence</td></tr>
+<tr><td class="l">Model dimension $d_{model}$</td><td>768</td><td class="l">embedding size</td></tr>
+<tr><td class="l">Attention heads $h$</td><td>12</td><td class="l">$d_k=d_v=768/12=64$</td></tr>
+<tr><td class="l">FFN inner size $d_{ff}$</td><td>3072</td><td class="l">$=4\times768$</td></tr>
+<tr><td class="l">Vocabulary $|V|$</td><td>40,478</td><td class="l">Byte-Pair Encoding (BPE) tokens</td></tr>
+<tr><td class="l">Activation</td><td>GELU</td><td class="l">Gaussian Error Linear Unit</td></tr>
+<tr><td class="l">Regularisation</td><td>Dropout, LayerNorm, residuals</td><td class="l">help convergence</td></tr></table></div>
+<h3>7.3 Training data: BookCorpus</h3>
+<ul><li>About 7,000 unique books, 74 million sentences, roughly 1 billion words, across 16 genres.</li>
+<li>Uses <b>long-range contiguous text</b>: sentences and paragraphs are <i>not</i> shuffled, so the model can learn long-distance dependencies. (The "1B words" benchmark has shuffled sentences with no contiguity, so it is less suitable.)</li>
+<li>Tokenizer: <b>Byte-Pair Encoding</b> with vocabulary 40,478. BPE merges frequent character pairs into sub-word units, so rare words are split into known pieces and there are no out-of-vocabulary words.</li></ul>
+<p>A training sample in the slide is a 512-token contiguous chunk: <code>⟨go⟩ at the bell labs hamming … devising a new ⟨stop⟩</code> (positions $x_1$ to $x_{511}$ plus ⟨go⟩).</p>
+<h3>7.4 Inside one block</h3>
+<div class="diagram"><div class="flow v">
+<div class="flow"><div class="n s">Input h<sub>l-1</sub></div><span class="a">→</span><div class="n g">Masked multi-head attention</div><span class="a">→</span><div class="n s">Dropout</div><span class="a">→</span><div class="n s">+ residual</div><span class="a">→</span><div class="n t">LayerNorm</div></div>
+<span class="a">↓ z (768-d per position)</span>
+<div class="flow"><div class="n t">FFN: 768 → 3072 (GELU) → 768</div><span class="a">→</span><div class="n s">Dropout</div><span class="a">→</span><div class="n s">+ residual</div><span class="a">→</span><div class="n t">LayerNorm</div><span class="a">→</span><div class="n b">h<sub>l</sub></div></div></div><div class="cap">The block is the Week 2 decoder layer minus cross-attention (post-norm, as in the original Transformer)</div></div>
+<p><b>Inside masked multi-head attention</b> (slide): for each head, $Q,K,V$ → MatMul $Q^TK$ + mask $M$ → scale by $1/\sqrt{d_k}$ → softmax → dropout → MatMul with $V$; the 12 head outputs are concatenated, passed through a linear layer ($W^O$), then dropout, residual add and layer norm.</p>
+<div class="box def"><b class="t">GELU and dropout</b><b>GELU</b>: $\text{GELU}(x)=x\,\Phi(x)$ where $\Phi$ is the standard normal CDF. Unlike ReLU's hard cut at 0 it is smooth: GELU(1)=0.841, GELU(0)=0, GELU(−1)=−0.159. <b>Dropout</b> randomly sets a fraction of activations to 0 during training so the network cannot rely on any one unit, reducing overfitting.</div>
+<h3>7.5 Learned positional embeddings</h3>
+<p>The original Transformer used fixed sinusoidal positions (Week 2). GPT-1 instead uses a <b>learned</b> table $W_p\in\mathbb R^{512\times768}$: row $p$ is the vector for position $p$, trained along with everything else. Trade-off from Week 2: simple and flexible, but it cannot represent positions beyond 512.</p></section>
+
+<section id="s8"><h2>8. Counting GPT-1's parameters (full derivation)</h2>
+<p>Notation: $d=768$, $d_{ff}=3072$, $|V|=40478$, $T_{max}=512$, $h=12$, $d_k=64$.</p>
+<h3>8.1 Embeddings</h3>
+<div class="box eq">$$\text{token: }|V|\cdot d=40478\times768=31{,}087{,}104\qquad\text{position: }512\times768=393{,}216$$
+$$\text{total}=31{,}480{,}320\ (\approx31.5\text{M}\ ;\ \text{slide: }31+0.3=31.3\text{M})$$</div>
+<h3>8.2 Multi-head attention, per block</h3>
+<ul><li>Per head: $W_Q,W_K,W_V$ are each $768\times64$, so $3\times(768\times64)=147{,}456\approx147\text{K}$.</li>
+<li>12 heads: $12\times147{,}456=1{,}769{,}472\approx1.7\text{M}$. (This equals $3\times768\times768$, since $12\times64=768$.)</li>
+<li>Output linear layer $W^O$: $768\times768=589{,}824\approx0.6\text{M}$.</li></ul>
+<div class="box eq">$$\text{MHA per block}=1{,}769{,}472+589{,}824=2{,}359{,}296\approx2.36\text{M}\qquad\times12=28{,}311{,}552$$</div>
+<h3>8.3 Feed-forward network, per block</h3>
+<div class="box eq">$$2\times(768\times3072)+3072+768=4{,}718{,}592+3{,}840=4{,}722{,}432\approx4.7\text{M}\qquad\times12=56{,}669{,}184$$</div>
+<p>That is $W_1$ ($768\times3072=2{,}359{,}296$) plus bias 3072, and $W_2$ ($3072\times768=2{,}359{,}296$) plus bias 768.</p>
+<h3>8.4 Total</h3>
+<div class="box eq">$$\text{Block}=2{,}359{,}296+4{,}722{,}432=7{,}081{,}728\quad\Rightarrow\quad12\text{ blocks}=84{,}980{,}736$$
+$$\text{Total}=31{,}480{,}320+84{,}980{,}736=\mathbf{116{,}461{,}056}\approx117\text{ million}$$</div>
+<div class="diagram"><svg viewBox="0 0 640 150" width="100%" role="img" aria-label="GPT-1 parameter split"><text x="320" y="16" font-size="13" text-anchor="middle" fill="currentColor" font-weight="bold">Where the 116.46 M parameters live</text><rect x="20.0" y="30" width="162.2" height="50" fill="#1f5fae"/><text x="101.1" y="52" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">31.48M</text><text x="101.1" y="68" font-size="11" text-anchor="middle" fill="#fff">27.0%</text><text x="101.1" y="100" font-size="11" text-anchor="middle" fill="currentColor">Embeddings</text><rect x="182.2" y="30" width="145.9" height="50" fill="#16808a"/><text x="255.1" y="52" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">28.31M</text><text x="255.1" y="68" font-size="11" text-anchor="middle" fill="#fff">24.3%</text><text x="255.1" y="100" font-size="11" text-anchor="middle" fill="currentColor">Attention (12 blocks)</text><rect x="328.0" y="30" width="292.0" height="50" fill="#4b45b5"/><text x="474.0" y="52" font-size="12" text-anchor="middle" fill="#fff" font-weight="bold">56.67M</text><text x="474.0" y="68" font-size="11" text-anchor="middle" fill="#fff">48.7%</text><text x="474.0" y="100" font-size="11" text-anchor="middle" fill="currentColor">FFN (12 blocks)</text></svg><div class="cap">The FFN holds almost half of all parameters; the embedding table is about a quarter</div></div>
+<div class="scroll"><table><tr><th class="l">Layer</th><th>Slide (rounded, M)</th><th>Exact (M)</th></tr>
+<tr><td class="l">Embedding layer</td><td>31.3</td><td>31.48</td></tr><tr><td class="l">Attention layers (12 blocks)</td><td>27.6</td><td>28.31</td></tr><tr><td class="l">FFN layers (12 blocks)</td><td>56.4</td><td>56.67</td></tr><tr><th class="l">Total</th><th>116.461056*</th><th>116.461056</th></tr></table></div>
+<div class="box warn"><b class="t">Why the slide's rounded rows do not add up to the total</b>The slide rounds each block to 2.3M and 4.7M before multiplying ($12\times2.3=27.6$, $12\times4.7=56.4$), so its three rows sum to 115.3M. The asterisk means the total 116.461056M is computed <i>without rounding</i>, which is the exact figure above.</div>
+<div class="box key"><b class="t">What is not counted</b>(1) <b>Weight tying:</b> the output matrix $W_v$ (768×40478) is assumed to <i>share</i> the token embedding matrix (its transpose), adding 0 parameters; a separate output matrix would add about 31M more. (2) LayerNorm scales/shifts and attention biases are small and left out, which is why the number matches "≈117M".</div>
+<p><b>Memory feel:</b> a batch of 64 sequences × 512 tokens × 768 features holds $64\times512\times768=25{,}165{,}824$ numbers per activation tensor, and each head's attention matrix is $512\times512=262{,}144$ numbers per sequence.</p></section>
+
+<section id="s9"><h2>9. Pre-training in practice</h2>
+<ul><li><b>Input shape:</b> $(B,T,C)=(64,512,768)$: batch of 64 sequences, 512 tokens each, 768-dim embeddings.</li>
+<li><b>Loss:</b> cross-entropy $L=-\sum\sum y_i\log\hat y_i$ (section 6).</li>
+<li><b>Optimizer:</b> Adam with a <b>cosine learning-rate schedule</b> (the lecture summary says AdamW, which is Adam with decoupled weight decay: weights shrink slightly each step, separately from the gradient).</li>
+<li><b>Strategy:</b> teacher forcing, so every position is trained in parallel.</li></ul>
+<div class="box eq">$$\eta_t=\eta_{min}+\tfrac12(\eta_{max}-\eta_{min})\Big(1+\cos\frac{\pi t}{T_{total}}\Big)$$</div>
+<p>The learning rate starts at $\eta_{max}$ and falls smoothly along a half cosine to $\eta_{min}$: big steps early, careful small steps near the end. (Formula is the standard cosine schedule; the slides only name it.)</p>
+<div class="diagram"><div class="flow"><div class="n b">Batch (64×512 tokens)</div><span class="a">→</span><div class="n t">12 blocks</div><span class="a">→</span><div class="n s">softmax per position</div><span class="a">→</span><div class="n g">cross-entropy vs. true next words</div><span class="a">→</span><div class="n i">Adam + cosine LR</div><span class="a">→</span><div class="n b">update θ</div></div></div></section>
+
+<section id="s10"><h2>10. Supervised fine-tuning</h2>
+<h3>10.1 Idea</h3>
+<p>Fine-tuning adapts the pre-trained model to a downstream task with <b>minimal change to the architecture</b>. Each labelled sample is a sequence $x_1..x_m$ with a label $y$.</p>
+<ol><li><b>Initialise</b> all parameters from the pre-trained model.</li>
+<li><b>Input side:</b> add special tokens depending on the task, such as a start token ⟨s⟩ and end token ⟨e⟩ (and a delimiter ⟨$⟩ when there are two pieces of text).</li>
+<li><b>Output side:</b> remove the language-model head and attach a <b>classification head</b>, a single linear layer $W_y$ (randomly initialised).</li>
+<li>Train on the labelled data (all weights, plus the new head, are updated).</li></ol>
+<div class="diagram"><div class="flow v"><div class="n g">ŷ = softmax(W<sub>y</sub> h<sub>12</sub><sup>m</sup>)</div><span class="a">↑ last position's output</span><div class="n t">Pre-trained 12 blocks (initialised from pre-training)</div><span class="a">↑</span><div class="n b">⟨s⟩ x<sub>1</sub> x<sub>2</sub> … x<sub>m</sub> ⟨e⟩</div></div><div class="cap">Fine-tuning for classification</div></div>
+<h3>10.2 Why use the last position?</h3>
+<p>Because of the causal mask, a position can see only itself and earlier positions. So the <b>last</b> position is the only one that has seen the <b>entire</b> input; it is the natural summary of the sequence. The first positions have seen almost nothing.</p>
+<h3>10.3 The classification head and loss</h3>
+<div class="box eq">$$\hat y=P(y\mid x_1,..,x_m)=\text{softmax}\big(W_y\,h_l^{m}\big),\quad W_y\in\mathbb R^{d\times C}\ (768\times C)\qquad \mathcal L_{FT}=-\sum_{(x,y)}\log\hat y_{y}$$</div>
+<p>The lecture summary adds a bias, $\text{softmax}(h_l^mW_y+b_y)$; same idea. For $C=2$ classes the new head has only $768\times2=1536$ weights (+2 bias), tiny compared with the 116M already learned. Samples shorter than the context length are <b>padded</b>, longer ones <b>truncated</b>.</p>
+<p><i>Worked example (created for practice):</i> logits for (positive, negative) $=(1.2,-0.4)$. $e^{1.2}=3.320$, $e^{-0.4}=0.670$, sum 3.990, so $P=(0.832,\ 0.168)$. If the true class is positive, loss $=-\ln0.832=0.184$; if negative, $-\ln0.168=1.784$.</p>
+<h3>10.4 Input formats for different tasks</h3>
+<div class="scroll"><table><tr><th class="l">Task</th><th class="l">Format</th><th class="l">Output</th></tr>
+<tr><td class="l">Sentiment analysis</td><td class="l">⟨s⟩ text ⟨e⟩ e.g. "Wow, India has now reached the moon"</td><td class="l">$\hat y\in\{+1,-1\}$ (positive)</td></tr>
+<tr><td class="l">Textual entailment</td><td class="l">⟨s⟩ premise ⟨$⟩ hypothesis ⟨e⟩</td><td class="l">entailment / contradiction</td></tr>
+<tr><td class="l">Multiple choice</td><td class="l">one input per choice: ⟨s⟩ question ⟨$⟩ choice$_c$ ⟨e⟩</td><td class="l">softmax over the choices' scores</td></tr></table></div>
+<p><b>Entailment example:</b> text "A soccer game with multiple males playing", hypothesis "Some men are playing a sport" → Entailment: True. The delimiter ⟨$⟩ tells the model where the text ends and the hypothesis begins.</p>
+<p><b>Multiple choice:</b> question "Which of the following animals is an amphibian?" with choices Frog, Fish. Feed ⟨s⟩ question ⟨$⟩ Frog ⟨e⟩ and take the last-position vector through a linear layer to get one <i>score</i>. Repeat for ⟨s⟩ question ⟨$⟩ Fish ⟨e⟩ (the same weights each time), then normalise the scores across choices with a softmax. Example scores Frog $=2.0$, Fish $=0.0$: $P(\text{Frog})=\tfrac{e^2}{e^2+1}=0.881$, $P(\text{Fish})=0.119$.</p>
+<div class="diagram"><div class="flow"><div class="n b">⟨s⟩ Q ⟨$⟩ Frog ⟨e⟩</div><span class="a">→ GPT → Linear →</span><div class="n t">score 2.0</div><div class="n b">⟨s⟩ Q ⟨$⟩ Fish ⟨e⟩</div><span class="a">→ GPT → Linear →</span><div class="n t">score 0.0</div><span class="a">→ softmax →</span><div class="n g">0.881 / 0.119</div></div></div></section>
+
+<section id="s11"><h2>11. Text generation and decoding strategies</h2>
+<h3>11.1 The autoregressive loop</h3>
+<p>For generation we use the model exactly as in the chain rule: predict the next word, append it, repeat. Prompt: "I like". Feed ⟨s⟩ I like, with the causal mask; sample a next token ("to"); append; run again ("think"); and so on.</p>
+<div class="diagram"><div class="flow v"><div class="flow"><div class="n b">⟨s⟩ I like</div><span class="a">→ model →</span><div class="n g">to</div></div><div class="flow"><div class="n b">⟨s⟩ I like to</div><span class="a">→ model →</span><div class="n g">think</div></div><div class="flow"><div class="n b">⟨s⟩ I like to think</div><span class="a">→ model →</span><div class="n g">that</div></div></div><div class="cap">Output: "I like to think that" (stop at length 5 or when the model outputs ⟨e⟩)</div></div>
+<p><b>Stopping criteria</b> (slide): reach a maximum sequence length (here 5), or the model outputs the end token ⟨e⟩. In the mask on the slide the prompt tokens (⟨s⟩, I, like) are all visible to each other, and each new position can see everything before it.</p>
+<h3>11.2 Pure argmax is not enough</h3>
+<p>The model gives a probability for each possible next word. The simplest rule is <b>greedy decoding</b>: always take the most probable word. Two questions from the slide: does the same prompt always give the same output? With greedy, yes; the model is deterministic. Or will it be creative? Not with greedy.</p>
+<div class="box warn"><b class="t">Wishlist for text generation (slide)</b>(1) <b>Discourage degenerate text</b>: repeated or incoherent, such as "I like to think that I like to think ..." or "I like to think that reference know how to think best selling book". (2) <b>Encourage creativity</b>: different, sensible continuations for the same prompt ("I like to read a book", "I like to buy a hot beverage", "I like a person who cares about others"). (3) <b>Accelerate</b> generation of tokens.</div>
+<p>To get diversity we <b>sample</b> from the distribution instead of always taking the maximum, and we control the shape of that distribution with the strategies below.</p>
+<h3>11.3 Temperature</h3>
+<p>The linear head produces raw scores (<b>logits</b>) $u_{t+1}\in\mathbb R^{|V|}$. Temperature $\tau>0$ divides them before the softmax:</p>
+<div class="box eq">$$P(x_{t+1}=v\mid x_{\le t})=\frac{\exp(u_{t+1,v}/\tau)}{\sum_{w=1}^{|V|}\exp(u_{t+1,w}/\tau)}$$</div>
+<ul><li>$\tau=1$: the model's normal distribution.</li>
+<li>$\tau\to0$: dividing by a tiny number blows up the gaps between logits, so the largest takes essentially all the probability: this becomes <b>greedy / argmax</b>, deterministic.</li>
+<li>$\tau>1$: gaps shrink, the distribution flattens, more random and "creative" (but more chance of nonsense).</li>
+<li>$\tau\to\infty$: uniform distribution over all words.</li></ul>
+<p><i>Worked example (created for practice):</i> logits $(2,1,0)$ for tokens A, B, C.</p>
+<div class="scroll"><table><tr><th>$\tau$</th><th>logits/τ</th><th>exp</th><th>P(A), P(B), P(C)</th></tr>
+<tr><td>0.5</td><td>(4, 2, 0)</td><td>(54.60, 7.39, 1)</td><td>0.867, 0.117, 0.016</td></tr>
+<tr><td>1</td><td>(2, 1, 0)</td><td>(7.39, 2.72, 1)</td><td>0.665, 0.245, 0.090</td></tr>
+<tr><td>2</td><td>(1, 0.5, 0)</td><td>(2.72, 1.65, 1)</td><td>0.506, 0.307, 0.186</td></tr></table></div>
+<div class="diagram"><svg viewBox="0 0 640 250" width="100%" role="img" aria-label="Same logits (2, 1, 0) at three temperatures"><text x="320.0" y="16" font-size="13" text-anchor="middle" fill="currentColor" font-weight="bold">Same logits (2, 1, 0) at three temperatures</text><line x1="40" y1="210" x2="630" y2="210" stroke="#9fb0c9"/><line x1="40" y1="210" x2="630" y2="210" stroke="#9fb0c9" stroke-opacity=".3"/><text x="36" y="214" font-size="10" text-anchor="end" fill="currentColor">0</text><line x1="40" y1="167.5" x2="630" y2="167.5" stroke="#9fb0c9" stroke-opacity=".3"/><text x="36" y="171.5" font-size="10" text-anchor="end" fill="currentColor">0.25</text><line x1="40" y1="125.0" x2="630" y2="125.0" stroke="#9fb0c9" stroke-opacity=".3"/><text x="36" y="129.0" font-size="10" text-anchor="end" fill="currentColor">0.5</text><line x1="40" y1="82.5" x2="630" y2="82.5" stroke="#9fb0c9" stroke-opacity=".3"/><text x="36" y="86.5" font-size="10" text-anchor="end" fill="currentColor">0.75</text><line x1="40" y1="40" x2="630" y2="40" stroke="#9fb0c9" stroke-opacity=".3"/><text x="36" y="44" font-size="10" text-anchor="end" fill="currentColor">1</text><rect x="57.9" y="62.6" width="38.7" height="147.4" fill="#1f5fae"/><text x="77.2" y="59.6" font-size="9" text-anchor="middle" fill="currentColor">0.87</text><text x="77.2" y="223" font-size="10" text-anchor="middle" fill="currentColor">token A</text><rect x="100.9" y="190.1" width="38.7" height="19.9" fill="#1f5fae"/><text x="120.2" y="187.1" font-size="9" text-anchor="middle" fill="currentColor">0.12</text><text x="120.2" y="223" font-size="10" text-anchor="middle" fill="currentColor">token B</text><rect x="143.8" y="207.3" width="38.7" height="2.7" fill="#1f5fae"/><text x="163.1" y="204.3" font-size="9" text-anchor="middle" fill="currentColor">0.02</text><text x="163.1" y="223" font-size="10" text-anchor="middle" fill="currentColor">token C</text><text x="131.7" y="242" font-size="11" text-anchor="middle" fill="currentColor">τ = 0.5 (sharp)</text><rect x="251.2" y="96.9" width="38.7" height="113.1" fill="#16808a"/><text x="270.6" y="93.9" font-size="9" text-anchor="middle" fill="currentColor">0.67</text><text x="270.6" y="223" font-size="10" text-anchor="middle" fill="currentColor">token A</text><rect x="294.2" y="168.4" width="38.7" height="41.6" fill="#16808a"/><text x="313.5" y="165.4" font-size="9" text-anchor="middle" fill="currentColor">0.24</text><text x="313.5" y="223" font-size="10" text-anchor="middle" fill="currentColor">token B</text><rect x="337.1" y="194.7" width="38.7" height="15.3" fill="#16808a"/><text x="356.5" y="191.7" font-size="9" text-anchor="middle" fill="currentColor">0.09</text><text x="356.5" y="223" font-size="10" text-anchor="middle" fill="currentColor">token C</text><text x="325.0" y="242" font-size="11" text-anchor="middle" fill="currentColor">τ = 1 (normal)</text><rect x="444.6" y="123.9" width="38.7" height="86.1" fill="#4b45b5"/><text x="463.9" y="120.9" font-size="9" text-anchor="middle" fill="currentColor">0.51</text><text x="463.9" y="223" font-size="10" text-anchor="middle" fill="currentColor">token A</text><rect x="487.5" y="157.8" width="38.7" height="52.2" fill="#4b45b5"/><text x="506.9" y="154.8" font-size="9" text-anchor="middle" fill="currentColor">0.31</text><text x="506.9" y="223" font-size="10" text-anchor="middle" fill="currentColor">token B</text><rect x="530.5" y="178.3" width="38.7" height="31.7" fill="#4b45b5"/><text x="549.8" y="175.3" font-size="9" text-anchor="middle" fill="currentColor">0.19</text><text x="549.8" y="223" font-size="10" text-anchor="middle" fill="currentColor">token C</text><text x="518.3" y="242" font-size="11" text-anchor="middle" fill="currentColor">τ = 2 (flat)</text></svg><div class="cap">Low temperature concentrates probability on the best token; high temperature spreads it out</div></div>
+<h3>11.4 Top-k sampling</h3>
+<p>Keep only the $k$ most probable tokens, set the others to 0, <b>renormalise</b> so the kept ones sum to 1, then sample. This removes the long tail of silly low-probability words. <i>Example (created for practice):</i> probabilities $(0.40,0.25,0.15,0.10,0.06,0.04)$, $k=3$: keep 0.40, 0.25, 0.15 (sum 0.80) → renormalised $(0.500,\ 0.3125,\ 0.1875)$.</p>
+<h3>11.5 Top-p (nucleus) sampling</h3>
+<p>Choose the <b>smallest set</b> of top tokens whose cumulative probability reaches $p$ (e.g. 0.9), renormalise, and sample. The set size adapts: if the model is confident, few tokens are kept; if it is unsure, many. Same example with $p=0.9$: cumulative sums $0.40,\ 0.65,\ 0.80,\ 0.90$ → the first 4 tokens are kept (sum 0.90) → renormalised $(0.444,\ 0.278,\ 0.167,\ 0.111)$.</p>
+<div class="scroll"><table><tr><th class="l">Strategy</th><th class="l">What it does</th><th class="l">Effect</th></tr>
+<tr><td class="l">Greedy (argmax)</td><td class="l">Always pick the most likely token</td><td class="l">Deterministic; can repeat itself</td></tr>
+<tr><td class="l">Temperature</td><td class="l">Rescale logits by $1/\tau$ before softmax</td><td class="l">Controls randomness for the whole distribution</td></tr>
+<tr><td class="l">Top-$k$</td><td class="l">Keep $k$ best tokens, renormalise</td><td class="l">Fixed-size cut-off</td></tr>
+<tr><td class="l">Top-$p$</td><td class="l">Keep smallest set with cumulative prob ≥ $p$</td><td class="l">Adaptive cut-off</td></tr></table></div>
+<div class="box idea"><b class="t">Matching the wishlist</b>Sampling with temperature, top-$k$ or top-$p$ gives <b>creativity</b> (different outputs for the same prompt) while the truncation steps avoid the incoherent low-probability words. These are usually combined (e.g. temperature then top-$p$). On <b>speed</b>: tokens must still be generated one at a time; the slide lists faster generation as a goal, to be addressed later.</div></section>
+
+<section id="s12"><h2>12. Revision</h2>
+<h3>12.1 Formula sheet</h3>
+<div class="box eq">$$P(x_1..x_T)=\prod_{i=1}^TP(x_i\mid x_{<i})\qquad\mathcal L=-\tfrac1T\sum_t\log P_\theta(x_t\mid x_{<t})\qquad\text{PPL}=e^{\mathcal L}$$
+$$h_0=X,\ \ h_l=\text{block}(h_{l-1}),\ \ P(x_i)=\text{softmax}(h_n[i]W_v)\qquad M_{t,j}=0\ (j\le t),\ -\infty\ (j>t)$$
+$$\hat y=\text{softmax}(W_yh^m_l),\ \ \mathcal L_{FT}=-\log\hat y_{y^*}\qquad P_\tau(v)=\frac{e^{u_v/\tau}}{\sum_we^{u_w/\tau}}$$
+$$\text{GPT-1 params}=\underbrace{40478\cdot768+512\cdot768}_{31{,}480{,}320}+12\underbrace{(4\cdot768^2+2\cdot768\cdot3072+3072+768)}_{7{,}081{,}728}=116{,}461{,}056$$</div>
+<h3>12.2 Key numbers</h3>
+<p>12 blocks · $d=768$ · 12 heads of 64 · FFN 3072 · context 512 · $|V|=40478$ · embeddings 31.48M · attention 28.31M · FFN 56.67M · total ≈116.46M (≈117M) · BookCorpus ≈7000 books, ≈1B words · fine-tune head $768\times C$.</p>
+<h3>12.3 Glossary</h3>
+<div class="scroll"><table><tr><th class="l">Term</th><th class="l">Meaning</th></tr>
+<tr><td class="l">Language model</td><td class="l">A function giving a probability to a sequence of tokens</td></tr>
+<tr><td class="l">Causal LM</td><td class="l">Predict each token from the previous ones only</td></tr>
+<tr><td class="l">Self-supervised</td><td class="l">Labels come from the data itself (next word), no humans</td></tr>
+<tr><td class="l">Pre-training / fine-tuning</td><td class="l">General learning on raw text / adaptation on a small labelled set</td></tr>
+<tr><td class="l">Encoder-only, decoder-only, enc-dec</td><td class="l">BERT-style, GPT-style, T5-style architectures</td></tr>
+<tr><td class="l">Logits</td><td class="l">Raw scores before softmax</td></tr>
+<tr><td class="l">Greedy decoding</td><td class="l">Always choose the most probable next token</td></tr>
+<tr><td class="l">Temperature / Top-k / Top-p</td><td class="l">Ways of reshaping or truncating the next-token distribution before sampling</td></tr>
+<tr><td class="l">Weight tying</td><td class="l">Output projection reuses the input embedding matrix</td></tr>
+<tr><td class="l">BPE</td><td class="l">Byte-Pair Encoding: sub-word tokenisation</td></tr></table></div>
+<h3>12.4 Practice questions</h3>
+<ol>
+<li><b>Why pre-train instead of training from scratch on each task?</b> Labelled data is scarce and costly; raw text is abundant; pre-training gives a good starting point so fine-tuning needs 30–100× fewer labels and converges faster.</li>
+<li><b>State and justify the chain rule for sequences.</b> $P(x_1..x_T)=\prod_iP(x_i\mid x_{<i})$ from repeated use of $P(A,B)=P(A)P(B\mid A)$; exact.</li>
+<li><b>Why is the independence assumption wrong?</b> "book" vs "thermometer" after "I enjoyed reading a": context changes word probabilities.</li>
+<li><b>How many training pairs does a 10-token sentence give?</b> 9 (prefix of length 1..9 → next token).</li>
+<li><b>Why does a decoder-only model need no cross-attention?</b> There is no separate source sequence/encoder.</li>
+<li><b>How does one forward pass give all chain-rule factors?</b> Causal mask makes output $i$ depend only on inputs up to $i$.</li>
+<li><b>Show that cross-entropy with one-hot targets equals negative log-likelihood.</b> All terms but the true class vanish (section 6.2).</li>
+<li><b>Why take the last token's output for classification?</b> It is the only position that has attended to the whole input.</li>
+<li><b>Compute GPT-1's attention parameters per block.</b> $3\cdot768\cdot768+768\cdot768=2{,}359{,}296$.</li>
+<li><b>What happens to the output as $\tau\to0$ and $\tau\to\infty$?</b> Greedy/argmax; uniform.</li>
+<li><b>Top-k vs top-p?</b> Fixed number of tokens vs smallest set reaching cumulative probability $p$ (adapts to model confidence).</li></ol>
+<div class="box key"><b class="t">Where this leads</b>GPT-1 (117M parameters) is the starting point; later models keep the same decoder-only recipe but scale up parameters, data and context length, and add better ways of adapting the model than a plain classification head.</div></section>
+</main></body></html>
