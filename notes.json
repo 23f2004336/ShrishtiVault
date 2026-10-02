@@ -1,4 +1,10 @@
 {
+  "Game Theory And Strategy": [
+    {
+      "title": "game theory week 1",
+      "path": "notes/game-theory-and-strategy/game-theory-week-1.html"
+    }
+  ],
   "Llm": [
     {
       "title": "llm week 1  attention and the transformer encoder",
