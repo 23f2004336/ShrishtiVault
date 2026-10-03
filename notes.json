@@ -7,13 +7,9 @@
     {
       "title": "game theory week 2 1 ",
       "path": "notes/game-theory-and-strategy/game-theory-week-2-1-.html"
-    },
-    {
-      "title": "game theory week 2",
-      "path": "notes/game-theory-and-strategy/game-theory-week-2.html"
     }
   ],
-  "Llm": [
+  "LLM": [
     {
       "title": "llm week 1  attention and the transformer encoder",
       "path": "notes/llm/llm-week-1_-attention-and-the-transformer-encoder.html"
