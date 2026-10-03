@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game Theory and Strategy: Week 2 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#0d9488,#4f46e5);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.92}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--der);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card)}
+th,td{border:1px solid var(--line);padding:7px 13px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}td.out{text-decoration:line-through;opacity:.45}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+ul,ol{padding-left:22px}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+</style></head><body>
+<header><h1>Game Theory and Strategy: Week 2</h1><p>Solving games: dominance, iterated elimination, Nash equilibrium, and three applications (Braess, Hotelling, Cournot)</p></header>
+<nav><a href="#s1">1 Recap</a><a href="#s2">2 Dominant eq.</a><a href="#s3">3 IESDS</a><a href="#s4">4 IEWDS</a><a href="#s5">5 Nash</a><a href="#s6">6 Classic games</a><a href="#s7">7 Meaning of Nash</a><a href="#s8">8 Braess</a><a href="#s9">9 Hotelling</a><a href="#s10">10 Cournot</a><a href="#s11">11 Recap</a></nav>
+<main>
+<div class="box def"><b>Colour key:</b> blue = definition, green = derivation (each step shown), orange = worked example, red = trap to avoid.</div>
+
+<div class="box ex"><b>Maths you need this week</b><br>
+<b>Expected value:</b> multiply each possible payoff by its probability and add. Example: 50% chance of 10 and 50% of 0 gives 0.5(10) + 0.5(0) = 5.<br>
+<b>Derivative to find a maximum:</b> for a profit that looks like (something)·q − b·q², the top is where the slope is zero. The slope of q² is 2q, the slope of a plain k·q is k. Set slope = 0, solve for q. The second derivative being negative confirms it is a peak and not a valley.<br>
+<b>Averages:</b> a number picked uniformly between 0 and y has average y/2.</div>
+<section id="s1"><h2>1. Where we are</h2>
+<p>Week 1 gave us the language: players, actions, payoffs, and the assumptions of <b>rationality</b> and <b>common knowledge</b>. Week 2 asks: <i>given a game, what will actually be played?</i> A rule that picks the outcome is called a <b>solution concept</b>. We build them from weakest-assumption to strongest-insight:</p>
+<svg viewBox="0 0 640 110" width="640" role="img" aria-label="Solution concept flow"><g stroke="var(--def)" stroke-width="2" fill="none"><path d="M165 55 L195 55"/><path d="M345 55 L375 55"/><path d="M505 55 L535 55"/></g>
+<rect class="n" x="10" y="25" width="155" height="60" rx="8"/><text x="87" y="52" text-anchor="middle" font-size="14">Dominant</text><text x="87" y="70" text-anchor="middle" font-size="14">strategy eq.</text>
+<rect class="n" x="195" y="25" width="150" height="60" rx="8"/><text x="270" y="52" text-anchor="middle" font-size="14">Iterated</text><text x="270" y="70" text-anchor="middle" font-size="14">elimination</text>
+<rect class="n" x="375" y="25" width="130" height="60" rx="8"/><text x="440" y="60" text-anchor="middle" font-size="14">Nash eq.</text>
+<rect class="n" x="535" y="25" width="100" height="60" rx="8"/><text x="585" y="60" text-anchor="middle" font-size="14">Applications</text></svg>
+<p><b>Action vs strategy.</b> In a table game (one simultaneous move) an <i>action</i> and a <i>strategy</i> mean the same thing. In a tree game a <b>strategy</b> is a full plan: what you would do at every point where you might have to move. This week we only use table games, so we use the words interchangeably.</p></section>
+
+<section id="s2"><h2>2. Dominant strategy equilibrium</h2>
+<div class="box def"><b>Strict dominance.</b> Action <i>a<sub>i</sub></i> strictly dominates <i>a′<sub>i</sub></i> if it pays more whatever the others do:
+<span class="eq">u<sub>i</sub>(a<sub>i</sub>, a<sub>−i</sub>) &gt; u<sub>i</sub>(a′<sub>i</sub>, a<sub>−i</sub>) for every a<sub>−i</sub></span>
+<b>Weak dominance:</b> ≥ for every a<sub>−i</sub>, and strictly &gt; for at least one a<sub>−i</sub>.<br>
+A <b>dominant action</b> dominates every other action of that player.</div>
+<div class="box def"><b>Dominant strategy equilibrium (DSE).</b> A profile a* = (a*<sub>1</sub>, ..., a*<sub>n</sub>) where every player's action is dominant:
+<span class="eq">u<sub>i</sub>(a*<sub>i</sub>, a<sub>−i</sub>) ≥ u<sub>i</sub>(a′<sub>i</sub>, a<sub>−i</sub>) for all i, all a′<sub>i</sub>, all a<sub>−i</sub></span>
+(strict inequality for a strictly dominant equilibrium, and the weak version gives a weakly dominant one.)</div>
+<p><b>Why it is "good news":</b> a player does not need to guess what others will do. Her best action is the same in every case. The Prisoner's Dilemma is the standard example: Confess is dominant for both, so (C, C) is the DSE.</p>
+<p><b>General Prisoner's Dilemma.</b> Row player's payoffs: (C,C) = a, (C,D) = c, (D,C) = b, (D,D) = d (the column player's are the mirror image). C strictly dominates D when <span class="m">a &gt; b</span> (against C) and <span class="m">c &gt; d</span> (against D). It is a social dilemma when <span class="m">d &gt; a</span>: both prefer mutual D to mutual C. Check with a = −5, b = −20, c = 0, d = −1: all three hold.</p>
+<div class="box warn"><b>Trap.</b> Most games have no dominant strategies at all. That is why we need weaker tools below.</div></section>
+
+<section id="s3"><h2>3. Iterated elimination of strictly dominated strategies (IESDS)</h2>
+<p><b>Idea.</b> A rational player never plays a strictly dominated action. If I know you are rational, I can delete your dominated actions from the game too. That makes a smaller game with new dominated actions. Repeat. This uses <b>common knowledge of rationality</b>: "you are rational, you know I am rational, ..." as deep as needed.</p>
+<svg viewBox="0 0 520 70" width="520" role="img" aria-label="IESDS loop"><g stroke="var(--der)" stroke-width="2" fill="none"><path d="M120 35 L150 35"/><path d="M270 35 L300 35"/><path d="M420 35 L450 35"/></g>
+<rect class="n" x="5" y="10" width="115" height="50" rx="8" style="stroke:#0d9488"/><text x="62" y="40" text-anchor="middle" font-size="13">Find dominated</text>
+<rect class="n" x="150" y="10" width="120" height="50" rx="8" style="stroke:#0d9488"/><text x="210" y="40" text-anchor="middle" font-size="13">Delete it</text>
+<rect class="n" x="300" y="10" width="120" height="50" rx="8" style="stroke:#0d9488"/><text x="360" y="40" text-anchor="middle" font-size="13">Smaller game</text>
+<rect class="n" x="450" y="10" width="65" height="50" rx="8" style="stroke:#d97706"/><text x="482" y="40" text-anchor="middle" font-size="13">Repeat</text></svg>
+<h3>Example 1 (3×3)</h3>
+<table><tr><th>P1 \ P2</th><th>L</th><th>C</th><th>R</th></tr><tr><th>U</th><td>0, 0</td><td>1, −1</td><td>1, −1</td></tr><tr><th>M</th><td>−1, 1</td><td>0, 0</td><td>−1, 1</td></tr><tr><th>D</th><td>−1, 1</td><td>2, −1</td><td>0, 0</td></tr></table>
+<div class="box der"><b>Round 1.</b> P1: compare M with U. Against L: −1 &lt; 0. Against C: 0 &lt; 1. Against R: −1 &lt; 1. So U strictly dominates M. <b>Delete M.</b><br>
+<b>Round 2.</b> P2 with rows U and D left. Use the second number in each cell, since those are P2's payoffs. Row U: L = 0, C = −1. Row D: L = 1, C = −1. So L ≥ C everywhere and L &gt; C against U (0 &gt; −1) and against D (1 &gt; −1). C is strictly dominated by L. <b>Delete C.</b><br>
+<b>Round 3.</b> Remaining: U row (L: 0,0 and R: 1,−1), D row (L: −1,1 and R: 0,0). P1: U beats D against L (0 &gt; −1) and against R (1 &gt; 0). <b>Delete D.</b><br>
+<b>Round 4.</b> Only row U: P2 compares L (0) with R (−1). <b>Delete R.</b><br>
+<b>Result: (U, L) with payoffs (0, 0).</b> One cell is left, so the game is <i>dominance solvable</i>.</div>
+<h3>Example 2 (2×3)</h3>
+<table><tr><th>P1 \ P2</th><th>L</th><th>M</th><th>R</th></tr><tr><th>U</th><td>1, 0</td><td>1, 2</td><td>0, 1</td></tr><tr><th>D</th><td>0, 3</td><td>0, 1</td><td>2, 0</td></tr></table>
+<div class="box der">P1 has no dominated action at first (U wins vs L and M, D wins vs R). P2: compare M with R. Against U: 2 &gt; 1. Against D: 1 &gt; 0. So M strictly dominates R: <b>delete R</b>. Now P1: U gives 1 and 1, D gives 0 and 0, so U strictly dominates D: <b>delete D</b>. P2 facing U: L = 0, M = 2, so M. <b>Result: (U, M) = (1, 2).</b></div>
+<h3>The "guess 2/3 of the average" game</h3>
+<p>Everyone picks a whole number from 1 to 100. The winner is whoever is closest to <b>2/3 of the average</b> of all guesses.</p>
+<div class="box der"><b>Derivation of the unravelling</b><br>
+<b>Step 1.</b> The average can never exceed 100, so the target 2/3 × average is at most 2/3 × 100 = 66.67. Any guess above 67 is further from every possible target than 67 is. <b>Delete 68-100.</b><br>
+<b>Step 2.</b> Now everyone is at most 67, so the average is at most 67 and the target at most 2/3 × 67 = 44.67. <b>Delete 46-67</b> (keep up to 45).<br>
+<b>Step 3.</b> Max 45, target at most 30. Then 20, 14, 9, 6, 4, 3, 2, 1. In general after k rounds the upper limit is <span class="m">100·(2/3)<sup>k</sup></span>, which shrinks toward 1.<br>
+<b>Result:</b> the only survivor is <b>everyone guesses 1</b>.</div>
+<div class="box warn"><b>Real life.</b> Try it with friends. People rarely go the full way down, because it needs them to trust that <i>others</i> will do all the rounds (this is exactly common knowledge of rationality). Your winning guess is usually well above 1.</div>
+<p><b>Path independence.</b> For <i>strict</i> dominance, the order in which you delete does not matter. You always end with the same reduced game.</p></section>
+
+<section id="s4"><h2>4. Iterated elimination of weakly dominated strategies (IEWDS)</h2>
+<p>Same idea, but deleting <i>weakly</i> dominated actions (never worse, sometimes better). It removes more, but it is less safe.</p>
+<h3>Example: two stores choosing High, Low or Match price</h3>
+<table><tr><th>A \ B</th><th>High</th><th>Low</th><th>Match</th></tr><tr><th>High</th><td>10, 10</td><td>2, 15</td><td>10, 10</td></tr><tr><th>Low</th><td>15, 2</td><td>5, 5</td><td>5, 5</td></tr><tr><th>Match</th><td>10, 10</td><td>5, 5</td><td>10, 10</td></tr></table>
+<div class="box der"><b>Round 1.</b> For A compare Match with High: vs High 10 = 10, vs Low 5 &gt; 2, vs Match 10 = 10. Never worse, once better, so Match weakly dominates High. Same for B. <b>Delete High for both.</b><br>
+<b>Round 2.</b> Left with Low and Match. Compare Match with Low for A: vs Low 5 = 5, vs Match 10 &gt; 5. Match weakly dominates Low. <b>Delete Low for both.</b><br>
+<b>Result: (Match, Match) = (10, 10).</b></div>
+<div class="box warn"><b>Path dependence.</b> Take this table (my reading of the slide):
+<table><tr><th>P1 \ P2</th><th>L</th><th>R</th></tr><tr><th>T</th><td>1, 1</td><td>0, 0</td></tr><tr><th>M</th><td>1, 1</td><td>2, 1</td></tr><tr><th>B</th><td>0, 0</td><td>2, 1</td></tr></table>
+<b>Order 1:</b> delete B (M is never worse: 1 &gt; 0 and 2 = 2). Then L weakly beats R for P2 (1 &gt; 0, 1 = 1), delete R. Left: T and M against L, both pay (1, 1).<br>
+<b>Order 2:</b> delete T (M is never worse: 1 = 1, 2 &gt; 0). Then R weakly beats L for P2 (1 = 1, 1 &gt; 0), delete L. Left: M and B against R, both pay (2, 1).<br>
+Different order, different answer. So IEWDS is path-dependent and IESDS is not.</div>
+<div class="box def"><b>Dominance solvable.</b> A game where repeated deletion (strict or weak) leaves exactly one action per player.</div></section>
+
+<section id="s5"><h2>5. Nash equilibrium</h2>
+<p>Most games are not dominance solvable. Nash equilibrium needs far less: only that each player is doing the best she can <b>given what the others do</b>.</p>
+<div class="box def"><b>Best response.</b> Player i's best response to a<sub>−i</sub> is the set of actions that maximise her payoff against it:
+<span class="eq">BR<sub>i</sub>(a<sub>−i</sub>) = argmax<sub>a<sub>i</sub> ∈ A<sub>i</sub></sub> u<sub>i</sub>(a<sub>i</sub>, a<sub>−i</sub>)</span>
+It can contain more than one action (ties), which is why it is called a <i>correspondence</i>.</div>
+<div class="box def"><b>Nash equilibrium (NE).</b> A profile a* = (a*<sub>1</sub>, ..., a*<sub>n</sub>) such that for every player i and every action a<sub>i</sub>:
+<span class="eq">u<sub>i</sub>(a*<sub>i</sub>, a*<sub>−i</sub>) ≥ u<sub>i</sub>(a<sub>i</sub>, a*<sub>−i</sub>)</span>
+Same thing in best-response language: <span class="m">a*<sub>i</sub> ∈ BR<sub>i</sub>(a*<sub>−i</sub>) for all i</span>. In words: <b>nobody gains by changing only her own action.</b></div>
+<h3>Two ways to find a NE</h3>
+<ol><li><b>Test a candidate.</b> Pick a cell, and for each player check every unilateral switch. If nobody gains, it is a NE.</li><li><b>Best-response intersection.</b> For each column of the table, mark (underline) P1's best payoff in that column. For each row, mark P2's best payoff in that row. Cells where both numbers are marked are the NE. (For continuous games, draw both reaction curves and find where they cross, as in Cournot below.)</li></ol>
+<div class="box ex"><b>Easy walkthrough of method 2 (Prisoner's Dilemma).</b> Payoffs: (C,C) = −5,−5; (C,D) = 0,−20; (D,C) = −20,0; (D,D) = −1,−1. Column C: P1 gets −5 (play C) or −20 (play D), so mark −5. Column D: P1 gets 0 or −1, mark 0. Row C: P2 gets −5 or −20, mark −5. Row D: P2 gets 0 or −1, mark 0. The only cell where both numbers are marked is (C, C). That is the NE.</div>
+<div class="box ex"><b>How the two methods fit with Week 1:</b> every dominant strategy equilibrium is a NE (a dominant action is a best response to everything). Every NE survives IESDS (a strictly dominated action is never a best response). But a NE need not be dominant, and a NE can be bad for everyone (Prisoner's Dilemma).</div></section>
+
+<section id="s6"><h2>6. Classic 2×2 games</h2>
+<p>These use the payoffs written on the lecture slides.</p>
+<h3>Battle of the Sexes: coordinate, but disagree on where</h3>
+<p>A girl (row) and a boy (column) each choose Movie (M) or Cricket (C). Both want to go to the same place, but they prefer different ones.</p>
+<table><tr><th>Girl \ Boy</th><th>M</th><th>C</th></tr><tr><th>M</th><td class="nash">1, 2</td><td>0, 0</td></tr><tr><th>C</th><td>0, 0</td><td class="nash">2, 1</td></tr></table>
+<p>At (M, M): the girl switching to C gets 0 &lt; 1, the boy switching to C gets 0 &lt; 2. Nobody gains, so it is a NE. At (C, C): same check (0 &lt; 2 and 0 &lt; 1), also a NE. At (M, C) both get 0 and either one gains by switching, so it is not. <b>Two pure NE</b>, each better for a different person. Theory cannot say which one will occur.</p>
+<h3>Stag Hunt: trust vs safety (Rousseau's social contract)</h3>
+<p>Two hunters each choose Stag (S) or Rabbit (R). Stag needs both of them; a rabbit can be caught alone.</p>
+<table><tr><th>1 \ 2</th><th>S</th><th>R</th></tr><tr><th>S</th><td class="nash">8, 8</td><td>0, 4</td></tr><tr><th>R</th><td>4, 0</td><td class="nash">2, 2</td></tr></table>
+<p>At (S, S): switching to R gives 4 &lt; 8, so no gain. At (R, R): switching to S gives 0 &lt; 2, no gain. <b>Both are NE.</b> (S, S) is better for both (<b>payoff-dominant</b>). (R, R) is the <b>safe</b> outcome: R guarantees at least 2, while S risks 0.<br>
+<b>How much trust is needed?</b> Let q = chance the other plays S. S pays 8q. R pays 4q + 2(1 − q) = 2 + 2q. They are equal when 8q = 2 + 2q, so q = 1/3. If you think the other plays S with more than 1/3 chance, go for Stag. The game is a model of cooperation that needs mutual trust.</p>
+<h3>Hawk-Dove (Chicken): two cars meet on a narrow road</h3>
+<p><i>The slide shows the story (two cars facing each other on a narrow road) and an empty table, so these payoff numbers are my own. Any numbers with the same ordering give the same result.</i></p>
+<table><tr><th>P1 \ P2</th><th>Hawk</th><th>Dove</th></tr><tr><th>Hawk</th><td>0, 0</td><td class="nash">3, 1</td></tr><tr><th>Dove</th><td class="nash">1, 3</td><td>2, 2</td></tr></table>
+<p>At (H, D): P1 switching to D gets 2 &lt; 3, P2 switching to H gets 0 &lt; 1. NE. (D, H) is also NE. (D, D) is not (P1 deviates to H and gets 3 &gt; 2). (H, H) is not (deviating to D gives 1 &gt; 0). <b>Two asymmetric pure NE</b>, where one player is aggressive and the other yields.</p>
+<div class="box warn"><b>Common thread:</b> Battle of the Sexes, Stag Hunt and Hawk-Dove each have <b>more than one</b> pure NE. Nash tells you which outcomes are stable, not which one will happen. That motivates the next section.</div></section>
+
+<section id="s7"><h2>7. How should we read a Nash equilibrium?</h2>
+<p>Two big readings (Osborne and Rubinstein):</p>
+<ul><li><b>Evolutive:</b> people play the game again and again, learn from others, and drift to an equilibrium. (Like a norm at a college event about whether people stand or sit.)</li><li><b>Educative (deductive):</b> perfectly rational players reason their way there from common knowledge, in one shot.</li></ul>
+<p><b>Dutta's "Nash parables"</b> are five stories for why a NE might actually be played:</p>
+<table class="scroll"><tr><th>Parable</th><th>Meaning</th></tr><tr><td>Play prescription</td><td>A convention or rule tells everyone what to do (drive on the left). If it is a NE, nobody wants to break it.</td></tr><tr><td>Pre-play communication</td><td>Players talk first. Talk is not binding ("cheap talk"), but it sticks <i>only if</i> the agreed profile is a NE.</td></tr><tr><td>Rational introspection</td><td>Each player reasons it out alone from the game and common knowledge.</td></tr><tr><td>Focal point (Schelling)</td><td>Among many NE, one stands out as obvious (a 50-50 split), and everyone expects everyone to pick it.</td></tr><tr><td>Trial and error</td><td>Repeated play; players adjust until nobody wants to change.</td></tr></table></section>
+
+<section id="s8"><h2>8. Application: Braess's paradox as a game</h2>
+<p>4000 drivers go from A to B. Roads A→C and D→B take <span class="m">x/100</span> minutes, where x is the number of cars on that road. Roads C→B and A→D always take 45 min. <b>Players:</b> the 4000 drivers. <b>Strategies:</b> ACB or ADB. <b>Payoff:</b> minus the travel time.</p>
+<svg viewBox="0 0 420 200" width="420" role="img" aria-label="Braess network week 2"><g stroke="var(--def)" stroke-width="2.5" fill="none"><path d="M60 100 L200 30"/><path d="M60 100 L200 170"/><path d="M200 30 L350 100"/><path d="M200 170 L350 100"/></g><path d="M200 46 L200 154" stroke="#e11d48" stroke-width="3" stroke-dasharray="6 4" fill="none"/>
+<circle class="n" cx="60" cy="100" r="16"/><text x="60" y="105" text-anchor="middle">A</text><circle class="n" cx="350" cy="100" r="16"/><text x="350" y="105" text-anchor="middle">B</text><circle class="n" cx="200" cy="30" r="16"/><text x="200" y="35" text-anchor="middle">C</text><circle class="n" cx="200" cy="170" r="16"/><text x="200" y="175" text-anchor="middle">D</text>
+<text x="85" y="55" font-size="13">A→C: x/100</text><text x="265" y="55" font-size="13">C→B: 45</text><text x="85" y="160" font-size="13">A→D: 45</text><text x="262" y="160" font-size="13">D→B: x/100</text><text x="208" y="105" font-size="13" fill="#e11d48">new C→D: 0 min</text></svg>
+<div class="box der"><b>Before the bridge: finding the NE</b><br>
+Let n drivers take ACB, so 4000 − n take ADB.<span class="eq">T(ACB) = n/100 + 45 &nbsp;&nbsp; T(ADB) = 45 + (4000 − n)/100</span>
+In a NE nobody gains by switching, so the two times must be equal:<span class="eq">n/100 = (4000 − n)/100 &nbsp;⟹&nbsp; n = 4000 − n &nbsp;⟹&nbsp; n = 2000</span>
+Travel time = 2000/100 + 45 = <b>65 min</b>.<br>
+<b>Check:</b> one driver switches from ADB to ACB. Now ACB has 2001 cars: 2001/100 + 45 = 65.01 &gt; 65. He loses. So no one wants to move. It is a NE.</div>
+<div class="box der"><b>After adding the 0-minute bridge C→D: new route ACDB</b><span class="eq">T(ACDB) = x<sub>AC</sub>/100 + 0 + x<sub>DB</sub>/100</span>
+<b>Test one driver deviating from the old equilibrium.</b> A driver from ACB moves to ACDB. Cars on A→C stay 2000 (he leaves and rejoins it). Cars on D→B go from 2000 to 2001. T = 20 + 0 + 20.01 = <b>40.01 min</b>, much less than 65. Everyone wants to switch.<br>
+<b>Why ACDB wins whatever others do.</b> Compare with ACB = x<sub>AC</sub>/100 + 45. The x<sub>AC</sub> terms are the same, so ACDB is better when x<sub>DB</sub>/100 &lt; 45. Since x<sub>DB</sub> ≤ 4000, x<sub>DB</sub>/100 ≤ 40 &lt; 45, always true. Compare with ADB = 45 + x<sub>DB</sub>/100: better when x<sub>AC</sub>/100 &lt; 45, also always true. So ACDB strictly dominates both old routes.<br>
+<b>Result.</b> All 4000 take ACDB:<span class="eq">T = 4000/100 + 0 + 4000/100 = 40 + 40 = <b>80 min</b></span></div>
+<div class="box warn"><b>The paradox.</b> A free shortcut moved everyone from 65 to 80 minutes. Each driver is rational, but together they overload both congested roads. Real cases: Stuttgart (1969), where traffic got worse until a newly built road was closed; New York (1990), where closing 42nd Street on Earth Day improved flow; Seoul (2002), where a 6-lane road was torn down to speed traffic. The same logic applies to electricity and internet networks.</div></section>
+
+<section id="s9"><h2>9. Application: Hotelling's location model</h2>
+<p><b>Setup.</b> A 1 km beach, consumers spread evenly along it, each buys exactly one ice cream (price INR 10, every 100 m of walking costs INR 1, so each customer simply goes to the <b>nearer</b> seller). Two sellers A and B pick positions x<sub>A</sub>, x<sub>B</sub> from {0, 0.1, 0.2, ..., 1}. Each wants the biggest <b>market share</b>.</p>
+<div class="box der"><b>Deriving market share.</b> Say x<sub>A</sub> &lt; x<sub>B</sub>. A customer at position t is equally far from both when t − x<sub>A</sub> = x<sub>B</sub> − t, i.e. at the midpoint
+<span class="eq">t* = (x<sub>A</sub> + x<sub>B</sub>) / 2</span>
+Everyone left of t* goes to A, everyone right goes to B. So <b>share of A = t*</b> and <b>share of B = 1 − t*</b> (if they are at the same spot, 50-50).</div>
+<svg viewBox="0 0 520 90" width="520" role="img" aria-label="Beach line"><path d="M20 50 L500 50" stroke="var(--ink)" stroke-width="3"/><text x="20" y="75" font-size="13">0</text><text x="492" y="75" font-size="13">1</text>
+<circle cx="140" cy="50" r="9" fill="#4f46e5"/><text x="140" y="35" text-anchor="middle" font-size="13">A at 0.2</text><circle cx="360" cy="50" r="9" fill="#e11d48"/><text x="360" y="35" text-anchor="middle" font-size="13">B at 0.6</text>
+<path d="M250 40 L250 62" stroke="#d97706" stroke-width="2"/><text x="250" y="80" text-anchor="middle" font-size="13">midpoint 0.4</text></svg>
+<h3>Best responses, case by case</h3>
+<div class="box der"><b>B at 0:</b> A at 0.1 gives t* = 0.05, so A's share = 1 − 0.05 = <b>95%</b>. A at 0.2 gives t* = 0.1, A's share = 90%. Closer is better, so BR<sub>A</sub>(0) = 0.1.<br>
+<b>B at 0.6:</b> A at 0.5 gives t* = 0.55, so A gets <b>55%</b>. A at 0.7 gives t* = 0.65, and A gets only 35%. A at 0.6 gives 50%. So BR<sub>A</sub>(0.6) = 0.5: sit just on the longer side (the left) and next to B.<br>
+<b>B at 0.4:</b> by mirror image, BR<sub>A</sub>(0.4) = 0.5, with 55%.<br>
+<b>B at 0.5:</b> A at 0.4 gives t* = 0.45, 45%. A at 0.6 gives 1 − 0.55 = 45%. A at 0.5 gives 50%. So BR<sub>A</sub>(0.5) = 0.5.</div>
+<table><tr><th>If B is at</th><th>left of centre (&lt; 0.5)</th><th>0.5</th><th>right of centre (&gt; 0.5)</th></tr><tr><th>A's best response</th><td>one step to B's right (x<sub>B</sub> + 0.1)</td><td>0.5</td><td>one step to B's left (x<sub>B</sub> − 0.1)</td></tr></table>
+<p>The seller always squeezes in next to the rival, on the side with more customers. By symmetry the same holds for B. The two best-response rules cross at only one cell:</p>
+<div class="box def"><b>Unique NE: x<sub>A</sub> = x<sub>B</sub> = 0.5.</b> Check: if A is at 0.5, B's best reply is 0.5 and vice versa. Both sell in the middle and split the market 50-50.</div>
+<p><b>Why "ε" in some notes?</b> On a continuous beach there is no "next point", so one writes x<sub>B</sub> − ε for "just beside B". The grid version avoids that. <b>Other uses:</b> the same logic explains why two political parties move toward the centre, and why rival shops cluster on the same street.</p></section>
+
+<section id="s10"><h2>10. Application: Cournot competition</h2>
+<p>Two firms sell the same product. Each chooses a <b>quantity</b> q<sub>i</sub> at the same time. The market price depends on the total.</p>
+<ul><li>Inverse demand: <span class="m">P = a − b(q<sub>1</sub> + q<sub>2</sub>)</span> (more total output, lower price; a, b &gt; 0)</li><li>Cost: <span class="m">c<sub>i</sub> q<sub>i</sub></span> (constant cost c<sub>i</sub> per unit)</li></ul>
+<div class="box der"><b>Step 1: profit.</b> Revenue minus cost:<span class="eq">π<sub>i</sub> = P·q<sub>i</sub> − c<sub>i</sub>q<sub>i</sub> = [a − c<sub>i</sub> − b(q<sub>i</sub> + q<sub>j</sub>)] q<sub>i</sub></span>
+<b>Step 2: best response.</b> Treat q<sub>j</sub> as fixed and maximise over q<sub>i</sub>. Differentiate:<span class="eq">∂π<sub>i</sub>/∂q<sub>i</sub> = a − c<sub>i</sub> − 2b q<sub>i</sub> − b q<sub>j</sub> = 0</span>
+(The 2b comes from differentiating the q<sub>i</sub>² term: −b q<sub>i</sub>² gives −2b q<sub>i</sub>.) The second derivative is −2b &lt; 0, so this is a maximum. Solve for q<sub>i</sub>:<span class="eq">q<sub>i</sub> = (a − c<sub>i</sub>)/(2b) − q<sub>j</sub>/2 &nbsp;&nbsp; <i>(reaction function)</i></span>
+If the rival makes more, you make less.<br>
+<b>Step 3: equilibrium.</b> A NE is where both reaction functions hold at once. With equal costs c<sub>1</sub> = c<sub>2</sub> = c, by symmetry q<sub>1</sub> = q<sub>2</sub> = q*:<span class="eq">q* = (a − c)/(2b) − q*/2 &nbsp;⟹&nbsp; (3/2)q* = (a − c)/(2b) &nbsp;⟹&nbsp; <b>q* = (a − c)/(3b)</b></span>
+<b>Step 4: market outcome.</b><span class="eq">Q* = 2q* = 2(a − c)/(3b) &nbsp;&nbsp; P* = a − bQ* = a − 2(a − c)/3 = (a + 2c)/3</span>
+Profit of each firm = (P* − c)q* = [(a − c)/3]·[(a − c)/(3b)] = (a − c)²/(9b).</div>
+<div class="box der"><b>Unequal costs</b> (bonus). Put q<sub>2</sub> = (a − c<sub>2</sub>)/(2b) − q<sub>1</sub>/2 into firm 1's reaction function:<br>
+q<sub>1</sub> = (a − c<sub>1</sub>)/(2b) − (a − c<sub>2</sub>)/(4b) + q<sub>1</sub>/4. Move q<sub>1</sub>/4 left: (3/4)q<sub>1</sub> = [2(a − c<sub>1</sub>) − (a − c<sub>2</sub>)]/(4b). So<span class="eq">q<sub>1</sub>* = (a − 2c<sub>1</sub> + c<sub>2</sub>)/(3b), &nbsp; q<sub>2</sub>* = (a − 2c<sub>2</sub> + c<sub>1</sub>)/(3b)</span>
+The lower-cost firm produces more. Setting c<sub>1</sub> = c<sub>2</sub> = c gives back (a − c)/(3b).</div>
+<div class="box ex"><b>Numbers: a = 100, b = 1, c = 10.</b> Reaction: q<sub>1</sub> = 45 − q<sub>2</sub>/2. Equilibrium q* = 90/3 = <b>30</b> each, Q = 60, P = 100 − 60 = <b>40</b>, profit = (40 − 10)(30) = <b>900</b> each. A single monopolist would produce (a − c)/(2b) = 45 at price 55 and earn 45 × 45 = 2025, more than the duopoly's combined 1800. Competition lowers price and joint profit.</div>
+<svg viewBox="0 0 360 250" width="360" role="img" aria-label="Cournot reaction curves"><g stroke="var(--ink)" stroke-width="1.5" fill="none"><path d="M40 210 L40 20"/><path d="M40 210 L340 210"/></g>
+<path d="M184 210 L40 30" stroke="#4f46e5" stroke-width="3" fill="none"/><path d="M40 120 L328 210" stroke="#e11d48" stroke-width="3" fill="none"/>
+<circle cx="136" cy="150" r="7" fill="#0d9488"/><text x="148" y="142" font-size="13">NE (30, 30)</text>
+<text x="344" y="214" font-size="13">q₁</text><text x="46" y="18" font-size="13">q₂</text><text x="30" y="226" font-size="11">0</text><text x="170" y="226" font-size="11">45</text><text x="14" y="124" font-size="11">45</text><text x="22" y="34" font-size="11">90</text>
+<text x="150" y="196" font-size="12" fill="#4f46e5">Firm 1: q₁ = 45 − q₂/2</text><text x="60" y="108" font-size="12" fill="#e11d48">Firm 2: q₂ = 45 − q₁/2</text></svg>
+<p style="text-align:center;font-size:.9rem">Where the two reaction lines cross is the Nash equilibrium (drawn for a = 100, b = 1, c = 10).</p></section>
+
+<section id="s11"><h2>11. Week 2 recap</h2>
+<div class="scroll"><table><tr><th>Idea</th><th>One-line summary</th></tr>
+<tr><td>Dominant strategy eq.</td><td>Everyone has an action that is best no matter what; no beliefs needed</td></tr>
+<tr><td>IESDS</td><td>Delete strictly dominated actions repeatedly; order does not matter</td></tr>
+<tr><td>IEWDS</td><td>Delete weakly dominated actions; the answer can depend on order</td></tr>
+<tr><td>Nash equilibrium</td><td>Everyone best-responds to everyone else; no one gains by deviating alone</td></tr>
+<tr><td>BoS, Stag Hunt, Hawk-Dove</td><td>Two pure NE each; theory does not say which</td></tr>
+<tr><td>Braess</td><td>Free bridge: 65 → 80 min</td></tr>
+<tr><td>Hotelling</td><td>Both sellers at 0.5</td></tr>
+<tr><td>Cournot</td><td>q* = (a − c)/(3b) each</td></tr></table></div>
+<h3>Practice (tap to reveal)</h3>
+<ol>
+<li>Why can IESDS never remove a Nash equilibrium?<details><summary>Answer</summary>A strictly dominated action is worse than another one against everything, so it is never a best response, so it cannot be part of a NE.</details></li>
+<li>In Cournot with a = 120, b = 2, c = 20, find q*, P* and each profit.<details><summary>Answer</summary>q* = 100/6 ≈ 16.67. Q = 33.33, P = 120 − 2(33.33) = 53.33. Profit = (53.33 − 20)(16.67) ≈ 555.6, which matches (a−c)²/(9b) = 10000/18.</details></li>
+<li>In Hotelling, why is (0.4, 0.6) not a NE?<details><summary>Answer</summary>A can move to 0.5. Midpoint becomes 0.55, so A gets 55% instead of 50%.</details></li>
+<li>Find the NE of the Prisoner's Dilemma by best-response marking.<details><summary>Answer</summary>Only (C, C): C is the best reply to both of the other player's actions, so both numbers get marked only in that cell.</details></li></ol></section>
+</main></body></html>
