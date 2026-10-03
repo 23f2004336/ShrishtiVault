@@ -2,6 +2,7 @@ name: Build notes list
 on:
   push:
     paths: ["notes/**"]
+  workflow_dispatch:
 permissions:
   contents: write
 jobs:
