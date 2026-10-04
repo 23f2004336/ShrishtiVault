@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game Theory and Strategy: Week 4 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#d97706,#4f46e5);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.92}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--ex);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card)}
+th,td{border:1px solid var(--line);padding:7px 13px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit;font-size:13px}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+.e{stroke:var(--def);stroke-width:2.2;fill:none}.hi{stroke:#0d9488;stroke-width:4;fill:none}
+ul,ol{padding-left:22px}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+</style></head><body>
+<header><h1>Game Theory and Strategy: Week 4</h1><p>Extensive-form games: game trees, backward induction, credible threats, information sets, subgames and subgame perfect equilibrium</p></header>
+<nav><a href="#s1">1 Trees</a><a href="#s2">2 Actions vs strategies</a><a href="#s3">3 Rollback</a><a href="#s4">4 Normal form</a><a href="#s5">5 Credible threats</a><a href="#s6">6 Classic games</a><a href="#s7">7 Info sets</a><a href="#s8">8 Subgames</a><a href="#s9">9 SPE</a><a href="#s10">10 Recap</a></nav>
+<main>
+<div class="box def"><b>Colour key:</b> blue = definition, green = derivation (every step shown), orange = worked example, red = trap.</div>
+<div class="box ex"><b>Maths you need this week:</b> only comparing numbers ("which is bigger?"), plus the Week 3 idea of mixed equilibrium in a 2×2 table (set the other player's two payoffs equal and solve). That is all.</div>
+
+<section id="s1"><h2>1. Game trees: games that unfold over time</h2>
+<p>Until now every game was a table: everyone chose at once. Many real situations happen in <b>order</b> and later players see what happened. We draw those as a <b>game tree</b> (the <b>extensive form</b>).</p>
+<table><tr><th></th><th>Normal (table) form</th><th>Extensive (tree) form</th></tr><tr><th>Time</th><td>Ignored; simultaneous</td><td>Moves happen in sequence</td></tr><tr><th>Describes</th><td>Players, actions, payoff for each profile</td><td>Players, who moves when, what they know, actions, payoffs</td></tr></table>
+<h3>Parts of a tree</h3>
+<ul><li><b>Initial node</b> (root): where the game starts. Exactly one.</li><li><b>Decision node</b>: a point where one named player picks an action.</li><li><b>Branch</b>: one available action, drawn as a line out of a node.</li><li><b>Terminal node</b>: the end. It carries a <b>payoff vector</b> (u₁, u₂, ...).</li></ul>
+<div class="box def"><b>Three rules for a valid tree:</b> (1) one initial node, (2) no cycles (you can never come back to an earlier node), (3) from the root there is exactly <b>one path</b> to every node.</div>
+<h3>Example: the war game</h3>
+<p>Country 1 decides whether to attack Country 2, which holds an island. If attacked, Country 2 sees the attack and either fights or retreats across a bridge. Each army prefers holding the island to not holding it. A fight is the worst outcome for both. <i>The slides give words only, so the numbers below are mine; only their ordering matters.</i></p>
+<svg viewBox="0 0 420 220" width="420" role="img" aria-label="War game tree"><path class="e" d="M210 30 L110 100"/><path class="e" d="M210 30 L320 100"/><path class="e" d="M110 100 L50 175"/><path class="e" d="M110 100 L170 175"/>
+<circle class="n" cx="210" cy="30" r="15"/><text x="205" y="35">1</text><circle class="n" cx="110" cy="100" r="15"/><text x="105" y="105">2</text>
+<text x="135" y="55">Attack</text><text x="262" y="55">Not attack</text><text x="300" y="130" text-anchor="middle">(0, 2)</text><text x="38" y="135">Fight</text><text x="155" y="135">Retreat</text><text x="50" y="195" text-anchor="middle">(−10, −10)</text><text x="170" y="195" text-anchor="middle">(10, −2)</text></svg>
+<p>Payoffs are (Country 1, Country 2). Country 1 likes: take the island (10) &gt; status quo (0) &gt; war (−10). Country 2 likes: keep the island (2) &gt; retreat (−2) &gt; war (−10).</p>
+<h3>Two kinds of uncertainty (from the slides)</h3>
+<ul><li><b>Nature's move:</b> chance decides something (a coin, a random type). Drawn as a node owned by "Nature".</li><li><b>Strategic uncertainty:</b> you do not know what another player chose. Drawn with an <b>information set</b> (Section 7).</li></ul>
+<h3>The Prisoner's Dilemma as a tree</h3>
+<svg viewBox="0 0 460 190" width="460" role="img" aria-label="Prisoner dilemma tree"><path class="e" d="M230 25 L130 80"/><path class="e" d="M230 25 L330 80"/><path class="e" d="M130 80 L80 150"/><path class="e" d="M130 80 L180 150"/><path class="e" d="M330 80 L280 150"/><path class="e" d="M330 80 L380 150"/>
+<path d="M130 80 L330 80" stroke="#e11d48" stroke-width="2.2" stroke-dasharray="5 4" fill="none"/>
+<circle class="n" cx="230" cy="25" r="15"/><text x="222" y="30">R</text><circle class="n" cx="130" cy="80" r="15"/><text x="123" y="85">B</text><circle class="n" cx="330" cy="80" r="15"/><text x="323" y="85">B</text>
+<text x="160" y="42">C</text><text x="290" y="42">D</text><text x="80" y="115">C</text><text x="170" y="115">D</text><text x="280" y="115">C</text><text x="370" y="115">D</text>
+<text x="80" y="170" text-anchor="middle">−5,−5</text><text x="180" y="170" text-anchor="middle">0,−20</text><text x="280" y="170" text-anchor="middle">−20,0</text><text x="380" y="170" text-anchor="middle">−1,−1</text><text x="230" y="75" text-anchor="middle" style="fill:#e11d48">same information set</text></svg>
+<p>Ranga (R) moves first, but Billa (B) cannot see it. The dashed red line joins Billa's two nodes: he cannot tell which one he is at. So "simultaneous" and "sequential" are really about <b>what you know</b>, not the clock.</p></section>
+
+<section id="s2"><h2>2. Rules of the game, actions and strategies</h2>
+<div class="box def"><b>What a tree must specify:</b> who the players are, who moves when (the <i>player function</i>), what actions are feasible, how much each player knows when moving, and the payoffs.<br>
+<b>Formal version:</b> N (players); H (set of <b>histories</b>, i.e. sequences of actions so far, starting from the empty history, where every start of a history is also a history); Z (terminal histories, where play stops); P(h) = the player who moves after history h; u<sub>i</sub>(z) = payoff at each z in Z.</div>
+<div class="box def"><b>Action:</b> one choice at one decision point. <b>Strategy:</b> a complete plan that names an action at <b>every</b> decision point of that player, including points that will never be reached.</div>
+<div class="box warn"><b>Trap:</b> "Play U, then a" is a strategy. "Play U" alone is not, if you also move later. In a table game, an action and a strategy are the same thing.</div>
+<div class="box der"><b>Counting strategies.</b> If player i has decision points 1, ..., k and m<sub>j</sub> actions at point j, she has a choice at each point, independently, so
+<span class="eq">|S<sub>i</sub>| = m<sub>1</sub> × m<sub>2</sub> × ... × m<sub>k</sub></span>
+Example: 3 decision points with 2, 3 and 2 actions give 2 × 3 × 2 = <b>12</b> strategies. The count grows fast, which is why we prefer trees to tables for sequential games.</div></section>
+
+<section id="s3"><h2>3. Backward induction (rollback)</h2>
+<p><b>Forward reasoning</b> ("what looks best right now?") goes wrong because it ignores how others will react. <b>Backward reasoning</b> starts at the end, where choices are easy, and works up.</p>
+<svg viewBox="0 0 560 70" width="560" role="img" aria-label="Rollback algorithm"><g class="e"><path d="M110 35 L140 35"/><path d="M270 35 L300 35"/><path d="M430 35 L460 35"/></g>
+<rect class="n" x="5" y="10" width="105" height="50" rx="8"/><text x="57" y="30" text-anchor="middle">Last decision</text><text x="57" y="46" text-anchor="middle">nodes</text>
+<rect class="n" x="140" y="10" width="130" height="50" rx="8"/><text x="205" y="30" text-anchor="middle">Mover picks</text><text x="205" y="46" text-anchor="middle">best own payoff</text>
+<rect class="n" x="300" y="10" width="130" height="50" rx="8"/><text x="365" y="30" text-anchor="middle">Cut other branches,</text><text x="365" y="46" text-anchor="middle">roll payoff up</text>
+<rect class="n" x="460" y="10" width="95" height="50" rx="8"/><text x="507" y="30" text-anchor="middle">Repeat up</text><text x="507" y="46" text-anchor="middle">to the root</text></svg>
+<div class="box def"><b>Works for:</b> finite games of <b>perfect information</b> (every information set has exactly one node). The result is the <b>rollback equilibrium</b>: a complete strategy profile.</div>
+<h3>War game by rollback</h3>
+<div class="box der"><b>Step 1:</b> Country 2's node: Fight −10 vs Retreat −2. Retreat is better, so Country 2 retreats. Roll up (10, −2).<br>
+<b>Step 2:</b> Country 1: Attack leads to (10, −2), so payoff 10. Not attack gives 0. 10 &gt; 0, so Country 1 attacks.<br>
+<b>Result:</b> Attack, Retreat. Payoffs (10, −2). A "forward" thinker who feared war would wrongly stay home.</div>
+<h3>Burning the bridge: changing the game helps Country 2</h3>
+<svg viewBox="0 0 420 200" width="420" role="img" aria-label="War game after burning the bridge"><path class="e" d="M210 30 L110 100"/><path class="e" d="M210 30 L320 100"/><path class="e" d="M110 100 L110 170" /><circle class="n" cx="210" cy="30" r="15"/><text x="205" y="35">1</text><circle class="n" cx="110" cy="100" r="15"/><text x="105" y="105">2</text>
+<text x="135" y="55">Attack</text><text x="262" y="55">Not attack</text><text x="300" y="130" text-anchor="middle">(0, 2)</text><text x="120" y="140">Fight (only option)</text><text x="110" y="190" text-anchor="middle">(−10, −10)</text></svg>
+<div class="box der">Country 2 destroys the bridge, deleting Retreat. Rollback: at Country 2's node only Fight remains, giving (−10, −10). Country 1 compares Attack (−10) with Not attack (0) and stays home. Country 2 ends with <b>2</b> instead of −2.<br><b>Lesson:</b> having fewer options can help if it makes your threat <b>credible</b>. Cutting off your own escape route is a commitment.</div>
+<h3>A three-stage example with the full derivation</h3>
+<svg viewBox="0 0 520 250" width="520" role="img" aria-label="Three stage tree"><g class="e"><path d="M260 25 L130 80"/><path d="M260 25 L390 80"/><path d="M130 80 L60 150"/><path d="M130 80 L200 150"/><path d="M390 80 L340 150"/><path d="M390 80 L450 150"/><path d="M200 150 L160 215"/><path d="M200 150 L240 215"/></g>
+<circle class="n" cx="260" cy="25" r="15"/><text x="255" y="30">1</text><circle class="n" cx="130" cy="80" r="15"/><text x="125" y="85">2</text><circle class="n" cx="390" cy="80" r="15"/><text x="385" y="85">2</text><circle class="n" cx="200" cy="150" r="15"/><text x="195" y="155">1</text>
+<text x="180" y="45">U</text><text x="330" y="45">D</text><text x="75" y="108">L</text><text x="175" y="108">R</text><text x="345" y="108">L</text><text x="430" y="108">R</text><text x="165" y="190">a</text><text x="232" y="190">b</text>
+<text x="60" y="170" text-anchor="middle">(2,4)</text><text x="340" y="170" text-anchor="middle">(1,1)</text><text x="450" y="170" text-anchor="middle">(0,5)</text><text x="160" y="235" text-anchor="middle">(5,3)</text><text x="240" y="235" text-anchor="middle">(3,2)</text></svg>
+<div class="box der"><b>Stage 3 (Player 1 at node after U, R):</b> a gives 5, b gives 3. Choose a. Roll up (5, 3).<br>
+<b>Stage 2 (Player 2):</b> after U: L gives 4, R (now worth 3) gives 3. Choose L, roll up (2, 4). After D: L gives 1, R gives 5. Choose R, roll up (0, 5).<br>
+<b>Stage 1 (Player 1):</b> U leads to payoff 2, D leads to 0. Choose U.<br>
+<b>Full equilibrium:</b> Player 1 = (U, a) [U at the root, a if the other node is ever reached]. Player 2 = (L, R) [L after U, R after D].
+<span class="eq">s* = ( (U, a), (L, R) ) &nbsp;&nbsp; path: U → L &nbsp;&nbsp; outcome (2, 4)</span></div>
+<div class="box warn"><b>Common mistake:</b> writing only the path (U, L). The actions "a" and "R after D" are never played, but they must be stated: they are exactly what makes Player 2 choose L (if he chose R after U, Player 1 would get 5 and he would get only 3).</div>
+<p><b>Ties.</b> If a mover is indifferent between two actions, each choice gives a different rolled-up tree, so there can be <b>several rollback equilibria</b>. Check each.</p>
+<h3>Slide example: Lucy and Charlie Brown (the football)</h3>
+<p>Lucy (L) moves first: Ask (A) Charlie Brown to kick the football, or Don't ask (DA). If she asks, Charlie Brown (CB) can Accept or Reject. If he accepts, Lucy decides at the last moment to Take Away the ball (TA) or Let Go (LG). <i>(TA and LG are my reading of the slide's abbreviations.)</i> Payoffs are (Lucy, CB).</p>
+<svg viewBox="0 0 460 230" width="460" role="img" aria-label="Lucy and Charlie Brown tree"><g class="e"><path d="M50 170 L150 110"/><path d="M50 170 L180 205"/><path d="M150 110 L250 55"/><path d="M150 110 L270 150"/><path d="M250 55 L360 25"/><path d="M250 55 L360 80"/></g>
+<circle class="n" cx="50" cy="170" r="14"/><text x="45" y="175">L</text><circle class="n" cx="150" cy="110" r="14"/><text x="140" y="115">CB</text><circle class="n" cx="250" cy="55" r="14"/><text x="245" y="60">L</text>
+<text x="78" y="130">A</text><text x="95" y="205">DA</text><text x="170" y="68">Accept</text><text x="200" y="145">Reject</text><text x="305" y="30">TA</text><text x="305" y="85">LG</text>
+<text x="190" y="222">(3, 2)</text><text x="275" y="165">(2, 3)</text><text x="368" y="30">(4, 1)</text><text x="368" y="85">(1, 4)</text></svg>
+<div class="box der"><b>Rollback.</b> <b>Last node (Lucy):</b> TA gives her 4, LG gives 1. She takes the ball away. Roll up (4, 1).<br>
+<b>Charlie Brown:</b> Accept now means (4, 1), so he gets 1. Reject gives him 3. He rejects. Roll up (2, 3).<br>
+<b>Lucy at the root:</b> Ask leads to (2, 3), so she gets 2. Don't ask gives 3. She doesn't ask.<br>
+<b>Result:</b> Lucy plays (DA, TA), Charlie Brown plays Reject, outcome <b>(3, 2)</b>. Charlie Brown does not trust her, and he is right.</div>
+<div class="box der"><b>Table form.</b> Lucy has 2 decision points with 2 actions each, so 2 × 2 = 4 strategies. Charlie Brown has 1, so 2 strategies.
+<table><tr><th>Lucy \ CB</th><th>Accept</th><th>Reject</th></tr><tr><th>(A, TA)</th><td>4, 1</td><td>2, 3</td></tr><tr><th>(A, LG)</th><td>1, 4</td><td>2, 3</td></tr><tr><th>(DA, TA)</th><td>3, 2</td><td class="nash">3, 2</td></tr><tr><th>(DA, LG)</th><td>3, 2</td><td class="nash">3, 2</td></tr></table>
+Check (DA, LG) with Reject: Lucy switching to (A, ·) gets 2 &lt; 3. Charlie Brown's choice does not matter (the game ends at DA), so no gain. ✔ NE. Same for (DA, TA) with Reject. The other cells fail: e.g. (DA, TA) with Accept, Lucy switches to (A, TA) and gets 4 &gt; 3.<br>
+<b>Two Nash equilibria, one subgame perfect.</b> Both have the same outcome (3, 2). But (DA, LG) says "if we ever get to the last node, Lucy lets go", and at that node LG pays 1 against TA's 4. That plan is not credible. Subgames: the whole game, the game after A, and Lucy's last node (3 in all). Only (DA, TA) with Reject is a NE in all three, so it is the <b>SPE</b>.</div>
+</section>
+
+<section id="s4"><h2>4. From tree to table, and non-credible threats</h2>
+<div class="box def"><b>Converting a tree to a table:</b> (1) list each player's complete strategies; (2) make rows and columns from them; (3) for each pair, follow the tree to the end and write its payoffs in that cell.</div>
+<h3>The entry game</h3>
+<p>The Challenger can Enter or Stay Out. If it enters, the Incumbent can Accommodate or Fight. <i>Payoffs from the slide, written (Challenger, Incumbent):</i> Stay out = (1, 2). Enter then Accommodate = (2, 1). Enter then Fight = (0, 0).</p>
+<svg viewBox="0 0 400 200" width="400" role="img" aria-label="Entry game"><path class="e" d="M200 25 L110 85"/><path class="e" d="M200 25 L310 85"/><path class="e" d="M110 85 L50 150"/><path class="e" d="M110 85 L170 150"/>
+<circle class="n" cx="200" cy="25" r="15"/><text x="190" y="30">Ch</text><circle class="n" cx="110" cy="85" r="15"/><text x="104" y="90">In</text>
+<text x="125" y="45">Enter</text><text x="255" y="45">Stay out</text><text x="310" y="115" text-anchor="middle">(1, 2)</text><text x="38" y="122">Fight</text><text x="120" y="122">Accommodate</text><text x="50" y="170" text-anchor="middle">(0, 0)</text><text x="170" y="170" text-anchor="middle">(2, 1)</text></svg>
+<table><tr><th>Challenger \ Incumbent</th><th>Accommodate</th><th>Fight</th></tr><tr><th>Enter</th><td class="nash">2, 1</td><td>0, 0</td></tr><tr><th>Stay out</th><td>1, 2</td><td class="nash">1, 2</td></tr></table>
+<div class="box der"><b>Nash equilibria of the table</b> (check each cell for a profitable one-player switch):<br>
+<b>(Enter, Accommodate):</b> Challenger switching to Stay out gets 1 &lt; 2; Incumbent switching to Fight gets 0 &lt; 1. ✔ NE.<br>
+<b>(Stay out, Fight):</b> Challenger switching to Enter gets 0 &lt; 1. Incumbent switching to Accommodate still gets 2 (the Incumbent's node is never reached, so nothing changes). ✔ NE.<br>
+<b>(Enter, Fight)</b>: Incumbent switches to Accommodate (1 &gt; 0). ✘. <b>(Stay out, Accommodate)</b>: Challenger switches to Enter (2 &gt; 1). ✘.</div>
+<div class="box warn"><b>The problem.</b> In (Stay out, Fight) the Incumbent "threatens" to fight. If the Challenger actually entered, the Incumbent would compare Fight (0) with Accommodate (1) and accommodate. The threat is <b>non-credible</b>. The table cannot see this because it forgets time order; the equilibrium only survives because the Incumbent's node is never reached.</div>
+<div class="box der"><b>Rollback fixes it.</b> Incumbent's node: Accommodate (1) beats Fight (0), so cut Fight and roll up (2, 1). Challenger: Enter gives 2, Stay out gives 1. Enter. Result: <b>(Enter, Accommodate)</b> only.</div></section>
+
+<section id="s6"><h2>5. Three classic tree games</h2>
+<h3>5.1 "I cut, you choose" (fair division)</h3>
+<p>Player 1 cuts a loaf into pieces of size x and 1 − x. Player 2 looks and picks a piece. Player 1 gets the other.</p>
+<div class="box der"><b>Stage 2 (chooser):</b> takes x if x &gt; 1 − x, i.e. x &gt; ½; takes 1 − x if x &lt; ½; indifferent at x = ½. So the chooser always gets <span class="m">max(x, 1 − x)</span> and the cutter gets <span class="m">min(x, 1 − x)</span>.<br>
+<b>Stage 1 (cutter):</b> choose x to maximise min(x, 1 − x). For x &lt; ½ this equals x, which rises as x rises. For x &gt; ½ it equals 1 − x, which falls as x rises. So the top is at the meeting point x = 1 − x, i.e. <b>x* = ½</b>, giving each ½.</div>
+<svg viewBox="0 0 320 170" width="320" role="img" aria-label="min of x and 1 minus x"><g stroke="var(--ink)" stroke-width="1.5" fill="none"><path d="M30 140 L30 20"/><path d="M30 140 L300 140"/></g><path d="M30 140 L165 40 L300 140" stroke="#4f46e5" stroke-width="3" fill="none"/><circle cx="165" cy="40" r="6" fill="#0d9488"/><text x="175" y="38">peak at x = ½ (value ½)</text><text x="30" y="157">0</text><text x="290" y="157">1</text><text x="10" y="34">½</text></svg>
+<p><b>Mechanism design.</b> The parent does not need to measure a "fair" cut. She only sets the <i>rules</i> so selfish children produce a fair split on their own.</p>
+<h3>5.2 Agenda setting and voting</h3>
+<p>Three voters rank options A, B, C in a cycle: Voter 1: A ≻ B ≻ C. Voter 2: B ≻ C ≻ A. Voter 3: C ≻ A ≻ B.</p>
+<div class="box der"><b>Head-to-head winners (majority):</b> A vs B: voters 1 and 3 prefer A, so A wins. B vs C: voters 1 and 2 prefer B, so B wins. C vs A: voters 2 and 3 prefer C, so C wins. A beats B, B beats C, C beats A: a <b>cycle</b> (the Condorcet paradox). There is no overall favourite, so the <i>order</i> of votes matters.</div>
+<p>Vote on two options first, then the winner against the third. If voters simply vote for their favourite in each pair:</p>
+<div class="scroll"><table><tr><th>Order</th><th>Round 1 winner</th><th>Round 2</th><th>Final</th></tr>
+<tr><td>B vs C, then A</td><td>B</td><td>A beats B</td><td class="nash">A</td></tr>
+<tr><td>A vs C, then B</td><td>C</td><td>B beats C</td><td class="nash">B</td></tr>
+<tr><td>A vs B, then C</td><td>A</td><td>C beats A</td><td class="nash">C</td></tr></table></div>
+<p>So whoever sets the agenda can make any option win. That is a lot of power.</p>
+<div class="box warn"><b>Careful (my addition).</b> This table assumes voters vote for their favourite in each round without thinking ahead. If voters use backward induction, the outcome can change. Take "A vs B, then C": if round 1 picks A, round 2 gives C (C beats A). If it picks B, round 2 gives B (B beats C). So round 1 is really a vote between final outcomes C and B. Voters 1 and 2 prefer B to C, so B wins 2-1. With far-sighted voters the result is B, not C.</div>
+<h3>5.3 The ultimatum game</h3>
+<p>The Proposer offers the Responder x from {0, 25, 50, 75, 100} out of 100. The Responder accepts (they get x and 100 − x) or rejects (both get 0).</p>
+<svg viewBox="0 0 520 180" width="520" role="img" aria-label="Ultimatum tree"><g class="e"><path d="M260 22 L60 80"/><path d="M260 22 L160 80"/><path d="M260 22 L260 80"/><path d="M260 22 L360 80"/><path d="M260 22 L460 80"/></g>
+<circle class="n" cx="260" cy="22" r="14"/><text x="253" y="27">P</text><text x="45" y="62">x=0</text><text x="135" y="55">x=25</text><text x="262" y="62">x=50</text><text x="360" y="55">x=75</text><text x="455" y="62">x=100</text>
+<g><circle class="n" cx="60" cy="90" r="12"/><circle class="n" cx="160" cy="90" r="12"/><circle class="n" cx="260" cy="90" r="12"/><circle class="n" cx="360" cy="90" r="12"/><circle class="n" cx="460" cy="90" r="12"/></g>
+<text x="260" y="140" text-anchor="middle">At each Responder node: Accept → (100 − x, x) &nbsp; Reject → (0, 0)</text></svg>
+<div class="box der"><b>Stage 2:</b> for any x &gt; 0, accepting gives x &gt; 0 = rejecting, so accept. At x = 0 the Responder is indifferent.<br>
+<b>Stage 1:</b> if the Responder accepts a zero offer, the Proposer offers 0 and keeps 100. If the Responder rejects 0 (but accepts everything positive), the Proposer offers the smallest positive amount on the menu, 25, and keeps 75. Either way the prediction is: <b>offer almost nothing, and it is accepted.</b></div>
+<div class="box ex"><b>Reality check.</b> In experiments Responders often reject offers below about 30%, to punish unfairness, and Proposers anticipate this by offering 40-50%. The theory assumes people care only about their own money.</div></section>
+
+<section id="s7"><h2>6. Information sets</h2>
+<div class="box def"><b>Information set:</b> a group of one player's decision nodes that she cannot tell apart when she moves. Drawn with a dashed line or a cloud.<br>
+<b>Singleton:</b> one node, so she knows exactly where she is (perfect information). <b>Non-singleton:</b> two or more nodes (imperfect information, or a simultaneous move).</div>
+<p><b>Two rules for a valid information set:</b> (1) all its nodes belong to the <i>same player</i>; (2) the <i>same actions</i> are available at every node in it. Otherwise she could tell the nodes apart by what she is allowed to do.</p>
+<div class="box ex"><b>Example: bully and student.</b> The Bully either arms himself with knuckles (K) or not (NK). The Student must choose Submit or Fight back <i>without seeing</i> which. The Student's two nodes (after K and after NK) sit in one information set, because he cannot observe the Bully's preparation.</div>
+<p><b>Order words.</b> Node x is a <b>predecessor</b> of y if x lies on the unique path from the root to y; then y is a <b>successor</b> of x. The <b>subtree</b> at x is x plus all its successors.</p>
+<h3>Slide example: reading a bigger tree</h3>
+<p>Here Player 1 moves at A, Player 2 at B and C (joined by the dashed line), and Player 3 at D and E. Letters X, Y, Z, W, U, V, T are terminal nodes.</p>
+<svg viewBox="0 0 500 300" width="500" role="img" aria-label="Information set example tree"><g class="e"><path d="M50 150 L50 60"/><path d="M50 150 L150 100"/><path d="M50 150 L150 205"/><path d="M150 100 L270 50"/><path d="M150 100 L270 115"/><path d="M150 205 L270 175"/><path d="M150 205 L270 245"/><path d="M270 50 L400 25"/><path d="M270 50 L400 80"/><path d="M270 245 L400 215"/><path d="M270 245 L400 275"/></g>
+<path d="M150 100 L150 205" stroke="#e11d48" stroke-width="2.2" stroke-dasharray="5 4" fill="none"/>
+<circle class="n" cx="50" cy="150" r="13"/><text x="45" y="155">A</text><circle class="n" cx="150" cy="100" r="13"/><text x="145" y="105">B</text><circle class="n" cx="150" cy="205" r="13"/><text x="145" y="210">C</text><circle class="n" cx="270" cy="50" r="13"/><text x="265" y="55">D</text><circle class="n" cx="270" cy="245" r="13"/><text x="266" y="250">E</text>
+<text x="35" y="108">R</text><text x="90" y="112">P</text><text x="90" y="190">Q</text><text x="205" y="62">S</text><text x="205" y="108">T</text><text x="205" y="185">S</text><text x="205" y="240">T</text><text x="335" y="30">G</text><text x="335" y="75">H</text><text x="335" y="220">J</text><text x="335" y="265">K</text>
+<text x="38" y="52">X</text><text x="285" y="120">Y</text><text x="285" y="180">Z</text><text x="408" y="30">W</text><text x="408" y="85">U</text><text x="408" y="220">V</text><text x="408" y="280">T</text>
+<text x="165" y="152" style="fill:#e11d48">Player 2's information set</text><text x="10" y="130" font-size="11">Player 1</text><text x="236" y="32" font-size="11">Player 3</text><text x="236" y="272" font-size="11">Player 3</text></svg>
+<div class="box der"><b>Information sets.</b> {A} for Player 1 (singleton). {B, C} for Player 2 (non-singleton). {D} and {E} for Player 3 (singletons: Player 3 sees which one he is at).<br>
+<b>Is {B, C} valid?</b> Both belong to Player 2 ✔. Both offer the same actions {S, T} ✔. Yes.<br>
+<b>Meaning:</b> Player 2 knows Player 1 played P or Q, but not which. He must pick S or T once, for both nodes.</div>
+<div class="box der"><b>Strategy counts.</b> Player 1: one node, 3 actions (R, P, Q), so <b>3</b> strategies. Player 2: <i>one information set</i> with 2 actions, so <b>2</b> strategies (S or T), not 4, because he cannot act differently at B and C. Player 3: two information sets with 2 actions each, so 2 × 2 = <b>4</b> strategies, e.g. (G, J) or (H, K).<br>
+<b>Predecessors and successors.</b> A is a predecessor of every other node. D's predecessors are B and A; its immediate predecessor is B. D's successors are W and U. E's predecessors are C and A; its successors are V and T. B's successors are D, Y, W, U.</div>
+<div class="box der"><b>Subgames in this tree.</b> <b>A:</b> singleton, contains everything, and the dashed set {B, C} is wholly inside ✔. <b>B and C:</b> not singletons ✘. <b>D:</b> singleton, subtree {D, W, U} ✔. <b>E:</b> singleton, subtree {E, V, T} ✔. So there are <b>3 subgames</b>: the whole game, the game at D, and the game at E.<br>
+<b>How to solve it (no payoffs on the slide):</b> solve D and E first (each is a one-player choice), replace them by their payoffs, then solve the remaining game between Players 1 and 2, where Player 2's move is simultaneous with respect to P and Q.</div>
+</section>
+
+<section id="s8"><h2>7. Subgames</h2>
+<div class="box def"><b>A subgame starts at node x if:</b><br>1. x is alone in its information set (a singleton);<br>2. it contains x and <b>all</b> successors of x;<br>3. it does not cut an information set: if one node of an information set is inside, all of them are.</div>
+<p>Plain meaning: a subgame is a smaller game that you could play on its own, where everyone knows the history up to x. The whole game is always a subgame.</p>
+<h3>Worked example (a slide game)</h3>
+<p>Player 1 picks U or D. D ends the game with (2, 2). After U, Player 1 picks A or B. Then Player 2 picks X or Y <b>without seeing</b> A or B (dashed line). Payoffs: (A,X) = (1,3), (A,Y) = (0,0), (B,X) = (0,0), (B,Y) = (3,1).</p>
+<svg viewBox="0 0 520 250" width="520" role="img" aria-label="Slide subgame example"><g class="e"><path d="M40 125 L130 70"/><path d="M40 125 L200 215"/><path d="M130 70 L260 35"/><path d="M130 70 L260 105"/><path d="M260 35 L400 15"/><path d="M260 35 L400 55"/><path d="M260 105 L400 85"/><path d="M260 105 L400 125"/></g>
+<path d="M260 35 L260 105" stroke="#e11d48" stroke-width="2.2" stroke-dasharray="5 4" fill="none"/>
+<circle class="n" cx="40" cy="125" r="14"/><text x="34" y="130">1</text><circle class="n" cx="130" cy="70" r="14"/><text x="124" y="75">1</text><circle class="n" cx="260" cy="35" r="14"/><text x="254" y="40">2</text><circle class="n" cx="260" cy="105" r="14"/><text x="254" y="110">2</text>
+<text x="70" y="85">U</text><text x="70" y="180">D</text><text x="185" y="45">A</text><text x="185" y="100">B</text><text x="330" y="22">X</text><text x="330" y="60">Y</text><text x="330" y="92">X</text><text x="330" y="130">Y</text>
+<text x="410" y="20">(1, 3)</text><text x="410" y="60">(0, 0)</text><text x="410" y="90">(0, 0)</text><text x="410" y="130">(3, 1)</text><text x="205" y="225">(2, 2)</text><text x="275" y="75" style="fill:#e11d48">Player 2's information set</text></svg>
+<div class="box der"><b>Which nodes can start a subgame?</b> The root (always). Player 1's second node (after U): it is a singleton, and its subtree contains both of Player 2's nodes together, so no information set is cut. ✔. Player 2's nodes: each is in a non-singleton information set, so ✘. So there are exactly <b>2 subgames</b>: the whole game and the game after U.<br>
+<b>Invalid example:</b> a "subgame" starting at only one of Player 2's two nodes would cut the dashed information set (condition 3), and also does not start at a singleton.</div>
+<p><b>Counting tip.</b> Count the singleton decision nodes whose subtree keeps every information set whole. Each is a subgame root.</p></section>
+
+<section id="s9"><h2>8. Subgame perfect equilibrium (SPE)</h2>
+<div class="box def"><b>Selten's definition.</b> A strategy profile is a <b>subgame perfect equilibrium</b> if it gives a Nash equilibrium in <b>every</b> subgame, including the whole game and subgames that are never reached.
+<span class="eq">u<sub>i</sub>( s*|<sub>G′</sub> ) ≥ u<sub>i</sub>( s<sub>i</sub>, s*<sub>−i</sub>|<sub>G′</sub> ) for every player i, every subgame G′, every strategy s<sub>i</sub> in G′</span></div>
+<p><b>Immediate consequences.</b> Every SPE is a Nash equilibrium (the whole game is one of the subgames). But a NE need not be an SPE, and the extra requirement is what removes non-credible threats.</p>
+<div class="box ex"><b>Entry game again.</b> NE: (Enter, Accommodate) and (Stay out, Fight). The Incumbent's node is a proper subgame (a one-player game). In it, "Fight" (0) is not best, so (Stay out, Fight) fails there. The only <b>SPE is (Enter, Accommodate)</b>.</div>
+<h3>Why we need SPE when we have backward induction</h3>
+<table><tr><th>Backward induction</th><th>SPE</th></tr><tr><td>Needs every information set to be a single node</td><td>Also works with simultaneous or hidden moves</td></tr><tr><td>Gets stuck at a non-singleton information set (what is the best action when you do not know the node?)</td><td>Solves the Nash equilibrium of that small simultaneous game and rolls the result up</td></tr></table>
+<h3>How to find SPE</h3>
+<svg viewBox="0 0 560 70" width="560" role="img" aria-label="SPE procedure"><g class="e"><path d="M110 35 L140 35"/><path d="M270 35 L300 35"/><path d="M430 35 L460 35"/></g>
+<rect class="n" x="5" y="10" width="105" height="50" rx="8"/><text x="57" y="40" text-anchor="middle">List subgames</text>
+<rect class="n" x="140" y="10" width="130" height="50" rx="8"/><text x="205" y="30" text-anchor="middle">Solve smallest:</text><text x="205" y="46" text-anchor="middle">all its NE</text>
+<rect class="n" x="300" y="10" width="130" height="50" rx="8"/><text x="365" y="30" text-anchor="middle">Replace it with</text><text x="365" y="46" text-anchor="middle">its NE payoffs</text>
+<rect class="n" x="460" y="10" width="95" height="50" rx="8"/><text x="507" y="30" text-anchor="middle">Go up, repeat</text><text x="507" y="46" text-anchor="middle">write full s*</text></svg>
+<h3>Full solution of the slide game</h3>
+<div class="box der"><b>Step 1: the subgame after U.</b> It is a simultaneous game between Player 1 (A or B) and Player 2 (X or Y):
+<table><tr><th>1 \ 2</th><th>X</th><th>Y</th></tr><tr><th>A</th><td class="nash">1, 3</td><td>0, 0</td></tr><tr><th>B</th><td>0, 0</td><td class="nash">3, 1</td></tr></table>
+This is a Battle-of-the-Sexes game. Pure NE: (A, X) with (1, 3), and (B, Y) with (3, 1). Mixed NE: let Player 1 play A with probability p. Player 2's payoffs: X gives 3p, Y gives 1(1 − p). Equal when 3p = 1 − p, so <b>p = ¼</b>. Let Player 2 play X with probability q. Player 1's payoffs: A gives q, B gives 3(1 − q). Equal when q = 3 − 3q, so <b>q = ¾</b>. Payoffs at the mixed NE: Player 1 gets q = ¾, Player 2 gets 3p = ¾.<br>
+<b>Step 2: roll back to the root.</b> Player 1 compares D (sure 2) with U, which now equals the subgame's value for her:
+<table><tr><th>Subgame equilibrium used</th><th>Player 1 gets from U</th><th>vs D = 2</th><th>Root choice</th></tr><tr><td>(A, X)</td><td>1</td><td>1 &lt; 2</td><td>D</td></tr><tr><td>(B, Y)</td><td>3</td><td>3 &gt; 2</td><td>U</td></tr><tr><td>mixed</td><td>¾</td><td>¾ &lt; 2</td><td>D</td></tr></table>
+<b>Step 3: the three SPE.</b>
+<span class="eq">1. P1: (D, A) &nbsp; P2: X &nbsp;→ outcome (2, 2)<br>2. P1: (U, B) &nbsp; P2: Y &nbsp;→ outcome (3, 1)<br>3. P1: D at root, ¼A + ¾B after U; &nbsp; P2: ¾X + ¼Y &nbsp;→ outcome (2, 2)</span></div>
+<div class="box ex"><b>A NE that is not an SPE.</b> Convert to a table. Player 1 has four strategies (UA, UB, DA, DB), Player 2 has two (X, Y):
+<table><tr><th>1 \ 2</th><th>X</th><th>Y</th></tr><tr><th>UA</th><td>1, 3</td><td>0, 0</td></tr><tr><th>UB</th><td>0, 0</td><td class="nash">3, 1</td></tr><tr><th>DA</th><td class="nash">2, 2</td><td>2, 2</td></tr><tr><th>DB</th><td class="nash">2, 2</td><td>2, 2</td></tr></table>
+Pure NE: (UB, Y), (DA, X), (DB, X). The last one, (DB, X), is a NE because Player 1 never has to play B. But "B after U" is a non-credible plan: if Player 1 got to that node and Player 2 played X, B pays 0 while A would pay 1. In the subgame, (B, X) is not a NE. So (DB, X) is <b>not</b> an SPE. Subgame perfection removes it.</div>
+<div class="box warn"><b>Take-away:</b> SPE does not always give one answer. Here there are three, because the simultaneous subgame has several equilibria.</div></section>
+
+<section id="s10"><h2>9. Week 4 recap</h2>
+<div class="scroll"><table><tr><th>Idea</th><th>Summary</th></tr>
+<tr><td>Game tree</td><td>One root, no cycles, a unique path to each node; terminal nodes carry payoffs</td></tr>
+<tr><td>Strategy</td><td>A full plan: an action at every decision point, even unreached ones; |S<sub>i</sub>| = product of choices</td></tr>
+<tr><td>Backward induction</td><td>Solve from the last nodes upward; works with perfect information</td></tr>
+<tr><td>Burning a bridge</td><td>Removing your own option can make a threat credible</td></tr>
+<tr><td>Non-credible threat</td><td>A NE of the table that fails in an unreached part of the tree</td></tr>
+<tr><td>I cut, you choose</td><td>Equal split; max of min(x, 1 − x) at ½</td></tr>
+<tr><td>Agenda setting</td><td>With cyclic preferences, vote order decides the winner</td></tr>
+<tr><td>Ultimatum</td><td>Theory: offer almost nothing. Experiments: ~40-50% offered</td></tr>
+<tr><td>Lucy and Charlie Brown</td><td>Rollback gives (DA, TA) and Reject; (DA, LG) is a NE but not an SPE</td></tr>
+<tr><td>Information set</td><td>Nodes the mover cannot tell apart; same player, same actions</td></tr>
+<tr><td>Subgame</td><td>Singleton root, all successors, no split information set</td></tr>
+<tr><td>SPE</td><td>A NE in every subgame; every SPE is a NE, not the reverse</td></tr></table></div>
+<h3>Practice (tap to reveal)</h3>
+<ol>
+<li>A player has 2 decision points with 3 and 4 actions. How many strategies?<details><summary>Answer</summary>3 × 4 = 12.</details></li>
+<li>In the entry game, why is (Stay out, Fight) a Nash equilibrium but not subgame perfect?<details><summary>Answer</summary>No one gains by deviating from it in the table, because the Incumbent's node is never reached. But in the subgame at the Incumbent's node, Fight (0) is worse than Accommodate (1), so Fight is not a Nash equilibrium there.</details></li>
+<li>Does the cutter in "I cut, you choose" gain by cutting 0.4/0.6? What does she get?<details><summary>Answer</summary>The chooser takes 0.6, so the cutter gets 0.4. Cutting ½/½ gives her 0.5, so no.</details></li>
+<li>In the slide game, why can't Player 2's nodes start a subgame?<details><summary>Answer</summary>Each is in a non-singleton information set, and a subgame must start at a singleton node.</details></li></ol></section>
+</main></body></html>
