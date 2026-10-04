@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Corporate Finance – Week-1 Notes</title>
+<style>
+:root{--ink:#1d2a44;--bg:#f6f8fc;--card:#fff;--teal:#0f9d8a;--amber:#f2a516;--coral:#e8574b;--blue:#3b6fd4;--violet:#7a54c8;--line:#d9e0ee;--soft:#eaf0fb}
+@media(prefers-color-scheme:dark){:root{--ink:#e6ebf7;--bg:#0f1626;--card:#18223a;--line:#2b3858;--soft:#1f2b49}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#1d2a44,#3b6fd4 60%,#0f9d8a);color:#fff;padding:36px 20px}
+header h1{margin:0;font:700 2rem Georgia,serif}header p{margin:6px 0 0;opacity:.9}
+nav{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 14px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:5px 12px;border-radius:99px;background:var(--soft);font-size:.85rem}
+main{max-width:900px;margin:auto;padding:16px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:20px 0}
+h2{font:700 1.5rem Georgia,serif;margin:0 0 10px;padding-left:12px;border-left:6px solid var(--blue)}
+h3{margin:22px 0 6px;color:var(--blue)}
+.box{border-radius:10px;padding:12px 16px;margin:12px 0;border-left:5px solid}
+.def{background:#e7f6f3;border-color:var(--teal)}.key{background:#fff5df;border-color:var(--amber)}.warn{background:#fdeceb;border-color:var(--coral)}.eg{background:#efeafa;border-color:var(--violet)}
+.box{color:#1d2a44}.box b.t{display:block;margin-bottom:2px}
+.math{background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0;font:1rem Georgia,serif;overflow-x:auto}
+.math div{margin:3px 0}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left}th{background:var(--soft)}
+.flow{display:flex;flex-direction:column;align-items:center;gap:0;margin:14px 0}
+.flow div{padding:8px 14px;border-radius:9px;color:#fff;font-size:.9rem;text-align:center;max-width:520px;width:100%}
+.flow i{font-style:normal;font-size:1.3rem;color:var(--coral);line-height:1}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.row>div{flex:1 1 200px;border-radius:10px;padding:10px 14px;color:#1d2a44}
+svg{max-width:100%;height:auto;background:var(--soft);border-radius:10px;margin:8px 0}
+svg text{fill:var(--ink);font:12px system-ui}
+.tr{display:flex;flex-direction:column;gap:3px;max-width:300px}.tr div{padding:8px;text-align:center;color:#fff;border-radius:6px}
+ul{padding-left:22px}li{margin:3px 0}
+.q{font-size:.9rem}
+</style></head><body>
+<header><h1>Corporate Finance — Week-1 Notes</h1><p>Asset pricing · Financial markets · Bubbles · The 2008 crisis · Structured finance &amp; AAA securities</p></header>
+<nav><a href="#s1">1 Value &amp; Bonds</a><a href="#s2">2 Stocks &amp; Risk</a><a href="#s3">3 Markets</a><a href="#s4">4 Bubbles</a><a href="#s5">5 Crisis</a><a href="#s6">6 Structured Finance</a><a href="#s7">7 AAA Maths</a><a href="#s8">8 Practice</a><a href="#s9">9 Rating Fragility</a><a href="#s10">10 Revision</a></nav>
+<main>
+
+<section id="s1"><h2>1. What gives an asset its value? (Lecture 1)</h2>
+<p>An <b>asset</b> is anything you can own that has value: a house, a painting, shares, bonds. Financial assets are called <b>securities</b>. The big question of asset pricing: <i>what determines the price?</i></p>
+<div class="box def"><b class="t">Why asset markets differ from goods markets</b>Buying fruit is only about eating it. Buying an asset has <b>two motives</b>: (1) <b>benefit from owning it</b> – live in the house, enjoy the painting, receive dividends; (2) <b>resale / capital gain</b> – sell later at a higher price. Both lie in the future, and the future is uncertain.</div>
+<div class="key"><b>Two things decide a security's value:</b> (1) the <b>size</b> of expected cash flows, (2) the <b>uncertainty</b> in forecasting them. Cash flow is just a common money yardstick for all future benefits.</div>
+<h3>Bonds</h3>
+<p>A <b>bond</b> promises fixed payments at fixed times. Government bonds have negligible default risk; corporate bonds do not.</p>
+<div class="box eg"><b class="t">Setup</b>1-year zero-coupon bond, promises ₹10,000 in one year, price today = P.</div>
+<div class="math"><div><b>Step 1 – return from buying and holding:</b> r = (10,000 − P) / P</div>
+<div><b>Step 2 – example, P = 9,000:</b> r = 1,000 / 9,000 = 0.1111 = <b>11.1% per year</b></div>
+<div><b>Step 3 – make P the subject:</b> r = 10,000/P − 1 ⟹ 1 + r = 10,000/P ⟹ <b>P = 10,000 / (1 + r)</b></div>
+<div><b>Step 4 – prove inverse relation:</b> dP/dr = −10,000 / (1 + r)² &lt; 0 &nbsp;(denominator is a square, always positive, so the sign is always negative)</div></div>
+<p><b>Meaning:</b> the payout is fixed, so the only way the bond can offer a higher return is by being cheaper. If other interest rates in the economy rise, investors will only hold the bond if its return rises too → its <b>price falls</b>.</p>
+<svg viewBox="0 0 380 210" width="380" role="img" aria-label="Bond price falls as rate rises"><line x1="40" y1="180" x2="350" y2="180" stroke="#888"/><line x1="40" y1="10" x2="40" y2="180" stroke="#888"/>
+<polyline fill="none" stroke="#3b6fd4" stroke-width="3" points="40,20 90,50 140,78 190,103 240,127 340,168"/>
+<circle cx="151" cy="85" r="5" fill="#e8574b"/><text x="160" y="80">r=11.1%, P=9,000</text>
+<text x="150" y="203">interest rate r (0% → 30%)</text><text x="4" y="18">P</text><text x="8" y="30">10,000</text><text x="55" y="45">r=0 → P=10,000</text></svg>
+<h3>Corporate vs government bonds (risk–return)</h3>
+<ul><li>Higher default risk → investors demand a <b>higher interest rate</b> → <b>lower price</b> for the same promised payments.</li>
+<li>If the risky bond does <i>not</i> default you earn more; but there is a greater chance promised payments never arrive. <b>Promised ≠ expected return.</b></li></ul>
+<h3>More on bonds: worked examples</h3>
+<p><b>Price and rate are two ways of quoting the same thing.</b> Using P = 10,000/(1+r):</p>
+<table><tr><th>Market rate r</th><th>5%</th><th>10%</th><th>15%</th><th>20%</th></tr><tr><td>Bond price P (₹)</td><td>9,524</td><td>9,091</td><td>8,696</td><td>8,333</td></tr></table>
+<div class="box eg"><b class="t">Example 1 – rates rise</b>Rates go from 10% to 15%. Price falls from 9,091 to 8,696, a drop of (9,091−8,696)/9,091 ≈ <b>4.3%</b>. Anyone who bought at 9,091 and must sell today loses money, even though the bond still pays 10,000.</div>
+<div class="box eg"><b class="t">Example 2 – safe vs risky bond (illustrative numbers)</b>Both promise ₹10,000 in a year. Safe bond: investors demand 10% → price 9,091. Risky bond: investors demand 20% → price 8,333. If the risky bond defaults 10% of the time and then pays 0, its <i>expected</i> payout is 0.9×10,000 = 9,000, so its expected return is 9,000/8,333 − 1 = 8%, not 20%. The 20% is a <b>promised</b> yield, the 8% is closer to what investors expect on average.</div>
+<div class="key"><b>Remember:</b> promised return = what you get if no default. Expected return = probability-weighted. A high yield on a bond is a warning sign, not a gift.</div>
+</section>
+
+<section id="s2"><h2>2. Stocks and Risk</h2>
+<div class="def box"><b class="t">Stock (share)</b>A claim on part of a firm's assets and therefore its profits, in proportion to shares held.</div>
+<div class="flow"><div style="background:#1d2a44">Firm's net earnings (profit)</div><i>↓ split into ↓</i></div>
+<div class="row"><div style="background:#d8f1ec"><b>Dividends</b><br>cash paid straight to shareholders</div><div style="background:#fff0cf"><b>Retained earnings</b><br>kept to maintain/expand future earnings</div></div>
+<p><b>Stocks vs bonds:</b> a bond has a contractual payment schedule; a stock has <b>no promised stream and no fixed time period</b>. Firms expected to earn more get higher valuations → higher share price.</p>
+<h3>Systematic vs idiosyncratic risk</h3>
+<table><tr><th></th><th>Systematic</th><th>Idiosyncratic</th></tr>
+<tr><td>What</td><td>Events hitting broad classes of assets together</td><td>Events hitting one firm/asset</td></tr>
+<tr><td>Examples</td><td>Interest-rate change, trade policy, economy-wide demand</td><td>Product success, lawsuit loss</td></tr>
+<tr><td>Diversifiable?</td><td><b>No</b></td><td><b>Yes</b> (hold many assets)</td></tr>
+<tr><td>Matters for price?</td><td><b>Yes</b></td><td><b>No</b></td></tr></table>
+<div class="box eg"><b class="t">Why diversification kills idiosyncratic risk</b>If you hold 100 firms, one firm's lawsuit moves your portfolio by about 1%; some firms win, others lose and these average out. A recession hurts <i>all</i> firms together, so nothing averages out.</div>
+<div class="key"><b>Required rate of return (market capitalization rate):</b> the return that makes investors buy a share. Higher systematic risk → higher required return → <b>lower price</b> for the same expected earnings.</div>
+<div class="flow"><div style="background:#e8574b">More systematic risk</div><i>↓</i><div style="background:#f2a516;color:#1d2a44">Higher required return</div><i>↓</i><div style="background:#3b6fd4">Lower share price (given same expected earnings)</div></div>
+<h3>Why diversification removes idiosyncratic risk (derivation)</h3>
+<p>Suppose each stock's return is +10% or −10% (50/50), so one stock has mean 0 and standard deviation σ = 10%. Hold n stocks in equal weights.</p>
+<div class="math"><div><b>Idiosyncratic case (independent firms):</b> Var(average) = (1/n²)·n·σ² = σ²/n ⟹ SD = σ/√n</div>
+<div>n = 1 → 10% &nbsp;·&nbsp; n = 4 → 5% &nbsp;·&nbsp; n = 100 → <b>1%</b> (risk almost gone)</div>
+<div><b>Systematic case (all move together, correlation = 1):</b> SD(average) = σ = 10% for any n. <b>Nothing is diversified.</b></div></div>
+<p>This is the whole reason the market pays you only for systematic risk: idiosyncratic risk can be removed for free, so nobody will pay a premium for bearing it. <b>Keep this idea – it returns in structured finance (Section 6).</b></p>
+<div class="box def"><b class="t">Simple words</b>Idiosyncratic = "my firm's bad luck". Systematic = "everyone's bad luck at once". Diversify across firms and the first cancels out. The second does not.</div>
+</section>
+
+<section id="s3"><h2>3. Markets for Financial Assets (Lecture 2)</h2>
+<h3>3.1 Trading strategies (both are forms of speculation)</h3>
+<table><tr><th></th><th>Fundamental value</th><th>Momentum</th></tr>
+<tr><td>Looks at</td><td>Intrinsic value from cash flows</td><td>Price trend only</td></tr>
+<tr><td>Buy when</td><td>Price &lt; fundamental value (underpriced)</td><td>Price is rising</td></tr>
+<tr><td>Sell when</td><td>Price &gt; fundamental value (overpriced)</td><td>Price is falling</td></tr>
+<tr><td>Belief</td><td>Price will return to fundamental value</td><td>Short-run trends persist</td></tr></table>
+<p>A momentum trader may pay <i>more</i> than fundamental value if she expects the price to rise further – profit comes from resale even if fundamentals never change. These strategies determine price behaviour and the possibility of bubbles and crashes.</p>
+<h3>3.2 Primary vs secondary market</h3>
+<div class="row"><div style="background:#d8f1ec"><b>Primary:</b> company sells new shares to the public for the first time (<b>IPO</b>). Money goes <b>to the company</b>.</div><div style="background:#e3ebfb"><b>Secondary:</b> existing shares traded on a stock exchange (BSE, NSE, SGX). Money moves <b>between investors</b>; company gets nothing.</div></div>
+<p><b>Case study – Reliance Industries (RIL), one day in April 2020:</b> price opened ≈ ₹1,175, fell to a low near ₹1,163, rallied to ≈ ₹1,183, closed ≈ ₹1,171. Volume was spread over the day with a big spike near the close (~15:00). Prices change constantly because beliefs change constantly.</p>
+<h3>3.3 Reservation prices and supply–demand</h3>
+<ul><li><b>Seller's reservation price</b> = lowest price a holder will accept.</li><li><b>Buyer's reservation price</b> = highest price a buyer will pay.</li></ul>
+<div class="box eg"><b class="t">Good news about RIL's profits</b>Buyers raise reservation prices → <b>demand shifts right</b>. Holders now want more to sell → <b>supply shifts left</b>. Price rises (slide: ₹1,162 → ₹1,167; volume 27k → 30k per hour).</div>
+<svg viewBox="0 0 300 190" width="300"><line x1="30" y1="170" x2="290" y2="170" stroke="#888"/><line x1="30" y1="10" x2="30" y2="170" stroke="#888"/>
+<line x1="40" y1="30" x2="200" y2="150" stroke="#3b6fd4" stroke-width="2"/><text x="203" y="153">D0</text>
+<line x1="80" y1="30" x2="240" y2="150" stroke="#0f9d8a" stroke-width="2"/><text x="243" y="153">D1</text>
+<line x1="40" y1="150" x2="200" y2="30" stroke="#e8574b" stroke-width="2"/><text x="203" y="32">S0</text>
+<line x1="60" y1="110" x2="200" y2="5" stroke="#f2a516" stroke-width="2"/><text x="203" y="14">S1</text>
+<circle cx="120" cy="90" r="4"/><text x="95" y="108">A</text><circle cx="123" cy="62" r="4"/><text x="128" y="60">B</text>
+<text x="130" y="186">Quantity</text><text x="2" y="14">Price</text></svg>
+<h3>3.4 Continuous double auction and the order book</h3>
+<p>Real exchanges do not run in hourly rounds. Anyone submits a <b>limit order</b> = (price, quantity).</p>
+<ul><li><b>Limit buy:</b> "buy up to Q shares at a price no higher than p" (p = buyer's reservation price).</li><li><b>Limit sell:</b> "sell up to Q at a price no lower than p".</li><li><b>Bids</b> = buy orders, listed highest first. <b>Asks</b> = sell orders, listed lowest first.</li></ul>
+<div class="flow"><div style="background:#1d2a44">New limit buy order arrives</div><i>↓</i><div style="background:#7a54c8">Is there an unfilled sell order at price ≤ my limit?</div>
+<i>↓ yes / no ↓</i></div>
+<div class="row"><div style="background:#d8f1ec"><b>Yes → trade now</b> at the sellers' ask prices (best price for the buyer), lowest ask first</div><div style="background:#fdeceb"><b>No → order joins the book</b> and waits for a seller</div></div>
+<p><b>Slide's order book (RIL):</b></p>
+<table><tr><th>Bid price</th><th>Qty</th><th>Ask price</th><th>Qty</th></tr><tr><td>1,418.05</td><td>15</td><td>1,418.20</td><td>50</td></tr><tr><td>1,417.90</td><td>240</td><td>1,418.25</td><td>1</td></tr><tr><td>1,417.85</td><td>500</td><td>1,418.30</td><td>1,686</td></tr><tr><td>1,417.80</td><td>433</td><td>1,418.35</td><td>1</td></tr><tr><td>1,417.60</td><td>459</td><td>1,418.40</td><td>2</td></tr></table>
+<p>Best bid = 1,418.05, best ask = 1,418.20, <b>spread = 0.15</b>. No trade happens while best bid &lt; best ask.</p>
+<div class="box eg"><b class="t">Order A: buy 100 @ 1,418.10</b>1,418.10 &lt; lowest ask 1,418.20 → no match. It enters the bid side at the <b>top</b> (new best bid 1,418.10, spread narrows to 0.10).</div>
+<div class="box eg"><b class="t">Order B: buy 1,500 @ 1,418.30</b>Limit is ≥ the first three asks, so it fills immediately, cheapest first:
+<div class="math"><div>50 shares @ 1,418.20 → 1,450 left</div><div>1 share @ 1,418.25 → 1,449 left</div><div>1,449 shares @ 1,418.30 (from 1,686) → 0 left</div><div>Remaining at 1,418.30: 1,686 − 1,449 = <b>237</b>, which is the new best ask</div></div>
+Buyer pays at the <i>ask</i> prices, not at her limit; average ≈ 1,418.297.</div>
+<p><b>Price dynamics:</b> bad news (e.g. a rumour a director will resign) → a large sell order below the best bid eats the bids one by one → price falls. Good news → buy orders above the best ask eat the asks → price rises in steps. The market is never in a still equilibrium, but price is always adjusting to reconcile supply and demand, and reflects <i>everyone</i>, including those just holding.</p>
+<h3>Order-book ladder (picture)</h3>
+<svg viewBox="0 0 360 200" width="360" role="img" aria-label="Order book ladder"><text x="10" y="14">Asks (sellers) – cheapest on the bottom of this stack</text>
+<rect x="40" y="22" width="280" height="24" fill="#e8574b" opacity=".75"/><text x="46" y="39" style="fill:#fff">1,418.40 · qty 2</text>
+<rect x="40" y="48" width="280" height="24" fill="#e8574b" opacity=".75"/><text x="46" y="65" style="fill:#fff">1,418.30 · qty 1,686</text>
+<rect x="40" y="74" width="280" height="24" fill="#e8574b"/><text x="46" y="91" style="fill:#fff">1,418.20 · qty 50 ← best ask</text>
+<text x="120" y="116">spread = 0.15 (no trade here)</text>
+<rect x="40" y="124" width="280" height="24" fill="#3b6fd4"/><text x="46" y="141" style="fill:#fff">1,418.05 · qty 15 ← best bid</text>
+<rect x="40" y="150" width="280" height="24" fill="#3b6fd4" opacity=".75"/><text x="46" y="167" style="fill:#fff">1,417.90 · qty 240</text>
+<text x="10" y="192">Bids (buyers) – highest on top</text></svg>
+<div class="box eg"><b class="t">Sell order: sell 300 @ 1,417.85 (a market-moving sell)</b>A sell fills against bids from the <b>highest</b> down, and the seller receives the <i>bid</i> prices:
+<div class="math"><div>15 @ 1,418.05 → 285 left</div><div>240 @ 1,417.90 → 45 left</div><div>45 @ 1,417.85 (of 500) → 0 left, 455 remain at 1,417.85</div><div>Average price = (15·1,418.05 + 240·1,417.90 + 45·1,417.85)/300 ≈ <b>1,417.90</b></div></div>
+Bids were eaten, so the best bid fell to 1,417.85: the price moved <b>down</b>. This is how bad news turns into a falling price.</div>
+<p><b>Priority rule (price-time):</b> better prices trade first; among equal prices, the order that arrived earlier trades first.</p>
+<p><b>Why the volume spike near close?</b> Many traders and funds want to settle positions before the market closes, so volume jumps even without news (the slide shows ~165k shares in one interval near 15:00).</p>
+</section>
+
+<section id="s4"><h2>4. Asset Market Bubbles (Lecture 3)</h2>
+<div class="def box"><b class="t">Bubble</b>A sustained and significant departure of an asset's price from its fundamental value.</div>
+<p>Index = weighted average of a basket of stocks (Sensex, NASDAQ Composite).</p>
+<h3>Case: the dot-com / tech bubble</h3>
+<svg viewBox="0 0 360 190" width="360"><line x1="25" y1="165" x2="345" y2="165" stroke="#888"/><polyline fill="none" stroke="#e8574b" stroke-width="3" points="30,138 80,128 130,108 165,70 197,16 230,94 263,128 330,99"/>
+<text x="150" y="12">Peak &gt;5,000 (2000)</text><text x="200" y="145">Bottom ≈1,100 (2002)</text><text x="28" y="156">&lt;750 (1995)</text>
+<text x="25" y="182">1995</text><text x="190" y="182">2000</text><text x="322" y="182">2004</text></svg>
+<ul><li>1995 → 2000: under 750 to over 5,000, ≈ <b>45% annual return</b>.</li><li>Then lost two-thirds in under a year; bottom ≈ 1,100, almost <b>80% below peak</b>.</li></ul>
+<h3>Three features that make bubbles possible</h3>
+<div class="row"><div style="background:#d8f1ec"><b>1. Resale value</b><br>can speculate on price change, not just income</div><div style="background:#fff0cf"><b>2. Ease of trading</b><br>switch buyer↔seller quickly</div><div style="background:#fdeceb"><b>3. Ease of borrowing</b><br>cheap debt amplifies demand for a rising asset</div></div>
+<h3>Momentum feedback loop</h3>
+<div class="flow"><div style="background:#3b6fd4">Price rises</div><i>↓</i><div style="background:#7a54c8">Traders read it as a signal of more rises (momentum)</div><i>↓</i><div style="background:#0f9d8a">More buying (often with borrowed money)</div><i>↓ back to top, until ↓</i><div style="background:#e8574b">Sudden crash</div></div>
+<p>Price changes are <b>messages</b> carrying information, but if everyone reads "up" as "more up", the message becomes self-reinforcing.</p>
+<h3>Do bubbles really exist? Three views</h3>
+<table><tr><th>Who</th><th>Claim</th></tr>
+<tr><td><b>Eugene Fama</b> – Efficient Market Hypothesis (EMH)</td><td>All public information is in prices almost instantly. "Bubble" is hindsight. Tech prices moved because news about firms changed sharply. <i>Logic:</i> if a formula predicted a crash next week, traders would sell today, so prices would fall today. People who say "too high" are right about half the time.</td></tr>
+<tr><td><b>Robert Shiller</b> – behavioural</td><td>Bubbles are real: "irrational exuberance", prices driven by expectations of further rises. Simple public statistics like <b>price/earnings ratio</b> reveal them in real time. Leaning against the wind may lose short-run, but wins long-run versus a diversified basket of similar-risk assets.</td></tr>
+<tr><td><b>Citibank CEO (2007)</b></td><td>"As long as the music is playing, you've got to get up and dance." Nobody knows when others will stop; a manager who stops early underperforms rivals, so everyone stays → corrections come late and abruptly.</td></tr></table>
+<h3>Fama vs Shiller with a concrete example</h3>
+<p>Suppose a stock trades at P/E = 40 while its long-run average is about 15.</p>
+<div class="row"><div style="background:#e3ebfb"><b>Shiller:</b> "40 vs 15 is a red flag. Prices are being driven by expectations of further rises. Sell or avoid; you may lose short-run, but win long-run."</div><div style="background:#d8f1ec"><b>Fama:</b> "A high P/E may simply mean investors expect very high future earnings growth. Prices already contain all public information, so you cannot reliably tell it is a bubble until after it bursts."</div></div>
+<div class="math"><div><b>Tech-bubble numbers, checked:</b></div><div>Annual return 1995→2000: (5,000/750)^(1/5) − 1 = 6.67^0.2 − 1 ≈ 0.46 → about 45–46% a year</div><div>Fall from peak: 1 − 1,100/5,000 = 0.78 → <b>78%</b> (the slide says "almost 80%")</div></div>
+<p><b>Why Fama's logic holds:</b> if a reliable crash signal existed, traders would sell the moment they saw it, so prices would fall <i>before</i> the crash. A predictable crash would destroy itself. <b>Why critics disagree:</b> a trader who sells too early and is wrong underperforms (Prince's "dance"), and nobody knows when others will stop, so riding the bubble can be rational for the individual even if it is bad for the market.</p>
+</section>
+
+<section id="s5"><h2>5. The 2007–08 Financial Crisis (Lecture 4)</h2>
+<p>US house prices (Case-Shiller index) more than doubled from Jan 2000 (=100) to a peak ≈ 225 in mid-2006, then fell sharply. Analysts expected lower demand and slower growth; <b>few foresaw a macro crisis</b>, because they missed the effect on the financial system.</p>
+<h3>Two causes of the boom</h3>
+<ul><li><b>Low interest rates</b> → low mortgage rates → more demand → higher house prices.</li><li><b>Subprime mortgages</b> → loans to riskier borrowers. While prices kept rising, nobody worried.</li></ul>
+<p>From 2006 prices fell → <b>underwater mortgages</b> (loan &gt; house value) → many defaults. Mortgages were also riskier than borrowers understood.</p>
+<h3>Three weaknesses of financial intermediaries</h3>
+<div class="row"><div style="background:#fdeceb"><b>High leverage</b><br>banks underestimated risk; managers paid for high-return bets; <b>SIVs</b> let banks sidestep leverage rules</div><div style="background:#fff0cf"><b>Illiquid assets</b><br>complex MBS, hard to value, only sellable at fire-sale prices</div><div style="background:#e3ebfb"><b>Liquid (short-term) liabilities</b><br>wholesale funding: must be rolled over; not covered by deposit insurance</div></div>
+<div class="def box"><b class="t">Key terms</b><b>SIV:</b> off-balance-sheet vehicle; borrows short-term from investors, holds securities, backed by a guarantee from the sponsoring bank. <b>Securitization / MBS:</b> pooling mortgages from many regions; sounds diversified, but lowered banks' care about repayment and misled rating agencies. <b>Wholesale funding:</b> short-term debt from other banks/investors (not checkable deposits).</div>
+<h3>Contagion chain</h3>
+<div class="flow"><div style="background:#1d2a44">House prices fall (2006)</div><i>↓</i><div style="background:#3b6fd4">Underwater mortgages, subprime defaults</div><i>↓</i><div style="background:#7a54c8">MBS values plunge; doubts on SIV and bank solvency</div><i>↓</i><div style="background:#0f9d8a">Investors refuse to roll over short-term lending (run on wholesale funding)</div><i>↓</i><div style="background:#f2a516;color:#1d2a44">Capital falls → forced asset sales at fire-sale prices → capital falls more</div><i>↓</i><div style="background:#e8574b">Credit freeze, higher borrowing rates, confidence collapse</div><i>↓</i><div style="background:#8a2b2b">Less consumption and investment → aggregate demand and GDP fall</div></div>
+<h3>Policy responses</h3>
+<table><tr><th>Tool</th><th>What / why</th></tr>
+<tr><td>Deposit insurance expanded</td><td>Stop runs</td></tr><tr><td>Fed liquidity (lender of last resort)</td><td>Banks and other intermediaries could borrow from the Fed</td></tr>
+<tr><td><b>TARP</b></td><td>Meant to remove complex assets from bank balance sheets; later used to inject capital into banks</td></tr>
+<tr><td>Policy rate cut to ~0 by Dec 2008</td><td>Hit the <b>zero lower bound</b>, so the Fed turned to unconventional policy (e.g. large asset purchases / QE)</td></tr>
+<tr><td>Fiscal policy</td><td>Tax cuts and more government spending to lift demand</td></tr></table>
+<h3>Leverage: why it makes a bank fragile (example)</h3>
+<table><tr><th></th><th>Bank A (high leverage)</th><th>Bank B (low leverage)</th></tr><tr><td>Assets</td><td>100</td><td>100</td></tr><tr><td>Debt</td><td>95</td><td>50</td></tr><tr><td>Equity (capital)</td><td>5</td><td>50</td></tr><tr><td>Leverage = assets/equity</td><td>20×</td><td>2×</td></tr><tr><td>Assets fall 6%</td><td>94 &lt; 95 debt → <b>equity wiped out, insolvent</b></td><td>94 vs 50 debt → equity 44, fine</td></tr></table>
+<p>A tiny fall in asset values is enough to destroy a highly leveraged bank. Mortgage defaults made asset values fall by more than that.</p>
+<h3>The fire-sale spiral and funding run, step by step</h3>
+<div class="flow"><div style="background:#3b6fd4">SIV holds long-term MBS but borrows <b>short-term</b> (needs rollover, e.g. every few weeks)</div><i>↓</i><div style="background:#7a54c8">Defaults rise; lenders cannot value the MBS, so they refuse to roll over</div><i>↓</i><div style="background:#f2a516;color:#1d2a44">SIV must sell MBS at once; complex, so buyers pay only fire-sale prices</div><i>↓</i><div style="background:#e8574b">Low sale prices lower the value of all similar MBS → capital falls further → more selling</div></div>
+<p><b>Why deposits did not run but wholesale funding did:</b> checkable deposits are insured, so depositors have no reason to panic. Wholesale lenders have no insurance and can simply decline to roll over. Hence the policy fixes below.</p>
+<h3>Problem → policy fix</h3>
+<table><tr><th>Problem</th><th>Fix</th></tr><tr><td>Runs on short-term funding</td><td>Expanded deposit insurance, Fed liquidity lines</td></tr><tr><td>Bank balance sheets clogged with unsellable MBS</td><td>TARP (buy toxic assets, then inject capital)</td></tr><tr><td>Weak demand, unemployment</td><td>Rate cuts to zero, QE, tax cuts, spending</td></tr></table>
+<div class="box key"><b class="t">Zero lower bound</b>Nominal rates cannot usefully go below 0 (people would hold cash). Once the policy rate hit 0 in Dec 2008, rate cuts were exhausted, so the Fed bought assets (QE) to push down longer-term rates, and the government used fiscal policy.</div>
+</section>
+
+<section id="s6"><h2>6. Rise and Fall of Structured Finance (Lecture 5)</h2>
+<div class="def box"><b class="t">Structured finance</b>Pool assets (loans, bonds, mortgages) and issue prioritised claims called <b>tranches</b> against the pool. Many tranches end up <b>safer than the average asset in the pool</b>.</div>
+<p><b>Rise and fall:</b> US issuance was $25–40bn per quarter in Q1–Q3 2005, peaked near <b>$100bn per quarter</b> (Q4 2006 – Q2 2007), then fell to under <b>$5bn</b> per quarter in H1 2008. Growth was ten-fold in under a decade.</p>
+<h3>The tranching picture</h3>
+<div class="row" style="align-items:center"><div style="background:#e3ebfb">Mortgages · Auto loans · Credit cards</div><div style="flex:0 0 40px;text-align:center;font-size:1.5rem">→</div><div style="background:#fff0cf">SPV (pool, off the originator's balance sheet)</div><div style="flex:0 0 40px;text-align:center;font-size:1.5rem">→</div>
+<div class="tr"><div style="background:#0f9d8a">Senior (AAA) – loses last</div><div style="background:#f2a516;color:#1d2a44">Mezzanine (BBB)</div><div style="background:#e8574b">Junior / equity – loses first</div></div></div>
+<p>Losses flow from the <b>bottom up</b> (a waterfall). The junior tranche is the cushion ("overcollateralization") protecting the senior.</p>
+<h3>Two fatal flaws</h3>
+<div class="box warn"><b class="t">Flaw 1 – Fragile to parameter errors</b>A AAA rating needs very precise estimates of default probabilities <i>and</i> correlations. Small errors can turn AAA into something that defaults with a reasonable chance.</div>
+<div class="box warn"><b class="t">Flaw 2 – Swaps diversifiable risk for systematic risk</b>Pooling assumes defaults are independent. But subprime defaults rise together in a downturn, so senior tranches fail exactly in bad times. Investors should have demanded much larger risk premia than for a similarly-rated corporate bond.</div>
+<h3>Credit rating agencies (CRAs)</h3>
+<ul><li>Moody's, S&amp;P, Fitch built a century of expertise on <b>single-name</b> corporate debt. Issuers wanted structured products rated on the <b>same scale</b> so rule-bound investors could buy them – an <i>illusion of comparability</i>.</li>
+<li>Mid-2007: <b>37,000</b> US structured issues rated AAA. About <b>60%</b> of structured products AAA vs under <b>1%</b> of corporate issues (Fitch).</li>
+<li>2006: Moody's earned <b>44%</b> of revenue from structured products (a conflict of interest, since issuers pay for ratings).</li>
+<li>2008: revenue vanished, rating-agency stocks fell about 50%. <b>27 of 30</b> Merrill Lynch asset-backed CDO tranches (AAA) became junk. In 2007 Moody's downgraded 31% of rated ABS CDO tranches and 14% of those originally AAA. Market effectively shut by mid-2008.</li></ul>
+<h3>Loss-waterfall diagram (CDO pool in the simulation)</h3>
+<div class="row" style="align-items:center"><div style="flex:1 1 220px;background:#fdeceb"><b>Pool loss grows from 0% upward</b><br>Each default of a 50%-recovery bond costs 0.5% of the pool (1 bond of 100). So 6% loss = 12 defaults; 12% loss = 24 defaults.</div>
+<div class="tr"><div style="background:#0f9d8a">Senior: hit only if loss &gt; 12% (&gt; 24 defaults)</div><div style="background:#f2a516;color:#1d2a44">Mezzanine: hit if loss is 6–12%</div><div style="background:#e8574b">Junior: wiped out first, 0–6%</div></div></div>
+<h3>Manufacturing AAA – extra insight</h3>
+<p>Expected pool loss = 100 bonds × 5% × 50% = <b>2.5%</b>, fixed no matter what correlation is. Tranching does not remove this loss; it moves it all into the junior tranche (which absorbs the first 6%). Senior is safe only because it is far above the expected loss <i>and</i> because it takes many simultaneous defaults to reach it.</p>
+</section>
+
+<section id="s7"><h2>7. Manufacturing AAA Securities – the Maths (Lecture 6)</h2>
+<p><b>Two steps:</b> (1) <b>Pooling</b> in an SPV. A <b>pass-through</b> (equal fractional claims) just inherits the average rating, so <i>no</i> credit enhancement. (2) <b>Tranching</b> – priority rules for absorbing losses. This is where the "magic" happens.</p>
+<h3>7.1 Two-bond model</h3>
+<div class="box eg"><b class="t">Setup</b>Two identical bonds, face value 1, default probability PD, pay 1 if OK, 0 if default. Pool = 2. Issue <b>Junior J</b> (face 1) and <b>Senior S</b> (face 1). Assume independent defaults (correlation γ = 0).</div>
+<table><tr><th>Bonds defaulting</th><th>Probability</th><th>Junior pays</th><th>Senior pays</th></tr><tr><td>0</td><td>(1−PD)²</td><td>1</td><td>1</td></tr><tr><td>1</td><td>2·PD(1−PD)</td><td>0 (absorbs the loss)</td><td>1</td></tr><tr><td>2</td><td>PD²</td><td>0</td><td>0</td></tr></table>
+<div class="math"><div>P(Senior defaults) = P(both default) = PD²</div><div>P(Junior defaults) = 1 − P(none default) = 1 − (1−PD)² = 2PD − PD²</div>
+<div><b>With PD = 0.10:</b> Senior = 0.01 = <b>1%</b> (10× safer than the bonds!), Junior = 1 − 0.81 = <b>19%</b></div></div>
+<p><b>Why does this work?</b> For the senior to fail, <i>both</i> must fail. If defaults are independent, two bad events at once are rare (0.1 × 0.1). The risk has not vanished – it is concentrated in the junior tranche.</p>
+<h3>7.2 Three-bond model</h3>
+<p>Junior defaults if ≥1 bond defaults; Mezzanine if ≥2; Senior only if all 3 (PD = 0.10, independent).</p>
+<div class="math"><div>Senior: PD³ = 0.001 = <b>0.1%</b></div>
+<div>P(exactly 2) = C(3,2)·PD²·(1−PD) = 3 × 0.01 × 0.9 = 0.027</div><div>Mezzanine: 0.027 + 0.001 = <b>2.8%</b></div>
+<div>Junior: 1 − (0.9)³ = 1 − 0.729 = <b>27.1%</b></div></div>
+<div class="key"><b>Insight:</b> with 2 bonds only 1 of 2 tranches (50%) is safer than 10%; with 3 bonds 2 of 3 tranches (66.7%) are. A bigger pool → a larger fraction of AAA-like paper.</div>
+<h3>7.3 CDO² (re-securitisation)</h3>
+<p>Take two junior tranches (each 19% default) from independent pools, pool them, and tranche again. The new senior defaults only if <b>both</b> juniors default:</p>
+<div class="math"><div>0.19 × 0.19 = 0.0361 ≈ <b>3.6%</b></div></div>
+<p>So "junk" (19%) is turned into something far safer. Note 3.6% is still above the original 1% senior, but shows how the machine keeps manufacturing safe-looking paper.</p>
+<h3>7.4 When correlation = 1</h3>
+<p>If the two bonds are perfectly correlated, they either both survive (90%) or both default (10%). A single default is impossible.</p>
+<div class="math"><div>P(Senior default) = P(both default) = <b>10%</b> = same as one bond</div></div>
+<div class="box warn"><b>Key conclusion:</b> credit enhancement depends on <b>low default correlation</b>. γ = 0 → senior 1%; γ = 1 → 10%; in between → between 1% and 10%.</div>
+<div class="flow"><div style="background:#0f9d8a">Low correlation → defaults rarely coincide → very safe senior</div><div style="background:#f2a516;color:#1d2a44;margin-top:6px">Medium correlation → senior default between 1% and 10%</div><div style="background:#e8574b;margin-top:6px">High correlation → senior ≈ underlying bond, no benefit</div></div>
+<h3>General N-bond rule and a 4-bond check</h3>
+<p>With N identical independent bonds, let X = number of defaults ~ Binomial(N, PD). Tranche i (i = 1 is junior) defaults if <b>at least i bonds default</b>: P(X ≥ i).</p>
+<table><tr><th>PD = 10%</th><th>Tranche 1 (junior)</th><th>2</th><th>3</th><th>4 (senior)</th><th>Tranches safer than 10%</th></tr><tr><td>N = 2</td><td>19%</td><td>1%</td><td>–</td><td>–</td><td>1 of 2 = 50%</td></tr><tr><td>N = 3</td><td>27.1%</td><td>2.8%</td><td>0.1%</td><td>–</td><td>2 of 3 = 66.7%</td></tr><tr><td>N = 4</td><td>34.4%</td><td>5.2%</td><td>0.37%</td><td>0.01%</td><td>3 of 4 = 75%</td></tr></table>
+<p>N = 4 working: P(X≥1) = 1−0.9⁴ = 0.3439; P(X≥2) = 1 − 0.6561 − 4(0.1)(0.9³) = 1 − 0.6561 − 0.2916 = 0.0523; P(X≥3) = 4(0.1³)(0.9) + 0.1⁴ = 0.0036 + 0.0001 = 0.0037; P(X≥4) = 0.0001. <b>As N grows, the fraction of "safe" tranches approaches 100%</b> – this is the "magic" and also why the whole thing collapses when independence fails.</p>
+<h3>Intermediate correlation (derivation)</h3>
+<p>For default indicators with default probability PD each, correlation γ = (P(both) − PD²) / (PD(1−PD)). Solve for the joint default probability:</p>
+<div class="math"><div><b>P(both) = PD² + γ·PD(1−PD)</b></div><div>γ = 0 → 0.01 &nbsp;·&nbsp; γ = 1 → 0.01 + 0.09 = 0.10 ✓ &nbsp;·&nbsp; γ = 0.5 → 0.01 + 0.045 = <b>0.055</b></div></div>
+<p>So Senior default probability = P(both) rises smoothly from 1% to 10% as γ goes 0 → 1: the "between 1 and 10 percent" in the lecture.</p>
+<div class="box eg"><b class="t">Practice problem at γ = 0.5 (solve it yourself first)</b>
+<div class="math"><div>P(both) = 0.055; P(exactly one) = 2(PD − P(both)) = 2(0.10 − 0.055) = 0.09; P(neither) = 0.855 (sum = 1 ✓)</div>
+<div>E[V] = 200(0.855) + 100(0.09) = 171 + 9 = 180 (same again)</div><div>E[V²] = 40,000(0.855) + 10,000(0.09) = 34,200 + 900 = 35,100 → Var = 35,100 − 32,400 = 2,700 → SD ≈ <b>51.96</b></div>
+<div>Yellow E = 100(0.855 + 0.09) = <b>94.5</b>; Red E = 100(0.855) = <b>85.5</b></div></div>
+Check: SD 42.43 → 51.96 → 60 and Yellow 99 → 94.5 → 90 as γ = 0 → 0.5 → 1. Everything moves smoothly between the two lecture cases.</div>
+<p><b>Shortcut for exams:</b> E[V] is always 2 × 100 × 0.9 = 180 (linearity, correlation does not matter). Yellow + Red always sum to E[V]. Yellow = 100·(1 − P(both)) and Red = 100·(1 − P(at least one)) = 100·(1 − 2PD + P(both)).</p>
+</section>
+
+<section id="s8"><h2>8. Practice Problem (Lecture 7)</h2>
+<div class="box eg"><b class="t">Given</b>2 Green bonds, face ₹100 each (total ₹200), PD = 10%. Pay ₹100 if OK, ₹0 if default. Senior <b>Yellow</b> (face 100, paid first), Junior <b>Red</b> (face 100, absorbs first loss). Default correlation γ.</div>
+<h3>Case 1: γ = 0 (independent)</h3>
+<div class="math"><div>P(both) = 0.1×0.1 = 0.01; P(neither) = 0.9×0.9 = 0.81; P(exactly one) = 1 − 0.01 − 0.81 = 0.18</div>
+<div>Portfolio value V: 200 (p 0.81), 100 (p 0.18), 0 (p 0.01)</div>
+<div>E[V] = 200(0.81) + 100(0.18) + 0 = 162 + 18 = <b>180</b></div>
+<div>E[V²] = 40,000(0.81) + 10,000(0.18) = 32,400 + 1,800 = 34,200</div>
+<div>Var = E[V²] − (E[V])² = 34,200 − 32,400 = <b>1,800</b> ⟹ SD = √1,800 ≈ <b>42.43</b></div>
+<div>Yellow pays 100, 100, 0 → E = 81 + 18 + 0 = <b>99</b></div>
+<div>Red pays 100, 0, 0 → E = 81 + 0 + 0 = <b>81</b></div></div>
+<h3>Case 2: γ = 1 (perfect correlation)</h3>
+<div class="math"><div>P(both) = 0.10; P(neither) = 0.90; P(exactly one) = 0</div>
+<div>E[V] = 200(0.9) = <b>180</b>; E[V²] = 40,000(0.9) = 36,000; Var = 36,000 − 32,400 = <b>3,600</b>; SD = <b>60</b></div>
+<div>Yellow: 100(0.9) = <b>90</b>; Red: 100(0.9) = <b>90</b></div></div>
+<table><tr><th>Metric</th><th>γ = 0</th><th>γ = 1</th><th>Effect of ↑ correlation</th></tr><tr><td>P(both default)</td><td>1%</td><td>10%</td><td>↑</td></tr><tr><td>P(neither)</td><td>81%</td><td>90%</td><td>↑</td></tr><tr><td>P(exactly 1)</td><td>18%</td><td>0%</td><td>↓</td></tr><tr><td>E[V]</td><td>180</td><td>180</td><td>unchanged</td></tr><tr><td>SD(V)</td><td>42.43</td><td>60</td><td>↑ riskier pool</td></tr><tr><td>Yellow (senior) E</td><td>99</td><td>90</td><td>↓ 9</td></tr><tr><td>Red (junior) E</td><td>81</td><td>90</td><td>↑ 9</td></tr></table>
+<div class="key"><b>Intuition:</b> correlation does not change the pool's average value (180), only how risk is <i>spread</i>. Higher correlation → outcomes are "all or nothing" → the senior loses value, and the junior gains value because the "exactly one defaults" state (which wipes it out) disappears. Total stays 180 (99+81 = 90+90).</div>
+</section>
+
+<section id="s9"><h2>9. Why Rating Structured Products Is So Hard (Lecture 8)</h2>
+<p>A <b>credit rating</b> measures ability to meet payments, based on <b>probability of default</b> or <b>expected loss</b>:</p>
+<div class="math"><div>Expected loss = P(default) × loss severity given default</div></div>
+<p><b>Grades:</b> investment grade = BBB− or better (low–moderate risk); speculative / junk = BB+ or below. Fitch history (10-year default prob. / annualised): AAA 0.19% / 0.02%; BBB− 7.26% / 0.75%; BB+ 10.18% / 1.07%; B 27.67% / 3.24%; C 95% / 29.96%.</p>
+<div class="row"><div style="background:#d8f1ec"><b>Single-name:</b> one firm, its own default probability and loss. Correlation is irrelevant.</div><div style="background:#fdeceb"><b>Structured:</b> need the <b>entire joint distribution</b> of payoffs, i.e. all pairwise correlations. Errors are magnified, especially in CDO².</div></div>
+<h3>Simulation study</h3>
+<ul><li>40 CDO pools × 100 bonds; 5-year PD = 5%, recovery 50% (loss given default 50%), each bond ≈ <b>BB+</b>.</li><li>Within-pool correlation 0.20; across pools 0.</li><li>Tranches by pool loss: Junior 0–6%, Mezzanine 6–12%, Senior &gt;12%. CDO² pools the 40 mezzanine tranches.</li></ul>
+<p><b>Baseline result:</b> from BB+ junk collateral: Senior = <b>AAA</b>, Mezzanine = BBB−; CDO² mezzanine and senior both = <b>AAA</b>.</p>
+<table><tr><th>Correlation</th><th>CDO Senior</th><th>CDO Mezz</th><th>CDO² Mezz</th></tr><tr><td>20% (baseline)</td><td>AAA</td><td>BBB−</td><td>AAA</td></tr><tr><td>40%</td><td>A+</td><td>BB−</td><td>B+</td></tr><tr><td>60%</td><td>BBB−</td><td>B+</td><td>C</td></tr><tr><td>80%</td><td>BB</td><td>B+</td><td>CC</td></tr></table>
+<p class="q"><i>Values from the slide (Table 3). Your lecture summary lists slightly different letters for some cells; if your exam follows the slides, use these, and the trend is identical.</i></p>
+<div class="box warn"><b class="t">Takeaways</b>(1) AAA from junk collateral only if correlation is low. (2) Raise correlation 0.2 → 0.6 and the senior falls from AAA to the borderline of investment grade. (3) CDO² is far more fragile: AAA → junk. (4) Subprime lending was new, so there was little historical data; correlation and PD were badly estimated, and re-securitisation magnified the errors. Models trained on single-name bonds underestimated <b>systematic</b> risk. Also, raising the default probability (5% → 12.5%) pushes the CDO senior from AAA to BBB−.</div>
+<h3>How the simulation assigns a rating (step by step)</h3>
+<div class="flow"><div style="background:#1d2a44">Simulate many scenarios of defaults in the 40 pools (with correlation 0.20 inside a pool)</div><i>↓</i><div style="background:#3b6fd4">For each tranche, count how often its capital is impaired = simulated default probability</div><i>↓</i><div style="background:#7a54c8">Convert Fitch's annualised default rates into 5-year probabilities: 1 − (1 − annual)⁵</div><i>↓</i><div style="background:#0f9d8a">Give the tranche the rating whose 5-year probability it matches</div></div>
+<div class="math"><div>Check: BBB annual 0.38% → 5-year = 1 − 0.9962⁵ ≈ 1.9%; BBB− annual 0.75% → ≈ 3.7%</div><div>CDO mezzanine default prob (Table 2) = 2.07% → between 1.9% and 3.7% → <b>BBB−</b> ✓</div><div>AAA annual 0.02% → ≈ 0.1%; CDO senior probability ≈ 0 → <b>AAA</b> ✓</div></div>
+<p><b>Slide Table 2 (baseline):</b> CDO Junior 0–6%: default 97.52%, expected payoff 0.59, rating NR. Mezzanine 6–12%: 2.07%, &gt;0.99, BBB−. Senior 12–100%: ~0%, AAA. CDO² Junior: 56.94%, C. CDO² Mezzanine and Senior: ~0%, AAA.</p>
+<h3>Effect of changing default probability (Table 3)</h3>
+<table><tr><th>pD (corr 20%)</th><th>CDO Senior</th><th>CDO Mezz</th><th>CDO² Mezz</th><th>CDO² Senior</th></tr><tr><td>5% (base)</td><td>AAA</td><td>BBB−</td><td>AAA</td><td>AAA</td></tr><tr><td>7.5%</td><td>AAA</td><td>B+</td><td>BBB−</td><td>AAA</td></tr><tr><td>10%</td><td>A+</td><td>CCC</td><td>NR</td><td>AAA</td></tr><tr><td>12.5%</td><td>BBB−</td><td>CC</td><td>NR</td><td>B−</td></tr></table>
+<h3>Why the figures behave this way</h3>
+<ul><li><b>Payoff vs correlation graph:</b> collateral and senior payoffs stay near 1 as correlation rises, but the <b>mezzanine</b> payoff falls and the <b>junior</b> payoff rises (as in the 2-bond case: more all-or-nothing outcomes). The senior only starts to slip at high correlation.</li>
+<li><b>Payoff vs default probability graph:</b> junior and mezzanine payoffs collapse quickly as pD rises (cushions burn through), while senior declines slowly. Even a small rise in pD from 5% to 7.5% destroys the CDO mezzanine rating (BBB− → B+).</li>
+<li><b>Why CDO² is worse:</b> its collateral is mezzanine tranches, which are <i>already</i> the most sensitive pieces. Errors pass through two layers, and all 40 pools share the same mis-estimated parameters, so their errors are correlated.</li>
+<li><b>Real-world link:</b> many CDOs held subprime MBS, which were themselves tranches, so they were effectively CDO². Subprime history was short, so data to estimate pD and correlation was scarce.</li></ul>
+</section>
+
+<section id="s10"><h2>10. Quick Revision Sheet</h2>
+<ul>
+<li><b>Value</b> = size of expected cash flows + uncertainty. P = FV/(1+r); dP/dr &lt; 0.</li>
+<li><b>Risky bond</b> → higher required return → lower price. <b>Systematic</b> risk is priced; <b>idiosyncratic</b> is diversified away.</li>
+<li><b>Order book:</b> bids (high→low), asks (low→high); trades at ask for buyers; spread = best ask − best bid.</li>
+<li><b>Bubble</b> = persistent price ≠ fundamental. Fama (no bubbles, EMH) vs Shiller (irrational exuberance, P/E) vs Prince ("keep dancing").</li>
+<li><b>Crisis chain:</b> house prices ↓ → defaults → MBS/SIV doubts → wholesale freeze → fire sales → credit crunch → GDP ↓.</li>
+<li><b>Structured finance:</b> pool + tranche. Senior default (2 bonds) = PD²; 3 bonds: 0.1%, 2.8%, 27.1%; CDO² senior 3.6%.</li>
+<li><b>Correlation 0 → 1:</b> senior default 1% → 10%; senior payoff 99 → 90; SD 42.43 → 60.</li>
+<li><b>Two flaws:</b> parameter sensitivity; systematic-for-idiosyncratic swap. CRAs misapplied single-name models.</li></ul>
+<p>Send me your exam questions and I will explain each one step by step in simple language.</p>
+<h3>Concept-by-concept simple explanations (for first-time readers)</h3>
+<table><tr><th>Idea</th><th>One-line meaning</th></tr><tr><td>Fundamental value</td><td>What the asset's future cash flows are really worth</td></tr><tr><td>Reservation price</td><td>Your walk-away price (max for buyers, min for sellers)</td></tr><tr><td>Limit order</td><td>"Trade up to this quantity, at this price or better"</td></tr><tr><td>Leverage</td><td>Using borrowed money; amplifies gains and losses</td></tr><tr><td>Illiquid</td><td>Hard to sell quickly without a big price cut</td></tr><tr><td>SPV</td><td>A separate legal box that holds the pool and issues the tranches</td></tr><tr><td>Tranche</td><td>A slice of the pool with a specific place in the loss queue</td></tr><tr><td>Default correlation</td><td>How likely bonds are to fail <i>together</i></td></tr><tr><td>Overcollateralization</td><td>The junior cushion beneath a senior tranche</td></tr></table>
+<h3>Likely exam questions and what to write</h3>
+<ul><li><b>"Prove price and interest rate are inversely related."</b> r = (FV−P)/P → P = FV/(1+r) → dP/dr = −FV/(1+r)² &lt; 0 → explain with competing assets.</li>
+<li><b>"Why is idiosyncratic risk not priced?"</b> Diversifiable (SD = σ/√n) so investors need no premium; systematic is not diversifiable so it sets the required return.</li>
+<li><b>"Walk through a limit order of X shares at price p."</b> Compare p with best ask/bid; fill level by level from the best price; leftover rests in the book; give the new best price and spread.</li>
+<li><b>"Bubble debate."</b> Definition + Fama (EMH, hindsight) + Shiller (P/E, irrational exuberance) + Prince (liquidity pressure) + three bubble-enabling features.</li>
+<li><b>"Explain how the crisis spread."</b> Use the 7-box chain plus leverage, illiquid assets, short-term liabilities.</li>
+<li><b>"How can AAA be made from junk? Why did it fail?"</b> Pool + tranche, show PD² = 1%; then correlation γ = 1 gives 10%, parameter sensitivity, systematic risk, CDO², CRA conflict.</li>
+<li><b>Numerical:</b> two-bond expected values and variance, 3-bond tranche probabilities, CDO² 0.19² = 3.61%.</li></ul>
+<h3>Common mistakes</h3>
+<ul><li>Saying correlation changes the <i>expected</i> pool value. It changes only the <b>spread</b> of outcomes.</li><li>Forgetting that buyers pay the <b>ask</b>, not their limit price.</li><li>Calling a high promised yield a high expected return.</li><li>Mixing the primary market (money to the company) with the secondary market (money between investors).</li></ul>
+</section>
+</main></body></html>
