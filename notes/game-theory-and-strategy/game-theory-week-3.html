@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game Theory and Strategy: Week 3 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#e11d48,#4f46e5);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.92}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--warn);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card)}
+th,td{border:1px solid var(--line);padding:7px 13px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+ul,ol{padding-left:22px}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+</style></head><body>
+<header><h1>Game Theory and Strategy: Week 3</h1><p>How the solution concepts connect, then mixed-strategy Nash equilibrium, the bystander effect, and never-a-best-response</p></header>
+<nav><a href="#s1">1 Links</a><a href="#s2">2 Why mix</a><a href="#s3">3 Indifference</a><a href="#s4">4 Pennies</a><a href="#s5">5 Existence</a><a href="#s6">6 Battle of Sexes</a><a href="#s7">7 Bystander</a><a href="#s8">8 Dominance by mix</a><a href="#s9">9 Meaning</a><a href="#s10">10 Recap</a></nav>
+<main>
+<div class="box def"><b>Colour key:</b> blue = definition, green = derivation or proof (each step shown), orange = worked example, red = trap.</div>
+
+<div class="box ex"><b>Maths you need this week</b><br>
+<b>Probability of both:</b> for independent events multiply. If P1 plays H with probability p and P2 plays H with probability q, the cell (H, H) has probability pq.<br>
+<b>Expected payoff:</b> add up (probability × payoff) over the possible outcomes. 50% of 10 and 50% of 0 gives 5.<br>
+<b>Slope of a straight line:</b> in U = (1 − q) + p(4q − 1), the number multiplying p, namely (4q − 1), is the slope. Positive slope: bigger p is better, so p = 1. Negative: p = 0. Zero: any p is equally good.<br>
+<b>Solving "set two things equal":</b> this is just a one-variable equation, e.g. 2q − 1 = 1 − 2q gives 4q = 2, so q = 1/2.</div>
+<section id="s1"><h2>1. How the solution concepts relate</h2>
+<svg viewBox="0 0 560 150" width="560" role="img" aria-label="Nested solution concepts"><ellipse cx="280" cy="75" rx="265" ry="68" fill="var(--defbg)" stroke="var(--def)" stroke-width="2"/><ellipse cx="280" cy="85" rx="190" ry="48" fill="var(--derbg)" stroke="var(--der)" stroke-width="2"/><ellipse cx="280" cy="95" rx="100" ry="28" fill="var(--exbg)" stroke="var(--ex)" stroke-width="2"/>
+<text x="280" y="26" text-anchor="middle" font-size="14">Nash equilibria (all)</text><text x="280" y="68" text-anchor="middle" font-size="13">survive IESDS (never eliminated)</text><text x="280" y="99" text-anchor="middle" font-size="13">dominant strategy eq.</text></svg>
+<p>Reading the picture: every dominant strategy equilibrium is a NE, and every NE survives IESDS. The reverse does not hold. Each statement below is proved.</p>
+
+<h3>Theorem 1. A game has at most one strictly dominant strategy equilibrium</h3>
+<div class="box der"><b>Proof (by contradiction).</b> Suppose there are two different ones, a* and b*. Then some player i has a*<sub>i</sub> ≠ b*<sub>i</sub>.<br>
+<b>1.</b> a*<sub>i</sub> is strictly dominant, so it beats every other action against <i>every</i> opponent profile. Use the profile b*<sub>−i</sub> and the other action b*<sub>i</sub>:<span class="eq">u<sub>i</sub>(a*<sub>i</sub>, b*<sub>−i</sub>) &gt; u<sub>i</sub>(b*<sub>i</sub>, b*<sub>−i</sub>)</span>
+<b>2.</b> b*<sub>i</sub> is also strictly dominant. Use the profile b*<sub>−i</sub> and the other action a*<sub>i</sub>:<span class="eq">u<sub>i</sub>(b*<sub>i</sub>, b*<sub>−i</sub>) &gt; u<sub>i</sub>(a*<sub>i</sub>, b*<sub>−i</sub>)</span>
+<b>3.</b> Put them together: u(a*<sub>i</sub>, ·) &gt; u(b*<sub>i</sub>, ·) &gt; u(a*<sub>i</sub>, ·). A number cannot be bigger than itself. Contradiction. ∎</div>
+
+<h3>Theorem 2. Dominant strategy equilibrium ⟹ Nash equilibrium (not the other way)</h3>
+<div class="box der"><b>Proof.</b> Dominance says: for every player i, u<sub>i</sub>(a*<sub>i</sub>, a<sub>−i</sub>) ≥ u<sub>i</sub>(a′<sub>i</sub>, a<sub>−i</sub>) for <i>all</i> a′<sub>i</sub> and <i>all</i> a<sub>−i</sub>. "All" includes the one profile a<sub>−i</sub> = a*<sub>−i</sub>, so<span class="eq">u<sub>i</sub>(a*<sub>i</sub>, a*<sub>−i</sub>) ≥ u<sub>i</sub>(a′<sub>i</sub>, a*<sub>−i</sub>) for all a′<sub>i</sub></span>
+That is exactly the Nash condition. ∎</div>
+<div class="box ex"><b>Why the reverse fails: Battle of the Sexes</b>
+<table><tr><th>P1 \ P2</th><th>Action (A)</th><th>Romantic (R)</th></tr><tr><th>A</th><td class="nash">3, 1</td><td>0, 0</td></tr><tr><th>R</th><td>0, 0</td><td class="nash">1, 3</td></tr></table>
+Best responses: BR<sub>1</sub>(A) = A, BR<sub>1</sub>(R) = R, and the same for P2. So (A, A) and (R, R) are NE. But for P1, A beats R when P2 plays A (3 &gt; 0), and loses when P2 plays R (0 &lt; 1). No dominant action, so neither NE is a dominant strategy equilibrium.</div>
+
+<h3>Theorem 3. IESDS never deletes a Nash equilibrium</h3>
+<div class="box der"><b>Proof (by contradiction).</b> Suppose a NE a* loses a component. Deletions happen in finite rounds, so look at the <b>first</b> round k where some a*<sub>i</sub> is deleted.<br>
+<b>1.</b> In rounds before k nothing from a* was deleted, so a*<sub>−i</sub> is still available to the opponents.<br>
+<b>2.</b> a*<sub>i</sub> is deleted in round k, so some a′<sub>i</sub> (pure or mixed) strictly beats it against <i>every</i> remaining opponent profile. Remaining profiles include a*<sub>−i</sub>:<span class="eq">u<sub>i</sub>(a′<sub>i</sub>, a*<sub>−i</sub>) &gt; u<sub>i</sub>(a*<sub>i</sub>, a*<sub>−i</sub>)</span>
+<b>3.</b> That says player i gains by deviating from a*, so a* is not a NE. Contradiction. ∎</div>
+
+<h3>Theorem 4. If only one profile survives IESDS, it is the unique NE</h3>
+<div class="box der"><b>Proof.</b> <i>Existence:</i> by Nash's theorem (Section 5) a NE exists, and by Theorem 3 it survives. Only one profile survives, so that profile is a NE. <i>Uniqueness:</i> any other NE would also survive (Theorem 3), but only one profile survived. ∎</div>
+<h3>IEWDS can delete a Nash equilibrium</h3>
+<div class="box ex"><table><tr><th>P1 \ P2</th><th>L</th><th>R</th></tr><tr><th>U</th><td class="nash">1, 1</td><td>0, 0</td></tr><tr><th>D</th><td>0, 0</td><td class="nash">0, 0</td></tr></table>
+Both (U, L) and (D, R) are NE. (Check (D, R): P1 switching to U gets 0, no gain. P2 switching to L gets 0, no gain.) Now delete weakly dominated actions: U weakly dominates D (1 &gt; 0 vs L, 0 = 0 vs R). Delete D. Then L beats R for P2. Delete R. Only (U, L) survives, so the NE (D, R) was lost.</div>
+<h3>Three ways to find a pure NE (from the slides)</h3>
+<ol><li>Every player has a dominant strategy: play them.</li><li>Delete dominated strategies; whatever survives is a candidate.</li><li>Best responses: mark each player's best replies and look for cells where both are marked.</li></ol></section>
+
+<section id="s2"><h2>2. Why we need mixed strategies</h2>
+<p>Some games have <b>no pure NE</b>. These are games of pure conflict, where being predictable gets you beaten.</p>
+<div class="box def"><b>Zero-sum:</b> u<sub>1</sub> + u<sub>2</sub> = 0 in every cell. <b>Constant-sum:</b> u<sub>1</sub> + u<sub>2</sub> = c. One player's gain is exactly the other's loss.</div>
+<table><tr><th>Rock-paper-scissors</th><th>Rock</th><th>Paper</th><th>Scissors</th></tr><tr><th>Rock</th><td>0, 0</td><td>−1, 1</td><td>1, −1</td></tr><tr><th>Paper</th><td>1, −1</td><td>0, 0</td><td>−1, 1</td></tr><tr><th>Scissors</th><td>−1, 1</td><td>1, −1</td><td>0, 0</td></tr></table>
+<p>Best replies chase each other in a circle: against Rock play Paper, against Paper play Scissors, against Scissors play Rock. No cell is stable. Matching pennies (Week 1) behaves the same way: if P2 plays H, P1 wants H; but then P2 wants T; then P1 wants T; then P2 wants H.</p>
+<p><b>The fix:</b> let players randomise. That adds new candidate equilibria. The cost is that we must now explain what randomising means (Section 9).</p>
+<div class="box def"><b>Mixed strategy.</b> A probability α<sub>i</sub>(a) on each pure action a in A<sub>i</sub>, with all probabilities ≥ 0 and
+<span class="eq">Σ<sub>a ∈ A<sub>i</sub></sub> α<sub>i</sub>(a) = 1</span>
+The set of all such α<sub>i</sub> is the <b>simplex</b> Δ(A<sub>i</sub>). It "convexifies" the choice space: any blend of two strategies is also a strategy. A pure action is the special case with probability 1 on one action.<br>
+<b>Support:</b> supp(α<sub>i</sub>) = the pure actions with positive probability.</div>
+<div class="box def"><b>Expected payoff</b> (players randomise independently). For a profile α = (α<sub>1</sub>, ..., α<sub>n</sub>):
+<span class="eq">U<sub>i</sub>(α) = Σ<sub>a ∈ A</sub> [ α<sub>1</sub>(a<sub>1</sub>) × ... × α<sub>n</sub>(a<sub>n</sub>) ] · u<sub>i</sub>(a)</span>
+Each cell's payoff is weighted by the chance of that cell. <b>Mixed Nash equilibrium:</b> U<sub>i</sub>(α*) ≥ U<sub>i</sub>(α<sub>i</sub>, α*<sub>−i</sub>) for every player i and every mixed strategy α<sub>i</sub>.</div>
+<div class="box der"><b>Solving rock-paper-scissors.</b> Let P2 play Rock, Paper, Scissors with probabilities q<sub>R</sub>, q<sub>P</sub>, q<sub>S</sub>. P1's expected payoffs:<br>
+Rock: 0·q<sub>R</sub> − q<sub>P</sub> + q<sub>S</sub> &nbsp; Paper: q<sub>R</sub> − q<sub>S</sub> &nbsp; Scissors: −q<sub>R</sub> + q<sub>P</sub>.<br>
+For P1 to be happy mixing, all three must be equal. Set Rock = Scissors: −q<sub>P</sub> + q<sub>S</sub> = −q<sub>R</sub> + q<sub>P</sub>, so q<sub>R</sub> + q<sub>S</sub> = 2q<sub>P</sub>. With q<sub>R</sub> + q<sub>P</sub> + q<sub>S</sub> = 1 this gives 1 − q<sub>P</sub> = 2q<sub>P</sub>, so q<sub>P</sub> = 1/3. The same steps for the other pairs give q<sub>R</sub> = q<sub>S</sub> = 1/3. By symmetry, <b>both play (1/3, 1/3, 1/3)</b> and the value is 0.</div></section>
+
+<section id="s3"><h2>3. The indifference principle</h2>
+<div class="box def"><b>Theorem 5.</b> In a mixed NE α*, player i's expected payoff against α*<sub>−i</sub>:<br>(1) is <b>the same</b> for every pure action in her support, and equals her equilibrium payoff c;<br>(2) is <b>at most c</b> for every pure action outside the support.</div>
+<div class="box der"><b>Proof.</b> Expected payoff is a weighted average of the pure-action payoffs in the support:
+<span class="eq">U<sub>i</sub>(α*) = Σ<sub>k ∈ supp</sub> α*<sub>i</sub>(a<sub>k</sub>) · U<sub>i</sub>(a<sub>k</sub>, α*<sub>−i</sub>)</span>
+Let M be the best pure-action payoff available against α*<sub>−i</sub>. Suppose some action a<sub>k̂</sub> in the support pays strictly less than M. Replace every payoff in the sum by M (bigger or equal, and strictly bigger for a<sub>k̂</sub> which has positive weight):
+<span class="eq">U<sub>i</sub>(α*) &lt; M · Σ α*<sub>i</sub>(a<sub>k</sub>) = M · 1 = M</span>
+So she would do strictly better by just playing the best pure action (payoff M). Then α*<sub>i</sub> was not a best response. Contradiction. Hence every support action pays exactly M = c, and outside-support actions cannot pay more than M. ∎</div>
+<div class="box ex"><b>Plain-English version:</b> a weighted average cannot beat its best ingredient. If she is willing to put weight on an action, that action must be as good as the best one. <b>Practical rule for solving:</b> to find the probabilities a player uses, make the <i>other</i> player indifferent between her pure actions.</div></section>
+
+<section id="s4"><h2>4. Deriving the mixed NE of matching pennies</h2>
+<p>P1 plays H with probability p. P2 plays H with probability q. P1 wins on a match.</p>
+<table><tr><th>P1 \ P2</th><th>H (q)</th><th>T (1−q)</th></tr><tr><th>H (p)</th><td>1, −1</td><td>−1, 1</td></tr><tr><th>T (1−p)</th><td>−1, 1</td><td>1, −1</td></tr></table>
+<div class="box der"><b>Step 1: P1's payoffs.</b>
+<span class="eq">U<sub>1</sub>(H) = 1·q + (−1)(1−q) = 2q − 1 &nbsp;&nbsp; U<sub>1</sub>(T) = −q + (1−q) = 1 − 2q</span>
+P1 is indifferent when 2q − 1 = 1 − 2q ⟹ 4q = 2 ⟹ <b>q = 1/2</b>. If q &lt; 1/2, T pays more, so P1 plays p = 0. If q &gt; 1/2, p = 1. So
+<span class="eq">BR<sub>1</sub>(q) = {0} if q &lt; ½; &nbsp;[0, 1] if q = ½; &nbsp;{1} if q &gt; ½</span>
+<b>Step 2: P2's payoffs.</b> U<sub>2</sub>(H) = −p + (1−p) = 1 − 2p, U<sub>2</sub>(T) = p − (1−p) = 2p − 1. Equal when 1 − 2p = 2p − 1 ⟹ <b>p = 1/2</b>. If p &lt; 1/2, H pays more, so q = 1. If p &gt; 1/2, q = 0.
+<span class="eq">BR<sub>2</sub>(p) = {1} if p &lt; ½; &nbsp;[0, 1] if p = ½; &nbsp;{0} if p &gt; ½</span>
+<b>Step 3: intersect.</b> The only point lying on both is (p, q) = (½, ½). Payoffs: U<sub>1</sub> = 2(½) − 1 = 0 and U<sub>2</sub> = 1 − 2(½) = 0.</div>
+<div class="box ex"><b>Test: why not another mix, like ¾ H + ¼ T for P1?</b> P2's payoff from H = −1(¾) + 1(¼) = −½. P2's payoff from T = 1(¾) − 1(¼) = +½. So P2 would play T for sure, and then P1 (who wins on a match) would shift toward T. Not stable. With ½-½, P2 gets 0 from H and 0 from T, so P2 has no reason to move. Only ½-½ survives.</div>
+<svg viewBox="0 0 300 260" width="300" role="img" aria-label="Matching pennies best responses"><g stroke="var(--ink)" fill="none" stroke-width="1.5"><path d="M40 220 L40 20"/><path d="M40 220 L270 220"/></g>
+<path d="M40 220 L40 120 L260 120 L260 20" stroke="#4f46e5" stroke-width="3" fill="none"/><path d="M40 20 L150 20 L150 220 L260 220" stroke="#e11d48" stroke-width="3" fill="none"/>
+<circle cx="150" cy="120" r="7" fill="#0d9488"/><text x="160" y="112" font-size="13">NE (½, ½)</text><text x="272" y="224" font-size="13">p</text><text x="30" y="16" font-size="13">q</text><text x="45" y="238" font-size="12">0</text><text x="252" y="238" font-size="12">1</text>
+<text x="200" y="110" font-size="12" fill="#4f46e5">BR₁</text><text x="156" y="170" font-size="12" fill="#e11d48">BR₂</text></svg>
+<p style="text-align:center;font-size:.9rem">Blue: P1's best response. Red: P2's. They cross once.</p></section>
+
+<section id="s5"><h2>5. Nash's existence theorem</h2>
+<div class="box def"><b>Theorem 6 (Nash, 1950).</b> Every finite game (finitely many players, each with finitely many actions) has at least one Nash equilibrium, possibly in mixed strategies.</div>
+<p>This is reassuring but does not tell you <i>how to find</i> it. Finiteness is enough but not necessary: some infinite games (like Cournot) also have equilibria.</p>
+<div class="box def"><b>Words used in the proof, in plain terms.</b> <b>Convex set:</b> if two points are inside, every blend of them is inside too (a filled circle is convex, a ring is not). Mixed strategies are blends, so they form a convex set. <b>Compact:</b> closed (includes its edges) and bounded (does not run off to infinity). <b>Fixed point:</b> a point that a map sends to itself; stir a cup of coffee and, by a similar theorem, some point ends up where it started. <b>Correspondence:</b> a rule that can return a <i>set</i> of answers (ties), not just one.</div>
+<div class="box der"><b>Idea of the proof (sketch).</b> Define the combined best-response map BR(α) = BR<sub>1</sub>(α<sub>−1</sub>) × ... × BR<sub>n</sub>(α<sub>−n</sub>). A NE is a point with α* ∈ BR(α*), a <b>fixed point</b>. Kakutani's fixed-point theorem gives one if:<br>
+1. The strategy space (a product of simplexes) is non-empty, compact and convex. ✔<br>
+2. BR(α) is never empty: expected payoff is continuous and the choice set is compact. ✔<br>
+3. BR(α) is convex: if two strategies are both best, any blend of them is too, because expected payoff is linear in the probabilities. ✔<br>
+4. BR has a closed graph (limits of best responses are best responses), from the maximum theorem. ✔</div></section>
+
+<section id="s6"><h2>6. Mixed NE of Battle of the Sexes</h2>
+<p>Using the table from Section 1. P1 plays A with probability p. P2 plays A with probability q.</p>
+<div class="box der"><b>Step 1: expected payoffs.</b> Weight each cell by its probability:
+<span class="eq">U<sub>1</sub> = 3(pq) + 1((1−p)(1−q)) = 3pq + 1 − p − q + pq = (1 − q) + p(4q − 1)</span>
+<span class="eq">U<sub>2</sub> = 1(pq) + 3((1−p)(1−q)) = pq + 3 − 3p − 3q + 3pq = (3 − 3p) + q(4p − 3)</span>
+Factoring out the player's own variable shows how it moves her payoff.<br>
+<b>Step 2: best responses.</b> U<sub>1</sub> changes by (4q − 1) per unit of p. If q &gt; ¼, p = 1. If q &lt; ¼, p = 0. If q = ¼, any p. For P2, the slope is (4p − 3): if p &gt; ¾, q = 1; if p &lt; ¾, q = 0; if p = ¾, any q.
+<span class="eq">BR<sub>1</sub>(q): 0 if q &lt; ¼, [0,1] if q = ¼, 1 if q &gt; ¼ &nbsp;&nbsp; BR<sub>2</sub>(p): 0 if p &lt; ¾, [0,1] if p = ¾, 1 if p &gt; ¾</span>
+<b>Step 3: intersections.</b> Three points: (p, q) = (1, 1), (0, 0), and (¾, ¼).</div>
+<svg viewBox="0 0 320 270" width="320" role="img" aria-label="Battle of the sexes best responses"><g stroke="var(--ink)" fill="none" stroke-width="1.5"><path d="M40 230 L40 20"/><path d="M40 230 L290 230"/></g>
+<path d="M40 230 L40 185 L270 185 L270 25" stroke="#4f46e5" stroke-width="3" fill="none" transform="translate(0,0)"/>
+<path d="M40 230 L40 230" stroke="none"/>
+<path d="M40 230 L215 230 L215 25 L270 25" stroke="#e11d48" stroke-width="3" fill="none" transform="translate(0,0)"/>
+<circle cx="40" cy="230" r="6" fill="#0d9488"/><circle cx="270" cy="25" r="6" fill="#0d9488"/><circle cx="215" cy="185" r="6" fill="#0d9488"/>
+<text x="225" y="180" font-size="12">mixed (¾, ¼)</text><text x="275" y="234" font-size="13">p</text><text x="30" y="16" font-size="13">q</text><text x="8" y="190" font-size="11">¼</text><text x="208" y="246" font-size="11">¾</text></svg>
+<p style="text-align:center;font-size:.9rem">Sketch: blue is P1's best response (p jumps from 0 to 1 at q = ¼), red is P2's (q jumps from 0 to 1 at p = ¾). The two curves meet at three points.</p>
+<table><tr><th>Equilibrium</th><th>P1 plays</th><th>P2 plays</th><th>Payoffs</th></tr><tr><td>Pure (A, A)</td><td>A</td><td>A</td><td>3, 1</td></tr><tr><td>Pure (R, R)</td><td>R</td><td>R</td><td>1, 3</td></tr><tr><td>Mixed</td><td>¾ A + ¼ R</td><td>¼ A + ¾ R</td><td>¾, ¾</td></tr></table>
+<div class="box der"><b>Mixed payoffs, two ways.</b> From the formulas: U<sub>1</sub> = (1 − ¼) + ¾(4·¼ − 1) = ¾ + 0 = ¾. Directly: U<sub>1</sub>(A) = 3q = ¾ and U<sub>1</sub>(R) = 1 − q = ¾. Same. U<sub>2</sub> = 3 − 9/4 + 0 = ¾.</div>
+<div class="box warn"><b>Notice:</b> the mixed NE pays ¾ to each, worse than either pure NE (at least 1). Randomising costs them because sometimes they miss each other. <b>Meaning of the numbers:</b> P1 plays A with probability ¾ so that P2 is indifferent (p = ¾ makes q irrelevant for P2), and P2 plays A with probability ¼ so that P1 is indifferent. Each randomises to make the <i>other</i> indifferent, not herself.</div></section>
+
+<section id="s7"><h2>7. Application: reporting a crime (the bystander effect)</h2>
+<p><b>Story.</b> In 1964, Kitty Genovese was murdered in New York. Reports said 38 witnesses did not call the police. Social psychologists explain it with <i>diffusion of responsibility</i> (more people, less guilt for not helping), <i>audience inhibition</i> and <i>social influence</i> (others' inaction signals "no need"). They all say the benefit or cost per person changes as the crowd grows.</p>
+<p><b>The game-theory question:</b> can the chance that nobody helps <i>rise</i> with the crowd even when each person's cost and benefit stay exactly the same?</p>
+<div class="box def"><b>Model.</b> n identical witnesses, each chooses Report (R) or Don't (N). If at least one reports, each witness gets V. Calling costs C. Assume <span class="m">V &gt; C &gt; 0</span> (each prefers the crime reported, but prefers someone else to pay). Payoffs for n = 2:
+<table><tr><th>1 \ 2</th><th>Don't (N)</th><th>Report (R)</th></tr><tr><th>N</th><td>0, 0</td><td>V, V − C</td></tr><tr><th>R</th><td>V − C, V</td><td>V − C, V − C</td></tr></table></div>
+<p>Pure NE: exactly one person calls. (The caller gets V − C &gt; 0 and would get 0 by quitting. A non-caller gets V and would get only V − C by calling.) There are n of these, and the witnesses cannot agree on who calls. So look for the <b>symmetric mixed NE</b>.</p>
+<div class="box der"><b>Derivation.</b> Let p = probability that a witness does <i>not</i> call. Fix witness i.<br>
+<b>1.</b> If i calls: payoff = V − C (the crime is surely reported).<br>
+<b>2.</b> If i does not call: the other n − 1 all stay silent with probability p<sup>n−1</sup>. So at least one other calls with probability 1 − p<sup>n−1</sup>. Payoff = V(1 − p<sup>n−1</sup>) + 0·p<sup>n−1</sup>.<br>
+<b>3.</b> Indifference (so she is willing to mix): <span class="eq">V − C = V(1 − p<sup>n−1</sup>) = V − V p<sup>n−1</sup></span>
+<b>4.</b> Cancel V: C = V p<sup>n−1</sup>, so p<sup>n−1</sup> = C/V and
+<span class="eq"><b>p* = (C/V)<sup>1/(n−1)</sup></b></span></div>
+<div class="box der"><b>What happens as n grows?</b><br>
+<b>Individual:</b> each calls with probability 1 − p* = 1 − (C/V)<sup>1/(n−1)</sup>. Since 0 &lt; C/V &lt; 1 and 1/(n−1) → 0, (C/V)<sup>1/(n−1)</sup> → (C/V)<sup>0</sup> = 1. So <b>1 − p* → 0</b>. Each person becomes less likely to call.<br>
+<b>Group:</b> nobody calls with probability (p*)<sup>n</sup> = (C/V)<sup>n/(n−1)</sup>. Write the exponent as n/(n−1) = 1 + 1/(n−1), which <i>falls</i> toward 1 as n grows. Raising a fraction between 0 and 1 to a smaller power makes it <i>bigger</i>. So P(unreported) rises with n and P(reported) = 1 − (C/V)<sup>n/(n−1)</sup> falls, approaching 1 − C/V but never below it.</div>
+<div class="box ex"><b>Numbers: V = 10, C = 2.5, so C/V = 0.25.</b>
+<div class="scroll"><table><tr><th>n</th><th>p* (don't call)</th><th>Each calls</th><th>Nobody calls</th><th>Reported</th></tr><tr><td>2</td><td>0.25</td><td>75%</td><td>0.0625</td><td>93.75%</td></tr><tr><td>3</td><td>0.50</td><td>50%</td><td>0.125</td><td>87.5%</td></tr><tr><td>5</td><td>0.7071</td><td>29.3%</td><td>0.1768</td><td>82.3%</td></tr><tr><td>very large</td><td>→ 1</td><td>→ 0%</td><td>→ 0.25</td><td>→ 75%</td></tr></table></div>
+Check n = 3: p<sup>2</sup> = 0.25, so p = 0.5, and nobody calls with 0.5<sup>3</sup> = 0.125.</div>
+<div class="box warn"><b>Takeaway:</b> the bystander effect can come purely from rational mixing. No change in cost or benefit is needed: more people means each relies on someone else, and together they are more likely to all rely on each other.</div></section>
+
+<section id="s8"><h2>8. Dominance by mixed strategies and "never a best response"</h2>
+<p><b>Example from the slides.</b> Left matrix: P1's second row (4, 4) against rows (10, 0) and (0, 10). A 50-50 mix of rows 1 and 3 pays ½(10) + ½(0) = 5 against column 1 and ½(0) + ½(10) = 5 against column 2. 5 &gt; 4 both times, so row 2 is strictly dominated by the mix, though not by any single row. In the right-hand version row 2 is (6, 6): the mix pays 5 &lt; 6, so it does <i>not</i> dominate. Indeed if P2 plays 50-50, rows 1 and 3 pay 5 but row 2 pays 6, so row 2 is a best response there.</p>
+<div class="box def"><b>Belief:</b> a player's guess (a probability) about what the others do. <b>Never a best response (NBR):</b> an action that is not the best choice under <i>any</i> belief.<br>
+<b>Facts:</b> (1) In a mixed NE, only best-response actions get positive probability, so an NBR action is never used. (2) A strictly dominated action is NBR. (3) <b>An action is NBR if and only if it is strictly dominated by a mixed strategy.</b> The idea behind (3): if no belief makes the action best, there is always a blend that beats it everywhere.</div>
+<h3>The spy example (Watson, Ch. 11)</h3>
+<p>Spy 001 picks a route a, b, c or d down a mountain (a is fastest). Spy 002 chooses x (no explosive) or y (use it). Payoffs (001, 002):</p>
+<table><tr><th>001 \ 002</th><th>x</th><th>y</th></tr><tr><th>a</th><td>12, 0</td><td>0, 6</td></tr><tr><th>b</th><td>11, 1</td><td>1, 5</td></tr><tr><th>c</th><td>10, 2</td><td>4, 2</td></tr><tr><th>d</th><td>9, 3</td><td>6, 0</td></tr></table>
+<div class="box der"><b>Step 1: 001's expected payoffs.</b> Let q = probability 002 plays x.
+<span class="eq">a: 12q &nbsp;&nbsp; b: 11q + (1−q) = 1 + 10q &nbsp;&nbsp; c: 10q + 4(1−q) = 4 + 6q &nbsp;&nbsp; d: 9q + 6(1−q) = 6 + 3q</span>
+<b>Step 2: where do the lines cross?</b> a = d: 12q = 6 + 3q ⟹ q = 2/3. c = d: 4 + 6q = 6 + 3q ⟹ q = 2/3. a = c: 12q = 4 + 6q ⟹ q = 2/3. All three meet at q = 2/3, where each pays 8.<br>
+<b>Step 3: best responses.</b> For q &lt; 2/3 the best is d. At q = 2/3, a, c and d tie. For q &gt; 2/3 the best is a. So c is a best response only at exactly q = 2/3; b is never best (at q = 2/3 it pays 1 + 6.67 = 7.67 &lt; 8).<br>
+<b>Step 4: b is dominated by a mix.</b> Try ¾ a + ¼ d. Against x: ¾(12) + ¼(9) = 11.25 &gt; 11. Against y: ¾(0) + ¼(6) = 1.5 &gt; 1. Strictly better both ways, so b is strictly dominated (no single pure action does it).</div>
+<svg viewBox="0 0 380 250" width="380" role="img" aria-label="Expected payoff lines"><g stroke="var(--ink)" fill="none" stroke-width="1.5"><path d="M40 220 L40 20"/><path d="M40 220 L350 220"/></g>
+<path d="M40 220 L340 40" stroke="#4f46e5" stroke-width="2.5"/><path d="M40 205 L340 55" stroke="#d97706" stroke-width="2.5" stroke-dasharray="6 4"/><path d="M40 160 L340 70" stroke="#0d9488" stroke-width="2.5"/><path d="M40 130 L340 85" stroke="#e11d48" stroke-width="2.5"/>
+<path d="M240 220 L240 100" stroke="var(--ink)" stroke-dasharray="3 3"/><text x="226" y="236" font-size="12">q = 2/3</text><text x="345" y="224" font-size="12">q</text><text x="46" y="16" font-size="12">payoff</text>
+<text x="300" y="38" font-size="12" fill="#4f46e5">a</text><text x="300" y="60" font-size="12" fill="#d97706">b (never best)</text><text x="300" y="82" font-size="12" fill="#0d9488">c</text><text x="300" y="104" font-size="12" fill="#e11d48">d</text></svg>
+<p style="text-align:center;font-size:.9rem">Sketch of the four payoff lines. The top edge of the lines (the "upper envelope") is d, then a. b is below it everywhere.</p>
+<div class="box der"><b>Step 5: all Nash equilibria.</b> <i>Pure NE?</i> If 002 plays x, 001's best is a, but against a 002 prefers y (6 &gt; 0). If 002 plays y, 001's best is d, but against d 002 prefers x (3 &gt; 0). The best replies chase each other, so no pure NE.<br>
+<i>Mixed NE.</i> 001 mixes over a, c, d only (b is dropped), so 001 needs q = 2/3 (Step 2). For 002 to mix, 002 must be indifferent. Let 001 play a, c, d with probabilities p<sub>a</sub>, p<sub>c</sub>, p<sub>d</sub>:
+<span class="eq">U<sub>2</sub>(x) = 0·p<sub>a</sub> + 2p<sub>c</sub> + 3p<sub>d</sub> &nbsp;&nbsp; U<sub>2</sub>(y) = 6p<sub>a</sub> + 2p<sub>c</sub> + 0·p<sub>d</sub></span>
+Set equal: 3p<sub>d</sub> = 6p<sub>a</sub>, so <b>p<sub>d</sub> = 2p<sub>a</sub></b>. Then p<sub>a</sub> + p<sub>c</sub> + 2p<sub>a</sub> = 1 gives <b>p<sub>c</sub> = 1 − 3p<sub>a</sub></b>, which needs p<sub>a</sub> ≤ 1/3.
+<span class="eq">NE: 001 plays (p<sub>a</sub>, 0, 1 − 3p<sub>a</sub>, 2p<sub>a</sub>) for any p<sub>a</sub> in [0, 1/3]; 002 plays x with probability 2/3</span>
+Payoffs: 001 gets 8, 002 gets 2p<sub>c</sub> + 3p<sub>d</sub> = 2(1 − 3p<sub>a</sub>) + 6p<sub>a</sub> = 2. A whole <b>continuum</b> of equilibria.</div>
+<div class="box warn"><b>Slide-vs-summary note:</b> the written summary used different payoffs for spy 002, which gives p<sub>d</sub> = 6p<sub>a</sub>. The slide numbers above are the lecture's, so use these.</div><h3>War game (3×3): solved without trusting dominance</h3>
+<p>Command 1 attacks Left, Center or Right (L′, C′, R′). Command 2 defends Left, Center or Right (L, C, R). Payoffs (Cmd 1, Cmd 2):</p>
+<table><tr><th>1 \ 2</th><th>L</th><th>C</th><th>R</th></tr><tr><th>L′</th><td>0, 3</td><td>3, 1</td><td>4, 0</td></tr><tr><th>C′</th><td>2, 1</td><td>1, 2</td><td>2, 1</td></tr><tr><th>R′</th><td>4, 0</td><td>1, 2</td><td>0, 4</td></tr></table>
+<div class="box der"><b>Step 1: shrink the game.</b> Compare C′ with ½L′ + ½R′. Against L: 2 vs 2. Against C: 2 vs 1. Against R: 2 vs 2. The mix is never worse and once better, so C′ is <i>weakly</i> dominated (not strictly). Likewise, once C′ is gone, C is weakly dominated by ½L + ½R (1.5 vs 1 against L′, and 2 vs 2 against R′). Drop both to get a 2×2:
+<table><tr><th>1 \ 2</th><th>L (q)</th><th>R (1−q)</th></tr><tr><th>L′ (p)</th><td>0, 3</td><td>4, 0</td></tr><tr><th>R′ (1−p)</th><td>4, 0</td><td>0, 4</td></tr></table>
+<b>Step 2: indifference.</b> Make Cmd 1 indifferent: 0·q + 4(1 − q) = 4q + 0 ⟹ 4 − 4q = 4q ⟹ <b>q = ½</b>. Make Cmd 2 indifferent: 3p + 0 = 0 + 4(1 − p) ⟹ 7p = 4 ⟹ <b>p = 4/7</b>.<br>
+<b>Step 3: check in the full 3×3</b> (necessary, because deleting weakly dominated actions can lose equilibria). Cmd 2 plays (½, 0, ½). Cmd 1 gets L′: 0(½) + 4(½) = 2, C′: 2(½) + 2(½) = 2, R′: 4(½) + 0 = 2. All equal 2, so Cmd 1 is happy to play (4/7, 0, 3/7). Cmd 1 plays (4/7, 0, 3/7). Cmd 2 gets L: 3(4/7) = 12/7, C: 1(4/7) + 2(3/7) = 10/7, R: 4(3/7) = 12/7. C is worse (10/7 &lt; 12/7), so giving it zero weight is right. <b>It is a NE:</b> payoffs 2 for Cmd 1 and 12/7 ≈ 1.71 for Cmd 2.<br>
+<b>Step 4: more equilibria.</b> Because C′ ties for Cmd 1, Cmd 1 may also use it. Let Cmd 1 play (4t, 1 − 7t, 3t). Cmd 2's payoffs against it: L = 3(4t) + 1(1 − 7t) = 1 + 5t and R = 1(1 − 7t) + 4(3t) = 1 + 5t, so L and R are always equal (Cmd 2 can keep mixing ½-½). C = 4t + 2(1 − 7t) + 2(3t) = 2 − 4t. Cmd 2 does not want C when 2 − 4t ≤ 1 + 5t, i.e. t ≥ 1/9. Also 1 − 7t ≥ 0 needs t ≤ 1/7. So every t in [1/9, 1/7] is a NE, and t = 1/7 is the one found above.</div>
+<div class="box warn"><b>Why this matters:</b> reducing a game by weak dominance is only a shortcut. Always plug the answer back into the full game.</div>
+</section>
+<section id="s9"><h2>9. What does a mixed equilibrium mean?</h2>
+<p>Do people really roll dice? Two common readings:</p>
+<ul><li><b>Steady state, individual randomisation:</b> the game is played over and over, and the probabilities are the long-run frequencies of each action.</li><li><b>Steady state, population:</b> in Battle of the Sexes, think of a large group of P1-types and P2-types. "p = ¾" means 75% of P1-types always play A and 25% always play R. Random pairing gives the same average payoffs as individual randomisation.</li></ul>
+<h3>Is the steady state stable?</h3>
+<div class="box der"><b>Battle of the Sexes: unstable.</b> Start at the mixed point and nudge P1 to p = ¾ + ε. P2's slope is 4p − 3 = 4ε &gt; 0, so P2's best reply is q = 1. Then P1's best reply to q = 1 is p = 1. The system slides to the pure NE (A, A). A nudge the other way slides to (R, R). So the mixed point is like a ball balanced on a hilltop.<br>
+<b>Matching pennies: self-correcting (neutral).</b> Nudge P1 to p = ½ + ε. P2's slope is 1 − 2p = −2ε &lt; 0, so P2 moves toward q = 0. Once q is below ½, P1 wants to lower p. The play circles around (½, ½) instead of running away.</div>
+<svg viewBox="0 0 560 70" width="560" role="img" aria-label="Instability of mixed NE"><g stroke="var(--def)" stroke-width="2.5" fill="none"><path d="M200 35 L90 35"/><path d="M360 35 L470 35"/></g><circle cx="280" cy="35" r="10" fill="#e11d48"/><circle cx="70" cy="35" r="10" fill="#0d9488"/><circle cx="490" cy="35" r="10" fill="#0d9488"/>
+<text x="70" y="62" text-anchor="middle" font-size="12">(R, R)</text><text x="490" y="62" text-anchor="middle" font-size="12">(A, A)</text><text x="280" y="62" text-anchor="middle" font-size="12">mixed (¾, ¼)</text><text x="145" y="25" font-size="12">nudge down</text><text x="385" y="25" font-size="12">nudge up</text></svg>
+<h3>The puzzle, and Harsanyi's answer</h3>
+<p><b>Puzzle:</b> at a mixed NE a player is indifferent among the actions in her support. Why would she pick exactly the probabilities that keep the <i>other</i> indifferent?</p>
+<div class="box def"><b>Harsanyi's purification (1973).</b> Suppose each player's payoffs have a tiny private random shock (a mood, a small preference). Each player knows her own shock but not the other's. Then she is almost never exactly indifferent, so she plays a plain <b>pure</b> action. From the opponent's view, her action looks random. As the shocks shrink to zero, the share of shock values on which she picks each action converges to the mixed NE probabilities. So the randomness is just hidden information, not dice.</div></section>
+
+<section id="s10"><h2>10. Week 3 recap</h2>
+<div class="scroll"><table><tr><th>Idea</th><th>Summary</th></tr>
+<tr><td>Uniqueness</td><td>At most one strictly dominant strategy equilibrium</td></tr>
+<tr><td>Dominant ⟹ Nash</td><td>True. Nash ⟹ dominant is false (Battle of the Sexes)</td></tr>
+<tr><td>IESDS and NE</td><td>IESDS never removes a NE; a lone survivor is the unique NE</td></tr>
+<tr><td>IEWDS and NE</td><td>Can remove a NE</td></tr>
+<tr><td>Mixed strategy</td><td>Probability over actions; simplex; support</td></tr>
+<tr><td>Indifference principle</td><td>Every action in the support gets the same payoff, outside ones get no more</td></tr>
+<tr><td>Matching pennies</td><td>(½, ½) each, value 0</td></tr>
+<tr><td>Battle of the Sexes</td><td>Two pure NE plus mixed (¾, ¼), payoffs ¾ each</td></tr>
+<tr><td>Bystander</td><td>p* = (C/V)<sup>1/(n−1)</sup>; more witnesses, lower reporting</td></tr>
+<tr><td>War game</td><td>Check reductions in the full game; equilibria t in [1/9, 1/7], one is (4/7, 0, 3/7) vs (½, 0, ½)</td></tr>
+<tr><td>NBR</td><td>Never a best response ⟺ strictly dominated by a mix</td></tr>
+<tr><td>Nash's theorem</td><td>Finite games always have a (possibly mixed) NE</td></tr></table></div>
+<h3>Practice (tap to reveal)</h3>
+<ol>
+<li>Solve the mixed NE of Battle of the Sexes with payoffs (2,1), (0,0), (0,0), (1,2).<details><summary>Answer</summary>P1 plays A with probability p so that P2 is indifferent: p·1 = (1−p)·2 ⟹ p = 2/3. P2 plays A with probability q so that P1 is indifferent: 2q = (1−q) ⟹ q = 1/3. Payoff 2/3 each.</details></li>
+<li>In the bystander game with C/V = 0.5 and n = 3, what is the chance nobody calls?<details><summary>Answer</summary>p² = 0.5, so p ≈ 0.7071. Nobody calls: p³ = 0.5^1.5 ≈ 0.354.</details></li>
+<li>Show that c in the spy game is not strictly dominated by any mix of a and d.<details><summary>Answer</summary>At q = 2/3 all of a, c, d pay 8, so no mix of a and d pays strictly more than c there. So c is not strictly dominated (it is a best response at q = 2/3).</details></li>
+<li>Why can IEWDS lose a NE but IESDS cannot?<details><summary>Answer</summary>A strictly dominated action loses strictly to something against every profile, including the equilibrium one, so it cannot be in a NE. A weakly dominated action can tie against the equilibrium profile and still be a best response there.</details></li></ol></section>
+</main></body></html>
