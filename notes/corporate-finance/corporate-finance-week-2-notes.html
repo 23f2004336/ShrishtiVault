@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Corporate Finance – Week-2 Notes</title>
+<style>
+:root{--ink:#1d2a44;--bg:#f6f8fc;--card:#fff;--teal:#0f9d8a;--amber:#f2a516;--coral:#e8574b;--blue:#3b6fd4;--violet:#7a54c8;--line:#d9e0ee;--soft:#eaf0fb}
+@media(prefers-color-scheme:dark){:root{--ink:#e6ebf7;--bg:#0f1626;--card:#18223a;--line:#2b3858;--soft:#1f2b49}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#1d2a44,#7a54c8 55%,#0f9d8a);color:#fff;padding:36px 20px}
+header h1{margin:0;font:700 2rem Georgia,serif}header p{margin:6px 0 0;opacity:.9}
+nav{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 14px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:5px 12px;border-radius:99px;background:var(--soft);font-size:.85rem}
+main{max-width:920px;margin:auto;padding:16px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:20px 0}
+h2{font:700 1.5rem Georgia,serif;margin:0 0 10px;padding-left:12px;border-left:6px solid var(--violet)}
+h3{margin:22px 0 6px;color:var(--blue)}
+.box{border-radius:10px;padding:12px 16px;margin:12px 0;border-left:5px solid;color:#1d2a44}
+.def{background:#e7f6f3;border-color:var(--teal)}.key{background:#fff5df;border-color:var(--amber)}.warn{background:#fdeceb;border-color:var(--coral)}.eg{background:#efeafa;border-color:var(--violet)}
+.box b.t{display:block;margin-bottom:2px}
+.math{background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0;font:1rem Georgia,serif;overflow-x:auto}
+.math div{margin:4px 0}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left}th{background:var(--soft)}
+.flow{display:flex;flex-direction:column;align-items:center;margin:14px 0}
+.flow div{padding:8px 14px;border-radius:9px;color:#fff;font-size:.9rem;text-align:center;max-width:540px;width:100%}
+.flow i{font-style:normal;font-size:1.2rem;color:var(--coral);line-height:1.1}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.row>div{flex:1 1 200px;border-radius:10px;padding:10px 14px;color:#1d2a44}
+svg{max-width:100%;height:auto;background:var(--soft);border-radius:10px;margin:8px 0}
+svg text{fill:var(--ink);font:12px system-ui}
+ul{padding-left:22px}li{margin:3px 0}
+.chip{display:inline-block;background:var(--soft);border-radius:6px;padding:0 7px;font:.9rem Georgia,serif}
+</style></head><body>
+<header><h1>Corporate Finance — Week-2 Notes</h1><p>Returns · Compounding · Present value · NPV · Intertemporal choice · No-arbitrage · Perpetuities, annuities &amp; bonds</p></header>
+<nav><a href="#s0">Roadmap</a><a href="#s1">1 Setup</a><a href="#s2">2 Returns</a><a href="#s3">3 Future value</a><a href="#s4">4 Present value</a><a href="#s5">5 NPV</a><a href="#s6">6 Intertemporal</a><a href="#s7">7 Arbitrage</a><a href="#s8">8 Forest &amp; e</a><a href="#s9">9 Annuities &amp; bonds</a><a href="#sp">10 Practice</a><a href="#s10">11 Revision</a></nav>
+<main>
+
+<section id="s0"><h2>Roadmap: how Week 2 fits together</h2>
+<p>Week 1 was a tour of markets. Week 2 builds the <b>toolkit</b>. Every idea feeds the next, so read in order. The whole week is really <b>one idea</b>: <i>money at different dates cannot be compared until you move it to the same date.</i></p>
+<div class="flow"><div style="background:#1d2a44">Return: how much did money grow? &nbsp;(Section 2)</div><i>↓ reverse direction ↑</i>
+<div style="background:#3b6fd4">Future value &amp; compounding: today → future &nbsp;(Section 3)</div><i>↓</i>
+<div style="background:#7a54c8">Present value &amp; discounting: future → today &nbsp;(Section 4)</div><i>↓</i>
+<div style="background:#0f9d8a">NPV: add up all discounted cash flows, decide on projects &nbsp;(Section 5)</div><i>↓ same maths, applied to people and markets ↓</i>
+<div style="background:#f2a516;color:#1d2a44">Intertemporal budget (Sec 6) · No-arbitrage price = PV (Sec 7) · Forest &amp; continuous compounding (Sec 8) · Perpetuity / annuity / bond shortcuts (Sec 9)</div></div>
+<div class="key"><b>Honest warning from the lectures:</b> the maths is easy (powers, logs, geometric series). The difficulty is the <b>number of new terms</b>. Use the glossary in Section 10.</div>
+</section>
+
+<section id="s1"><h2>1. Setting the Stage (Lecture 1, first half)</h2>
+<h3>1.1 Time value of money (TVM)</h3>
+<div class="def box"><b class="t">Principle</b>₹100 today is worth <b>more</b> than ₹100 next year.</div>
+<p><b>Why?</b> You can deposit today's ₹100 in a bank at a positive interest rate. A year later you hold more than ₹100. So money now can be turned into <i>more</i> money later, but not the other way round. Waiting has a price: the interest you give up (the <b>opportunity cost</b>).</p>
+<h3>1.2 Who is on each side?</h3>
+<p><b>Lenders / investors</b> give money today to get more later. <b>Borrowers</b> (such as firms) use it. A firm must decide <i>which projects to run</i> with borrowed money. This is <b>capital budgeting</b>. The main method is the <b>NPV rule</b>:</p>
+<div class="flow"><div style="background:#3b6fd4">Convert every future inflow and outflow into today's money</div><i>↓</i><div style="background:#7a54c8">Add them up and subtract the cost today → NPV</div><i>↓</i><div style="background:#0f9d8a">NPV &gt; 0 → accept &nbsp;|&nbsp; NPV &lt; 0 → reject</div></div>
+<h3>1.3 Perfect market (start with the simplest world)</h3>
+<table><tr><th>Pillar</th><th>Meaning</th></tr><tr><td>P1 No taxes</td><td>No income, corporate or capital-gains tax</td></tr><tr><td>P2 No transaction costs</td><td>Buying/selling is free (no brokerage, no bid–ask spread)</td></tr><tr><td>P3 No information/opinion differences</td><td>Everyone has the same information and reads it the same way</td></tr><tr><td>P4 Many buyers and sellers</td><td>Nobody can move the price alone: everyone is a <b>price-taker</b></td></tr></table>
+<p><b>Three extra simplifications</b> (not part of "perfect market"): <b>E1</b> same interest rate every period; <b>E2</b> no inflation; <b>E3</b> no risk, everything is known for sure. Later weeks relax each one (inflation comes back in Section 6).</p>
+<h3>1.4 Loans and bonds</h3>
+<ul><li><b>Loan:</b> borrower receives cash today and promises fixed amounts at fixed future dates. The last repayment date is the <b>maturity</b> (T).</li><li><b>Bond:</b> a particular type of loan. Buying a bond = lending. A firm "issues" or "sells" a bond when it borrows.</li><li>Loans and bonds are called <b>fixed-income securities</b> because the payments are fixed in advance.</li></ul>
+<h3>1.5 Why does a rate of interest exist at all? (plain English)</h3>
+<p>Three reasons a lender wants a premium for waiting: (1) <b>impatience</b>: people prefer to spend now; (2) <b>opportunity</b>: the lender could have used the money for something productive; (3) in the real world, <b>inflation and risk</b> (we switch these off for now through E2 and E3). In our simplified world, the interest rate r is just the <b>price of moving money across time</b>, like an exchange rate between "rupees today" and "rupees next year".</p>
+<div class="flow"><div style="background:#1d2a44">₹1 today</div><i>⇄ exchange rate = (1 + r) ⇄</i><div style="background:#7a54c8">₹(1 + r) next year</div></div>
+<div class="box def"><b class="t">Fixed-income securities (why the name?)</b>Loans and bonds promise <b>fixed</b> payments in advance. Contrast stocks, whose payments are not promised. That is why bond valuation can be done exactly with the formulas of this week.</div>
+<h3>1.6 Why start with a "perfect market"?</h3>
+<p>Think of a physics problem that ignores friction first. Without taxes, costs, secret information, and powerful traders, the maths is clean, and one price rules every asset. Later weeks add the frictions back. The most important consequence: in a perfect market the <b>interest rate is the same for borrowing and lending</b>, so one rate r can be used everywhere.</p>
+</section>
+
+<section id="s2"><h2>2. Returns (Lecture 1)</h2>
+<h3>2.1 Notation</h3>
+<table><tr><th>Symbol</th><th>Meaning</th></tr><tr><td>t = 0</td><td>today</td></tr><tr><td>t = 1</td><td>next period (a year, month or day)</td></tr><tr><td>T</td><td>final period</td></tr><tr><td>C₀</td><td>cash at time 0 (the price paid / cost)</td></tr><tr><td>C₁</td><td>cash returned at time 1</td></tr></table>
+<h3>2.2 Net return and rate of return</h3>
+<div class="math"><div>Net return = C₁ − C₀ &nbsp;&nbsp;(profitable if &gt; 0)</div><div>Rate of return: <b>r₁ = (C₁ − C₀) / C₀</b></div></div>
+<div class="box eg"><b class="t">Example</b>Costs ₹100, returns ₹120. Net return = 20. Rate of return = 20/100 = <b>20%</b>.</div>
+<p><b>Why divide by C₀?</b> ₹20 profit on ₹100 is great; ₹20 on ₹10,000 is poor. The rate is "profit per rupee invested", so investments of different sizes can be compared.</p>
+<h3>2.3 Interim payments (dividends, coupons, rent)</h3>
+<p>Stocks pay dividends, bonds pay coupons, real estate pays rent. These arrive <i>before</i> the final sale, so they count as part of the return:</p>
+<div class="math"><div><b>r₁ = (C₁ + D₁ − C₀) / C₀</b></div></div>
+<h3>2.4 Decomposition (proof)</h3>
+<div class="math"><div>r₁ = (C₁ + D₁ − C₀)/C₀</div><div>Rearrange the numerator: = [(C₁ − C₀) + D₁]/C₀</div><div>Split the fraction: = (C₁ − C₀)/C₀ &nbsp;+&nbsp; D₁/C₀</div><div><b>Total return = capital-gain yield + dividend (rental/coupon) yield</b> ∎</div></div>
+<div class="box eg"><b class="t">Worked example</b>Buy at 92, receive dividend 5, sell at 110.
+<div class="math"><div>Total: (110 + 5 − 92)/92 = 23/92 = <b>25%</b></div><div>Capital gain yield: (110 − 92)/92 = 18/92 ≈ <b>19.57%</b></div><div>Dividend yield: 5/92 ≈ <b>5.43%</b> &nbsp;→ 19.57 + 5.43 = 25 ✓</div></div></div>
+<div class="key"><b>Key point:</b> capital gain can be <i>negative</i> while the total return is still positive, if the dividend yield is bigger than the price fall. Example: buy at 100, dividend 8, sell at 95 → (95 + 8 − 100)/100 = +3%.</div>
+<h3>2.5 Points vs basis points</h3>
+<p>"10% is 5% more than 5%" is ambiguous. Is it 5 more <i>points</i>, or 100% more <i>relatively</i>? Fix it with units:</p>
+<table><tr><th>Unit</th><th>Value</th></tr><tr><td>1 full point</td><td>1% = 0.01</td></tr><tr><td>1 basis point (bp)</td><td>0.01% = 0.0001</td></tr><tr><td>1 point</td><td>= 100 bp</td></tr></table>
+<div class="math"><div>10% vs 5%: difference = <b>5 points = 500 bp</b>; relative increase = (10 − 5)/5 = <b>100%</b></div></div>
+<h3>2.6 More worked returns (practise the pattern)</h3>
+<table><tr><th>Case</th><th>C₀</th><th>D₁</th><th>C₁</th><th>Total return</th><th>Capital gain yield</th><th>Dividend yield</th></tr>
+<tr><td>A (the lecture case)</td><td>92</td><td>5</td><td>110</td><td>25.00%</td><td>19.57%</td><td>5.43%</td></tr>
+<tr><td>B (price falls, dividend rescues)</td><td>100</td><td>8</td><td>95</td><td>+3.00%</td><td>−5.00%</td><td>8.00%</td></tr>
+<tr><td>C (no dividend, bank-like)</td><td>100</td><td>0</td><td>120</td><td>20.00%</td><td>20.00%</td><td>0%</td></tr>
+<tr><td>D (rental property)</td><td>50,00,000</td><td>3,00,000 rent</td><td>51,00,000</td><td>8.00%</td><td>2.00%</td><td>6.00%</td></tr></table>
+<p><b>How to do any return question in 3 lines:</b> (1) write the total gain = final value + all payments received − price paid; (2) divide by price paid; (3) split into the price part and the payment part as a check.</p>
+<div class="box warn"><b class="t">Mistake to avoid</b>Dividend yield is dividend ÷ <b>purchase price C₀</b>, not ÷ the selling price. And "return" always means per rupee <i>invested</i> (the initial cost).</div>
+<h3>2.7 Units: more basis-point practice</h3>
+<ul><li>Interest rate moves from 6.50% to 6.75%: the change is <b>25 bp</b> (0.25 points). Relative increase = 0.25/6.50 ≈ 3.85%.</li><li>"Central bank cuts by 50 bp" means the rate falls by 0.50 percentage points, e.g. from 6.50% to 6.00%.</li><li>If someone says "up 5%", ask: 5 <i>points</i> or 5 <i>percent of the old value</i>?</li></ul>
+</section>
+
+<section id="s3"><h2>3. Future Value and Compounding (Lecture 2)</h2>
+<h3>3.1 One period</h3>
+<div class="math"><div>From r = (C₁ − C₀)/C₀: &nbsp;r·C₀ = C₁ − C₀ &nbsp;⟹ &nbsp;<b>C₁ = C₀(1 + r)</b></div></div>
+<p>The ₹110 you get next year from ₹100 at 10% is the <b>future value (FV)</b> of ₹100: its value at a later date.</p>
+<h3>3.2 Many periods: compounding</h3>
+<p>If you reinvest everything each year at the same rate r, then:</p>
+<div class="math"><div>C₂ = C₁(1 + r) = C₀(1 + r)(1 + r) = C₀(1 + r)²</div><div>C₃ = C₂(1 + r) = C₀(1 + r)³ &nbsp;⟹ &nbsp;<b>C_t = C₀(1 + r)^t</b> &nbsp;(by induction)</div><div>t-period return: <b>1 + r_t = (1 + r)^t</b></div></div>
+<div class="box eg"><b class="t">Compound vs simple interest (₹100 at 10%)</b>Simple: 10 a year → 120 after 2 years (20%). Compound: 110 → 110 × 1.1 = 121 (<b>21%</b>). The extra 1 is the 10% earned in year 2 on year 1's interest of 10. That is <b>"interest on interest"</b>.</div>
+<svg viewBox="0 0 370 210" width="370" role="img" aria-label="Compound vs simple growth"><line x1="40" y1="180" x2="350" y2="180" stroke="#888"/><line x1="40" y1="10" x2="40" y2="180" stroke="#888"/>
+<polyline fill="none" stroke="#e8574b" stroke-width="3" points="40,180 90,164.7 140,143.7 190,121.3 240,94.2 290,61.5 340,21.9"/>
+<line x1="40" y1="180" x2="340" y2="92.7" stroke="#3b6fd4" stroke-width="3" stroke-dasharray="6 4"/>
+<text x="250" y="45" style="fill:#e8574b">Compound: 313.84</text><text x="250" y="88" style="fill:#3b6fd4">Simple: 220</text><text x="45" y="198">Year 0</text><text x="320" y="198">Year 12</text><text x="45" y="170">100</text></svg>
+<table><tr><th>Year</th><th>1</th><th>2</th><th>5</th><th>10</th><th>12</th></tr><tr><td>₹100 at 10%</td><td>110</td><td>121</td><td>161.05</td><td>259.37</td><td>313.84</td></tr></table>
+<p>Slide example: ₹100 for 12 years at 10% = 100 × (1.1)¹² ≈ <b>313.84</b>.</p>
+<h3>3.3 Finding the equivalent yearly rate</h3>
+<div class="box eg"><b class="t">Question</b>Which constant yearly rate r gives a 2-year return of 50%?</div>
+<div class="math"><div>(1 + r)² = 1 + 0.50 = 1.5 &nbsp;⟹ &nbsp;1 + r = √1.5 = 1.22474 &nbsp;⟹ &nbsp;<b>r ≈ 22.47%</b></div><div>General: <b>r = (1 + r_t)^(1/t) − 1</b></div></div>
+<div class="warn box"><b class="t">Trap</b>It is NOT 50%/2 = 25%. Check: 1.25² − 1 = 56.25%, too big. Returns <i>multiply</i>, they do not add.</div>
+<h3>3.4 Doubling time (derivation)</h3>
+<div class="math"><div>Want x with (1 + r)^x = 2</div><div>Take logs: x·ln(1 + r) = ln 2 &nbsp;⟹ &nbsp;<b>x = ln 2 / ln(1 + r)</b></div><div>r = 3%: x = 0.693147 / 0.029559 ≈ <b>23.45 years</b> (the lecture summary rounds to 23.44)</div></div>
+<p><i>Sanity check (rule of 72):</i> 72/3 = 24 years, close. Higher rate → faster doubling.</p>
+<h3>3.5 Fractional periods</h3>
+<p>Compounding also works for half a year. If half-year rate is r₀.₅ then two half-years must equal one year:</p>
+<div class="math"><div>(1 + r₀.₅)² = 1 + r₁ &nbsp;⟹ &nbsp;r₀.₅ = √(1 + r₁) − 1</div><div>r₁ = 5%: √1.05 − 1 = 1.024695 − 1 ≈ <b>2.47%</b> &nbsp;(not 2.5%!)</div></div>
+<div class="key"><b>Remember:</b> to change the period length, take a <b>root</b> (or power) of (1 + r), never divide r. Section 9's bond example depends on this.</div>
+<h3>3.6 Why compounding makes returns multiply (slow explanation)</h3>
+<p>After year 1 your 100 has become 110. In year 2 the bank does not treat the 10 as "old interest"; it simply sees <b>110 of principal</b> and pays 10% on it. So each year multiplies the amount by the same factor 1.10. Doing it t times gives 1.10 × 1.10 × … = 1.10^t. That is the only idea behind the formula.</p>
+<div class="flow"><div style="background:#3b6fd4">100</div><i>× 1.1</i><div style="background:#7a54c8">110</div><i>× 1.1</i><div style="background:#0f9d8a">121</div><i>× 1.1</i><div style="background:#f2a516;color:#1d2a44">133.10</div></div>
+<h3>3.7 The same rate gives very different results over long horizons</h3>
+<table><tr><th>Years</th><th>5% a year</th><th>10% a year</th><th>20% a year</th></tr>
+<tr><td>10</td><td>162.89</td><td>259.37</td><td>619.17</td></tr><tr><td>20</td><td>265.33</td><td>672.75</td><td>3,833.76</td></tr><tr><td>30</td><td>432.19</td><td>1,744.94</td><td>23,737.63</td></tr><tr><td>40</td><td>704.00</td><td>4,525.93</td><td>146,977.16</td></tr></table>
+<p>At 10%, 40 years turns 100 into more than 4,500. Time is as important as the rate. This is why the forest example in Section 8 gives 362,074 from 8,000.</p>
+<h3>3.8 More practice on the FV family</h3>
+<div class="box eg"><b class="t">Q1.</b> ₹5,000 at 8% for 6 years. <b>FV</b> = 5000 × 1.08⁶ = 5000 × 1.58687 = <b>7,934.37</b>. Total interest = 2,934.37; simple interest would be only 2,400.</div>
+<div class="box eg"><b class="t">Q2.</b> A 3-year return of 33.1%. Yearly rate? (1+r)³ = 1.331 ⟹ 1+r = 1.331^(1/3) = <b>1.10</b> ⟹ r = <b>10%</b>. (Not 33.1/3 = 11.03%.)</div>
+<div class="box eg"><b class="t">Q3.</b> Doubling at 10%: x = ln2/ln1.1 = 0.6931/0.09531 = <b>7.27 years</b>. Triple: x = ln3/ln1.1 = 11.53 years.</div>
+<div class="box eg"><b class="t">Q4.</b> Yearly rate 12%. Monthly rate? (1+r_m)¹² = 1.12 ⟹ r_m = 1.12^(1/12) − 1 = <b>0.949%</b> (not 12%/12 = 1%). Quarterly: 1.12^(1/4) − 1 = 2.874%.</div>
+<div class="warn box"><b class="t">Why not just divide?</b>1% a month compounded 12 times gives 1.01¹² = 12.68% a year, more than 12%. So 1% a month is <i>not</i> the same as 12% a year. Exact conversion needs roots.</div>
+</section>
+
+<section id="s4"><h2>4. Present Value and Discounting (Lecture 2)</h2>
+<p>Future value asks "what will my money be?". <b>Present value (PV)</b> reverses it: "what is a future sum worth <i>today</i>?" This is what a firm needs: if Project Y returns ₹1 million in 5 years, how much should we pay for it now?</p>
+<h3>4.1 Derivation</h3>
+<div class="math"><div>Start with C_t = C₀(1 + r)^t and solve for C₀:</div><div><b>PV = C₀ = C_t / (1 + r)^t</b> &nbsp;&nbsp;(one period: C₁/(1 + r))</div><div>Discount factor: <b>DF_t = 1/(1 + r)^t</b>, so PV = C_t × DF_t</div></div>
+<ul><li>"Discounting" = reverse of compounding.</li><li>The rate r is also called the <b>discount rate</b> or <b>cost of capital</b> (what your money could earn elsewhere).</li><li>If r &gt; 0 then DF &lt; 1: the future is worth less than today.</li></ul>
+<div class="flow"><div style="background:#3b6fd4">Today (t = 0)</div><i>⇄  × (1+r) per year ⇄  ÷ (1+r) per year</i><div style="background:#7a54c8">Future (t)</div></div>
+<h3>4.2 Examples from the slides</h3>
+<div class="math"><div>Save for 100 next year at 10%: PV = 100/1.1 ≈ <b>90.91</b> (DF ≈ 0.91)</div><div>100 in two periods at 10%: PV = 100/1.1² = 100/1.21 ≈ <b>82.64</b> (DF ≈ 0.83)</div></div>
+<div class="box eg"><b class="t">Is a project a good deal?</b>It costs 90.91 and pays 100 next year.
+<div class="math"><div>Market rate 12%: PV = 100/1.12 = 89.29 &lt; 90.91 cost → <b>bad deal</b></div><div>Market rate 9%: PV = 100/1.09 = 91.74 &gt; 90.91 cost → <b>good deal</b></div></div>
+Reason: at 12% you can get 100 next year by putting only 89.29 in the bank, so paying 90.91 is wasteful.</div>
+<h3>4.3 Bond prices and rates move oppositely</h3>
+<div class="math"><div>Bond pays 1,000 in a year. r = 5%: P = 1000/1.05 = <b>952.38</b>. r = 6%: P = 1000/1.06 = <b>943.40</b></div>
+<div><b>Proof:</b> P = C₁(1 + r)⁻¹ ⟹ dP/dr = −C₁(1 + r)⁻² = −C₁/(1 + r)² &lt; 0 for all r &gt; −1</div></div>
+<p>Intuition: the payout is fixed, so a higher required return can only be achieved by paying a lower price. Price up ⟺ implied return down.</p>
+<h3>4.4 Discounting vs compounding on a timeline</h3>
+<svg viewBox="0 0 470 140" width="470" role="img" aria-label="Compounding and discounting on a timeline"><line x1="30" y1="70" x2="440" y2="70" stroke="#888" stroke-width="2"/>
+<g text-anchor="middle"><circle cx="70" cy="70" r="5" fill="#3b6fd4"/><text x="70" y="92">t = 0</text><text x="70" y="108" style="fill:#3b6fd4">82.64</text>
+<circle cx="235" cy="70" r="5" fill="#7a54c8"/><text x="235" y="92">t = 1</text><text x="235" y="108" style="fill:#7a54c8">90.91</text>
+<circle cx="400" cy="70" r="5" fill="#0f9d8a"/><text x="400" y="92">t = 2</text><text x="400" y="108" style="fill:#0f9d8a">100</text>
+<path d="M75 55 Q150 20 230 55" fill="none" stroke="#e8574b" stroke-width="2"/><text x="150" y="28" style="fill:#e8574b">compound ×1.1 →</text>
+<path d="M395 55 Q320 20 240 55" fill="none" stroke="#f2a516" stroke-width="2"/><text x="330" y="28" style="fill:#c9890a">← discount ÷1.1</text></g></svg>
+<p>Read the picture: 82.64 today, 90.91 a year from now and 100 two years from now are <b>all the same wealth</b> at 10%. They are just stated at different dates. That is the whole meaning of "equivalent".</p>
+<h3>4.5 PV intuition: the "bank test"</h3>
+<p>To value a future ₹100, ask: <i>"How much would I need to put in the bank today so that it grows to exactly ₹100?"</i> The answer is the PV. If a seller asks more than that, you are better off using the bank. If a seller asks less, buy.</p>
+<h3>4.6 Effect of the rate and of time on PV</h3>
+<table><tr><th>PV of ₹100</th><th>1 year</th><th>5 years</th><th>10 years</th><th>30 years</th></tr>
+<tr><td>r = 5%</td><td>95.24</td><td>78.35</td><td>61.39</td><td>23.14</td></tr><tr><td>r = 10%</td><td>90.91</td><td>62.09</td><td>38.55</td><td>5.73</td></tr><tr><td>r = 15%</td><td>86.96</td><td>49.72</td><td>24.72</td><td>1.51</td></tr></table>
+<ul><li>PV falls as the rate rises (row to row).</li><li>PV falls as time lengthens (column to column).</li><li>At 10%, money 30 years away is worth less than 6 rupees per hundred. That is why distant cash flows barely matter for valuation.</li></ul>
+<h3>4.7 Worked examples</h3>
+<div class="box eg"><b class="t">Q1. A project returns ₹1,000,000 in 5 years. r = 8%. Maximum you should pay?</b>PV = 1,000,000 / 1.08⁵ = 1,000,000 / 1.469328 = <b>680,583</b>. Pay less than this and you gain; more and you lose.</div>
+<div class="box eg"><b class="t">Q2. Which is worth more at r = 10%: 150 in 3 years or 100 today?</b>PV(150) = 150/1.331 = 112.70 &gt; 100. So <b>150 in 3 years</b> is worth more today. Never compare the raw numbers.</div>
+<div class="box eg"><b class="t">Q3. Several payments: 300 in year 1, 400 in year 2, 500 in year 3, r = 6%.</b>
+<div class="math"><div>PV = 300/1.06 + 400/1.1236 + 500/1.191016</div><div>= 283.02 + 355.99 + 419.81 = <b>1,058.82</b></div></div>
+Simple sum is 1,200, but the true value is 1,058.82. The 141.18 gap is the price of waiting.</div>
+</section>
+
+<section id="s5"><h2>5. Net Present Value, NPV (Lecture 3)</h2>
+<h3>5.1 Why PV makes adding possible (value additivity)</h3>
+<p>You cannot add ₹10 next year and ₹8 in five years to get ₹18: different dates mean different "units" of money. But after converting each to <b>today's</b> rupees they are in the same unit and can be added, subtracted and compared.</p>
+<div class="math"><div>Example at 5%: PV(10 in 1 yr) = 10/1.05 = 9.52; PV(8 in 5 yrs) = 8/1.05⁵ = 6.27 → total <b>15.79</b>, not 18.</div></div>
+<h3>5.2 Formula and rule</h3>
+<div class="math"><div><b>NPV = C₀ + C₁/(1+r) + C₂/(1+r)² + … + C_T/(1+r)^T</b> &nbsp;(C₀ negative if it is a cost)</div></div>
+<p>"Net" = include the upfront cost. Three steps: (1) discount every future cash flow, (2) add them, (3) subtract the cost.</p>
+<table><tr><th>NPV</th><th>Meaning</th><th>Decision</th></tr><tr><td>&gt; 0</td><td>earns more than the market rate r</td><td style="color:#0f9d8a"><b>Accept</b></td></tr><tr><td>= 0</td><td>earns exactly r</td><td>Indifferent</td></tr><tr><td>&lt; 0</td><td>earns less than r</td><td style="color:#e8574b"><b>Reject</b></td></tr></table>
+<h3>5.3 Two ways to understand NPV</h3>
+<div class="box eg"><b class="t">Example: pay 12 now, get 10 in year 1 and 8 in year 5, r = 5%</b>NPV = 10/1.05 + 8/1.05⁵ − 12 = 9.524 + 6.268 − 12 = <b>3.79</b>.</div>
+<div class="row"><div style="background:#d8f1ec"><b>Interpretation 1 – value added</b><br>The market value of the cash flows is 15.79 but the project costs 12. The difference, 3.79, is the extra value created.</div><div style="background:#e3ebfb"><b>Interpretation 2 – versus the capital market</b><br>Put the same 12 in the bank at 5%: it becomes 12.60 next year. Take out 10, leaving 2.60. In 4 more years: 2.60 × 1.05⁴ ≈ <b>3.16</b>. The project gives <b>8</b>. Gap = 4.84, whose PV is 4.84/1.05⁵ = 3.79 = NPV ✓</div></div>
+<h3>5.4 Example: mining project (r = 5%)</h3>
+<svg viewBox="0 0 440 90" width="440" role="img" aria-label="Mining cash-flow timeline"><line x1="20" y1="45" x2="420" y2="45" stroke="#888" stroke-width="2"/>
+<g text-anchor="middle"><circle cx="40" cy="45" r="4" fill="#e8574b"/><text x="40" y="30">t=0</text><text x="40" y="70" style="fill:#e8574b">−900</text>
+<circle cx="120" cy="45" r="4" fill="#0f9d8a"/><text x="120" y="30">t=1</text><text x="120" y="70" style="fill:#0f9d8a">+200</text>
+<circle cx="200" cy="45" r="4" fill="#0f9d8a"/><text x="200" y="30">t=2</text><text x="200" y="70" style="fill:#0f9d8a">+200</text>
+<circle cx="280" cy="45" r="4" fill="#0f9d8a"/><text x="280" y="30">t=3</text><text x="280" y="70" style="fill:#0f9d8a">+400</text>
+<circle cx="360" cy="45" r="4" fill="#0f9d8a"/><text x="360" y="30">t=4</text><text x="360" y="70" style="fill:#0f9d8a">+400</text>
+<circle cx="420" cy="45" r="4" fill="#e8574b"/><text x="415" y="30">t=5</text><text x="415" y="70" style="fill:#e8574b">−100</text></g></svg>
+<table><tr><th>t</th><th>Cash flow</th><th>1.05^t</th><th>PV</th></tr><tr><td>0</td><td>−900</td><td>1</td><td>−900.00</td></tr><tr><td>1</td><td>200</td><td>1.05</td><td>190.48</td></tr><tr><td>2</td><td>200</td><td>1.1025</td><td>181.41</td></tr><tr><td>3</td><td>400</td><td>1.157625</td><td>345.54</td></tr><tr><td>4</td><td>400</td><td>1.215506</td><td>329.08</td></tr><tr><td>5</td><td>−100</td><td>1.276282</td><td>−78.35</td></tr><tr><th colspan="3">NPV</th><th>+68.15</th></tr></table>
+<p>NPV &gt; 0 → <b>take the project</b>. Note that the cleanup cost at t=5 is a negative cash flow and is discounted like any other.</p>
+<h3>5.5 Is a fast-growing company a better buy? (G vs S, r = 10%)</h3>
+<table><tr><th>Year</th><th>G (growing)</th><th>S (shrinking)</th></tr><tr><td>1</td><td>100</td><td>100</td></tr><tr><td>2</td><td>150</td><td>90</td></tr><tr><td>3</td><td>250</td><td>80</td></tr></table>
+<div class="math"><div>Price today: PV(G) = 100/1.1 + 150/1.21 + 250/1.331 = 90.91 + 123.97 + 187.83 = <b>402.70</b></div><div>PV(S) = 90.91 + 74.38 + 60.11 = <b>225.39</b></div></div>
+<p>Your gut says G is better. Test it by computing one-year returns for someone who buys at today's fair price.</p>
+<div class="math"><div><b>G:</b> at t=1 you hold 100 cash plus a firm worth 150/1.1 + 250/1.1² = 136.36 + 206.61 = 342.98. Total 442.98. Return = (442.98 − 402.70)/402.70 = <b>10.0%</b></div><div><b>S:</b> 100 + 90/1.1 + 80/1.21 = 100 + 81.82 + 66.12 = 247.93. Return = (247.93 − 225.39)/225.39 = <b>10.0%</b></div></div>
+<div class="key"><b>Lesson:</b> both earn exactly the cost of capital, 10%. G's fast growth is already in its higher price (402.70 vs 225.39). In a competitive market a fast-growing company is not a better <i>investment</i>; you simply pay more for it. (A great business is not the same as a bargain.)</div>
+<h3>5.6 The NPV decision flowchart</h3>
+<div class="flow"><div style="background:#1d2a44">1. Draw the timeline: list every cash flow with its date and sign (− cost, + inflow)</div><i>↓</i>
+<div style="background:#3b6fd4">2. Choose the discount rate r (what the money could earn elsewhere at the same risk)</div><i>↓</i>
+<div style="background:#7a54c8">3. PV of each flow = C_t / (1+r)^t (the t=0 flow is not changed)</div><i>↓</i>
+<div style="background:#0f9d8a">4. Add everything → NPV</div><i>↓</i>
+<div style="background:#f2a516;color:#1d2a44">5. NPV &gt; 0 accept · NPV = 0 indifferent · NPV &lt; 0 reject</div></div>
+<h3>5.7 How the answer depends on r (mining project)</h3>
+<table><tr><th>Discount rate</th><th>0%</th><th>5%</th><th>8%</th><th>10%</th></tr><tr><td>NPV</td><td>200.00</td><td>68.15</td><td>0.14</td><td>-41.25</td></tr></table>
+<p>Higher r shrinks every future inflow, so NPV falls. The project is a good idea at 5% (NPV +68.15) and a bad idea at 10% (NPV -41.25). The NPV hits zero at roughly <b>r ≈ 8.0%</b> (extra detail beyond the lecture: this break-even rate is called the IRR; your lecture only needs the NPV sign at the given r). Because the cost is up front and the benefits come later, projects like this are the most sensitive to the discount rate.</p>
+<svg viewBox="0 0 330 190" width="330" role="img" aria-label="NPV falls as discount rate rises"><line x1="40" y1="95" x2="310" y2="95" stroke="#888"/><line x1="40" y1="10" x2="40" y2="180" stroke="#888"/>
+<polyline fill="none" stroke="#7a54c8" stroke-width="3" points="40,50 130,87 185,100 235,112 300,125"/>
+<circle cx="157" cy="95" r="4" fill="#e8574b"/><text x="165" y="88" style="fill:#e8574b">NPV = 0 at ≈ 8.0%</text>
+<text x="45" y="46">r = 0 (NPV +200)</text><text x="215" y="140">negative NPV: reject</text><text x="60" y="130" style="fill:#0f9d8a">positive: accept</text><text x="230" y="190">discount rate r →</text></svg>
+<h3>5.8 Why NPV is the right rule (common doubts)</h3>
+<ul><li><b>Why not "total profit"?</b> It adds rupees from different dates. NPV puts them on the same date first.</li><li><b>Why not "highest return %"?</b> A 50% return on ₹10 is worth less in rupees than a 12% return on ₹10 lakh. NPV measures rupees of value created.</li><li><b>Why does the sign alone decide?</b> NPV &gt; 0 means doing the project leaves you richer today than putting the same money in the market. Nobody should refuse a free gain.</li><li><b>Why is r the market rate?</b> It is the opportunity cost. If the market gives 5% for a similar investment, a project earning less than 5% is a poor use of money.</li></ul>
+<div class="box eg"><b class="t">Another NPV: cost 5,000; inflows 1,500, 2,000, 2,500, 1,000 in years 1–4; r = 8%</b>
+<div class="math"><div>PVs: 1,500/1.08 = 1,388.89, 2,000/1.08² = 1,714.68, 2,500/1.08³ = 1,984.58, 1,000/1.08⁴ = 735.03</div><div>Sum = 5,823.18; NPV = 823.18</div></div>NPV is positive → accept. (Total undiscounted inflows are 7,000, but only about 5,823 in today's money.)</div>
+<h3>5.9 Why the growth-vs-shrinking result is not a paradox</h3>
+<p>Think of two apartments. One is in a booming area (high rent growth) and the other in a stagnant area. The first is much more expensive. If both were priced "fairly", an investor in each earns the same 10% return, and the booming-area buyer just gets more of it as price growth and less as rent. G's return of 10% is cash 100 (24.8% of the 402.70) plus a price change of −59.73 (i.e. 342.98 − 402.70), which is negative, and the sum is still 10%. This shows the decomposition from Section 2 at work.</p>
+<div class="math"><div>G: cash yield = 100/402.70 = 24.83%; capital gain = (342.98 − 402.70)/402.70 = −14.83%; total = <b>10.00%</b></div><div>S: cash yield = 100/225.39 = 44.37%; capital gain = (147.93 − 225.39)/225.39 = −34.37%; total = <b>10.00%</b></div></div>
+<p>So S pays a bigger cash yield but its price shrinks faster. Everything is balanced by the market so that all investments earn the same 10%.</p>
+</section>
+
+<section id="s6"><h2>6. Intertemporal Choice: Borrowing and Saving (Lecture 4)</h2>
+<h3>6.1 Warm-up: the ordinary budget constraint</h3>
+<p>Income m, goods with prices p₁, p₂. A bundle (x₁, x₂) is affordable if <b>p₁x₁ + p₂x₂ ≤ m</b>. The <i>budget line</i> p₁x₁ + p₂x₂ = m has slope <b>−p₁/p₂</b>: to get one more unit of good 1 you give up p₁/p₂ units of good 2.</p>
+<h3>6.2 Same idea across time</h3>
+<p>Two periods. Incomes m₁, m₂; consumption c₁, c₂; interest rate r. For now prices are 1. The "goods" are <b>consumption today</b> and <b>consumption tomorrow</b>. The bank lets you shift spending between them.</p>
+<div class="row"><div style="background:#e3ebfb"><b>Case A – Endowment point</b><br>No saving or borrowing: c₁ = m₁, c₂ = m₂.</div><div style="background:#d8f1ec"><b>Case B – Save everything</b><br>c₁ = 0, save s₁ = m₁. Period 2: m₂ + (1+r)m₁ (this is the <b>future value</b> of income).</div><div style="background:#fff0cf"><b>Case C – Borrow the max</b><br>c₂ = 0. Loan b₁ must satisfy b₁(1+r) = m₂, so b₁ = m₂/(1+r). Then c₁ = m₁ + m₂/(1+r) (the <b>present value</b> of income).</div></div>
+<h3>6.3 Deriving the budget line</h3>
+<div class="math"><div>Spend c₁ in period 1 → saving s₁ = m₁ − c₁ (negative means borrowing)</div><div>Period 2: c₂ = m₂ + (1 + r)(m₁ − c₁)</div><div>Expand: c₂ = m₂ + (1+r)m₁ − (1+r)c₁</div><div>Move c₁ to the left: (1+r)c₁ + c₂ = (1+r)m₁ + m₂</div><div>Divide by (1+r): <b>c₁ + c₂/(1+r) = m₁ + m₂/(1+r)</b></div></div>
+<div class="key"><b>Fundamental law:</b> PV of consumption = PV of income. You can shift consumption through time, but you cannot spend more than the present value of everything you will earn. The slope is <b>−(1+r)</b>: one extra rupee consumed today costs (1+r) rupees tomorrow.</div>
+<svg viewBox="0 0 340 230" width="340" role="img" aria-label="Intertemporal budget line"><line x1="40" y1="200" x2="320" y2="200" stroke="#888"/><line x1="40" y1="15" x2="40" y2="200" stroke="#888"/>
+<line x1="40" y1="28" x2="307" y2="190" stroke="#7a54c8" stroke-width="3"/>
+<circle cx="180" cy="113" r="5" fill="#e8574b"/><text x="188" y="108">Endowment (100,100)</text>
+<circle cx="40" cy="28" r="4" fill="#0f9d8a"/><text x="48" y="26">Save all: c₂ = 210</text>
+<circle cx="307" cy="190" r="4" fill="#f2a516"/><text x="215" y="188">Borrow max: c₁ = 190.9</text>
+<text x="170" y="220">c₁ (period 1)</text><text x="4" y="14">c₂</text><text x="105" y="62" style="fill:#7a54c8">slope = −(1+r) = −1.1</text></svg>
+<p class="chip">Numbers used: m₁ = m₂ = 100, r = 10%</p>
+<div class="box eg"><b class="t">Example: borrow 50 today</b>c₁ = 150, so s₁ = −50. Period 2: c₂ = 100 + 1.1(100 − 150) = 100 − 55 = <b>45</b>. Check PV: 150 + 45/1.1 = 190.91 = 100 + 100/1.1 ✓. Points above the line are unaffordable. Points below are affordable but wasteful.</div>
+<h3>6.4 Adding prices</h3>
+<div class="math"><div><b>p₁c₁ + p₂c₂/(1+r) = m₁ + m₂/(1+r)</b></div></div>
+<h3>6.5 Inflation and the real interest rate</h3>
+<p>Let inflation π be defined by p₂ = p₁(1 + π). (π = 0.05 means prices rise 5%.) Choose units so p₁ = 1, giving p₂ = 1 + π.</p>
+<div class="math"><div>Budget: c₁ + (1+π)c₂/(1+r) = m₁ + m₂/(1+r)</div><div>Solve for c₂: c₂ = −[(1+r)/(1+π)]·c₁ + [1/(1+π)]·[m₁(1+r) + m₂]</div><div>Slope = −(1+r)/(1+π) ≡ −(1+ρ), so <b>1 + ρ = (1+r)/(1+π)</b></div></div>
+<p>ρ is the <b>real interest rate</b>: the trade-off in terms of <i>goods</i>, not rupees. If you save ₹1 you get (1+r) rupees back, but each rupee buys 1/(1+π) as much.</p>
+<div class="math"><div><b>Approximation:</b> (1+r)/(1+π) ≈ (1+r)(1−π) = 1 + r − π − rπ. If rπ is tiny: <b>ρ ≈ r − π</b></div></div>
+<table><tr><th>r</th><th>π</th><th>Exact ρ</th><th>Approx r − π</th></tr><tr><td>10%</td><td>5%</td><td>4.76%</td><td>5%</td></tr><tr><td>20%</td><td>15%</td><td>4.35%</td><td>5%</td></tr></table>
+<div class="warn box"><b class="t">Note</b>The shortcut is good when rates are small. When r and π are large, use the exact ratio.</div>
+<h3>6.6 Plain-English picture of the intertemporal budget</h3>
+<p>You have two "pots" of income: m₁ now and m₂ later. The bank lets you slide spending along the line, like a see-saw. Spend more now (borrow) and you must spend less later by (1+r) for every rupee. Spend less now (save) and you get (1+r) more later for every rupee. You can never leave the line, because the PV of what you spend equals the PV of what you earn.</p>
+<div class="flow"><div style="background:#0f9d8a">Saver: c₁ &lt; m₁ → points to the upper-left of the endowment point</div><div style="background:#e8574b;margin-top:8px">Borrower: c₁ &gt; m₁ → points to the lower-right of the endowment point</div></div>
+<h3>6.7 Worked examples (m₁ = 100, m₂ = 121, r = 10%)</h3>
+<div class="math"><div>PV of income = 100 + 121/1.1 = 100 + 110 = <b>210</b> (max c₁)</div><div>FV of income = 100 × 1.1 + 121 = <b>231</b> (max c₂)</div><div>Check slope: 231/210 = 1.1 = (1 + r) ✓</div></div>
+<table><tr><th>Choice of c₁</th><th>Saving s₁ = m₁ − c₁</th><th>c₂ = 121 + 1.1·s₁</th><th>Verify: c₁ + c₂/1.1</th></tr>
+<tr><td>100 (endowment)</td><td>0</td><td>121.00</td><td>210</td></tr><tr><td>60 (save 40)</td><td>+40</td><td>165.00</td><td>210</td></tr><tr><td>150 (borrow 50)</td><td>−50</td><td>66.00</td><td>210</td></tr><tr><td>210 (max borrow)</td><td>−110</td><td>0.00</td><td>210</td></tr><tr><td>0 (max save)</td><td>+100</td><td>231.00</td><td>210</td></tr></table>
+<p>Every row gives 210. That is what "PV of consumption = PV of income" means numerically.</p>
+<h3>6.8 Inflation example in full</h3>
+<div class="box eg"><b class="t">r = 10%, π = 5%, m₁ = m₂ = 100, p₁ = 1</b>
+<div class="math"><div>p₂ = 1.05. Real rate: 1+ρ = 1.10/1.05 = 1.0476 ⟹ <b>ρ = 4.76%</b> (shortcut r − π = 5%)</div><div>Save 100 today: bank gives 110 rupees next year. Each rupee buys 1/1.05 as much, so 110 rupees buy 110/1.05 = <b>104.76 of today's goods</b>.</div><div>So giving up 1 unit of goods today gets only 1.0476 units of goods tomorrow, not 1.10. That is the slope −(1+ρ).</div></div></div>
+<h3>6.9 Why the real rate matters</h3>
+<ul><li>Savers care about <b>purchasing power</b>, not rupee amounts. A 6% deposit with 8% inflation has a negative real rate (≈ −1.9%): you become poorer in real terms.</li><li>If π &gt; r, ρ &lt; 0. Borrowing then is "cheap" in real terms.</li><li>Rule: in an exam, state the exact formula first, and use r − π only if rates are small.</li></ul>
+<div class="box eg"><b class="t">Also try (prices differ): p₁ = 1, p₂ = 2 (100% inflation), r = 10%</b>1 + ρ = 1.1/2 = 0.55 ⟹ ρ = −45%. Saving 1 rupee gives 1.1 rupees later, but those buy only 0.55 units of goods. The shortcut would say 10% − 100% = −90%, which is far off. This is why the shortcut only works for small rates.</div>
+</section>
+
+<section id="s7"><h2>7. Asset Markets I: No-Arbitrage (Lecture 5)</h2>
+<h3>7.1 Same certainty ⟹ same return</h3>
+<p>With no uncertainty, nobody would hold an asset that pays a lower return than an otherwise identical one. So <b>all riskless assets that are held must pay the same return</b>.</p>
+<h3>7.2 The condition</h3>
+<p>Asset A: price p₀ now, known price p₁ tomorrow, no dividends. Asset B: bank deposit at rate r. Put ₹1 in each:</p>
+<div class="math"><div>A: buys 1/p₀ units, worth p₁/p₀ tomorrow &nbsp;|&nbsp; B: worth 1 + r tomorrow</div><div>Equilibrium: <b>1 + r = p₁/p₀ &nbsp;⟹ &nbsp;p₀ = p₁/(1 + r)</b></div></div>
+<h3>7.3 What if it fails? The arbitrage machine</h3>
+<div class="flow"><div style="background:#3b6fd4">Suppose 1 + r &gt; p₁/p₀ (A is overpriced)</div><i>↓</i><div style="background:#7a54c8">Sell A today for p₀ (or short-sell it if you don't own it)</div><i>↓</i><div style="background:#0f9d8a">Put the p₀ in the bank → p₀(1 + r) tomorrow</div><i>↓</i><div style="background:#f2a516;color:#1d2a44">Buy A back for p₁. Profit = p₀(1 + r) − p₁ &gt; 0</div><i>↓</i><div style="background:#e8574b">Everyone sells A → supply up → p₀ falls until 1 + r = p₁/p₀</div></div>
+<div class="box eg"><b class="t">Numbers: p₁ = 110, r = 10%</b>Fair price = 110/1.1 = 100. Suppose A trades at 105. Sell A at 105; the bank turns it into 115.50; buy A back for 110; <b>free profit 5.50</b> with no risk and no money of your own. Price must fall to 100.
+<br><i>Reverse case (extra, same logic):</i> at 95, borrow 95 (owe 104.50), buy A, sell for 110 → profit 5.50. Demand pushes the price up to 100.</div>
+<div class="def box"><b class="t">Riskless arbitrage</b>Buying and selling equivalent assets to lock in a sure profit with <b>zero risk and zero net investment</b>. Well-functioning markets remove it quickly, so we can assume it does not last.</div>
+<div class="key"><b>Big result:</b> if no arbitrage exists, <b>price = present value of future cash flows</b>: p₀ = Σ C_t/(1+r)^t. This is why PV is the right tool for valuing assets.</div>
+<h3>7.4 Real-world adjustments</h3>
+<ul><li><b>Liquidity:</b> how easily an asset turns into cash without losing value. Government bonds are liquid, real estate is not. Illiquid assets must offer a <b>liquidity premium</b> (higher return, so lower price).</li><li><b>Risk:</b> riskier assets must offer a <b>risk premium</b>, i.e. a required return above r.</li><li>The no-arbitrage rule assumes the two assets are identical except for money terms.</li></ul>
+<h3>7.5 Slowing down: what does "short selling" mean?</h3>
+<p>Short selling = sell something you do not own. You <b>borrow</b> the asset, sell it now for p₀, and promise to give back the same asset later. If you can buy it back later for less than you sold it for, you keep the difference. For arbitrage you do not need your own money: you borrow the asset, sell it, and put the cash in the bank.</p>
+<table><tr><th>Step</th><th>Cash today</th><th>Cash tomorrow</th></tr><tr><td>Borrow &amp; sell A</td><td>+p₀</td><td></td></tr><tr><td>Deposit p₀ in bank</td><td>−p₀</td><td>+p₀(1+r)</td></tr><tr><td>Buy A back (return it)</td><td></td><td>−p₁</td></tr><tr><td><b>Total</b></td><td><b>0</b></td><td><b>p₀(1+r) − p₁ &gt; 0</b></td></tr></table>
+<p>Zero today and positive tomorrow in <b>every</b> scenario: that is a pure arbitrage.</p>
+<h3>7.6 Extending to many periods (derivation)</h3>
+<p>Apply the one-period rule at each date. With a known price path p₀, p₁, p₂:</p>
+<div class="math"><div>p₁ = p₂/(1+r) &nbsp;(at date 1) &nbsp;and &nbsp;p₀ = p₁/(1+r) &nbsp;(at date 0)</div><div>Substitute: p₀ = p₂/(1+r)²</div><div>Repeat: <b>p₀ = p_T/(1+r)^T</b></div></div>
+<p>If the asset also pays dividends d₁, d₂ …, then each period the total payoff is price plus dividend:</p>
+<div class="math"><div>p₀ = (p₁ + d₁)/(1+r) = d₁/(1+r) + [d₂ + p₂]/(1+r)² = … = <b>Σ d_t/(1+r)^t + p_T/(1+r)^T</b></div></div>
+<p>If T is far away, the last term vanishes and price becomes the PV of all dividends. This is the basis of stock valuation.</p>
+<h3>7.7 Examples</h3>
+<div class="box eg"><b class="t">Dividend asset:</b> pays 6 next year, then trades at 106; r = 6%. Fair price = (106 + 6)/1.06 = <b>105.66</b>. If it trades at 108: sell short at 108, bank → 114.48, buy back at 106 and pay the dividend 6 (the short seller must also pass on the dividend), total outflow 112. Profit = 2.48, so price falls.</div>
+<div class="box eg"><b class="t">Gold-type asset, no payments:</b> price now 1000, known to be 1100 next year. r = 10%. Fair price = 1100/1.1 = 1000. Equal returns, so no arbitrage. If next year's price were 1155 (a 15.5% growth), the price today would have to jump to 1050 first.</div>
+<h3>7.8 Misconceptions</h3>
+<ul><li>"Arbitrage means any profit": No. It must be <b>riskless</b> and need <b>no investment</b>. Buying a stock and hoping is not arbitrage.</li><li>"Arbitrage opportunities last": In well-functioning markets they vanish within moments, because traders rush to exploit them and their trades change the prices.</li><li>"All assets have the same return": Only <b>riskless and otherwise identical</b> assets. Risky or illiquid assets earn more (premiums).</li></ul>
+</section>
+
+<section id="s8"><h2>8. Asset Markets II: The Forest and Continuous Compounding (Lecture 6)</h2>
+<h3>8.1 The problem</h3>
+<p>A forest's wood value V(t) grows with time (price of wood normalised to 1). <b>When should it be cut?</b></p>
+<div class="warn box"><b class="t">Naive answer</b>Wait until V(t) is largest: V′(t) = 0. <b>Wrong</b>, because it ignores that cutting earlier lets you put the money in the bank to earn interest.</div>
+<div class="key"><b>Correct rule:</b> compare the forest's growth rate with the bank. <b>Cut when V′(t)/V(t) = r.</b> Before that, the forest is "paying" more than the bank, so keep it. After that, it pays less, so sell and bank the money.</div>
+<h3>8.2 Why V′/V is the forest's rate of return</h3>
+<p>Waiting one more year adds V′ to the value; as a fraction of what you hold (V) that is V′/V. It is the return from holding, comparable with r.</p>
+<h3>8.3 Continuous compounding (derivation)</h3>
+<p>Interest paid n times a year at rate r/n each time. After T years:</p>
+<div class="math"><div>(1 + r/n)^(nT)</div><div>Take the log: nT·ln(1 + r/n). For large n, r/n is tiny and ln(1 + x) ≈ x, so ≈ nT·(r/n) = rT</div><div>Hence <b>lim (1 + r/n)^(nT) = e^(rT)</b></div></div>
+<table><tr><th>Payments per year n</th><th>1</th><th>2</th><th>4</th><th>12</th><th>365</th><th>∞</th></tr><tr><td>₹1 at 10% after 1 yr</td><td>1.1000</td><td>1.1025</td><td>1.1038</td><td>1.1047</td><td>1.1052</td><td>e⁰·¹ = 1.1052</td></tr></table>
+<p>More frequent payments give only slightly more. Continuous compounding is mathematically convenient: FV = C₀e^(rT) and PV = C_T·e^(−rT).</p>
+<h3>8.4 Proof of the cutting rule</h3>
+<div class="math"><div>Forest worth V(t) at time t; present value v(t) = V(t)e^(−rt)</div><div>Maximise: dv/dt = V′(t)e^(−rt) + V(t)(−r)e^(−rt) = 0 (product rule)</div><div>Factor: e^(−rt)[V′(t) − rV(t)] = 0. Since e^(−rt) &gt; 0: V′(t) = rV(t)</div><div><b>⟹ V′(t)/V(t) = r</b> ∎</div></div>
+<h3>8.5 The numerical example: V(t) = −1000 + 1000t − 10t², r = 10%</h3>
+<div class="math"><div><b>Naive:</b> V′ = 1000 − 20t = 0 ⟹ t = 50; V(50) = −1000 + 50,000 − 25,000 = 24,000</div><div><b>Rule:</b> (1000 − 20t) / (−1000 + 1000t − 10t²) = 0.1</div><div>Cross-multiply: 1000 − 20t = −100 + 100t − t²</div><div>Rearrange: t² − 120t + 1100 = 0 &nbsp;⟹ &nbsp;(t − 10)(t − 110) = 0</div><div>t = 110 is after the peak (V(110) = −12,000 &lt; 0, meaningless). <b>t* = 10</b>; V(10) = −1000 + 10,000 − 1,000 = <b>8,000</b></div></div>
+<table><tr><th>t</th><th>5</th><th>10</th><th>20</th><th>30</th><th>50</th></tr><tr><td>V(t)</td><td>3,750</td><td>8,000</td><td>15,000</td><td>20,000</td><td>24,000</td></tr><tr><td>V′/V</td><td>24%</td><td><b>10%</b></td><td>4%</td><td>2%</td><td>0%</td></tr></table>
+<svg viewBox="0 0 360 200" width="360" role="img" aria-label="Forest growth rate vs interest rate"><line x1="40" y1="180" x2="350" y2="180" stroke="#888"/><line x1="40" y1="10" x2="40" y2="180" stroke="#888"/>
+<polyline fill="none" stroke="#0f9d8a" stroke-width="3" points="52,20 58,101 70,142 100,164 160,174 220,177 340,180"/>
+<line x1="40" y1="164" x2="350" y2="164" stroke="#e8574b" stroke-dasharray="5 4" stroke-width="2"/>
+<circle cx="100" cy="164" r="5" fill="#f2a516"/><text x="108" y="150">cut at t = 10</text><text x="260" y="158" style="fill:#e8574b">bank rate r = 10%</text><text x="150" y="85" style="fill:#0f9d8a">forest growth rate V′/V</text><text x="45" y="196">time t (years) →</text></svg>
+<div class="box eg"><b class="t">Payoff comparison at t = 50</b>Cut at 50: <b>24,000</b>. Cut at 10, bank 8,000 at 10% for 40 years: 8000 × 1.1⁴⁰ = 8000 × 45.259 ≈ <b>362,074</b>, over 15 times more. (With continuous compounding it would be 8000·e⁴ ≈ 436,785.)</div>
+<div class="key"><b>General lesson:</b> to end up richest, always hold the asset with the highest return available at each point in time. "Biggest value" is not the goal; "best return" is.</div>
+<h3>8.6 Understanding e slowly</h3>
+<p>Start with ₹1 and a rate of 100% a year. Pay interest n times a year: (1 + 1/n)ⁿ.</p>
+<table><tr><th>n</th><th>1</th><th>2</th><th>4</th><th>12</th><th>365</th><th>1,000,000</th></tr><tr><td>(1 + 1/n)ⁿ</td><td>2</td><td>2.25</td><td>2.4414</td><td>2.6130</td><td>2.7146</td><td>2.71828…</td></tr></table>
+<p>The numbers climb but stop around <b>e ≈ 2.71828</b>. So there is a ceiling to what more frequent compounding can give. With rate r and time T the ceiling is e^(rT).</p>
+<h3>8.7 Effective annual rate under continuous compounding</h3>
+<div class="math"><div>Continuous rate r = 10% → one-year growth factor e^0.10 = 1.10517 → effective annual rate = <b>10.517%</b></div><div>Convert back: effective annual R → continuous rate r = ln(1 + R). R = 5% → r = ln 1.05 = 4.879%.</div><div>PV with continuous discounting: PV = C·e^(−rT). 1,000 in 3 years at r = 8%: 1000 × e^(−0.24) = 1000 × 0.7866 = <b>786.63</b> (discrete: 1000/1.08³ = 793.83)</div></div>
+<h3>8.8 Why the rule "growth = interest" is natural (marginal thinking)</h3>
+<p>At any moment you can either hold the forest for one more year or sell it and bank the money. Holding earns V′ (the extra wood value). Selling and banking earns r·V. So:</p>
+<table><tr><th>Situation</th><th>Compare</th><th>Action</th></tr><tr><td>V′/V &gt; r</td><td>Forest beats bank</td><td>Keep growing</td></tr><tr><td>V′/V = r</td><td>Equal</td><td><b>Cut now</b></td></tr><tr><td>V′/V &lt; r</td><td>Bank beats forest</td><td>Cut earlier / already late</td></tr></table>
+<p>This is the same comparison as in all of finance: compare your asset's return with the market's return.</p>
+<div class="box eg"><b class="t">Second forest example: V(t) = −500 + 400t − 4t², r = 10%</b>
+<div class="math"><div>Naive: V′ = 400 − 8t = 0 ⟹ t = 50; V(50) = −500 + 20,000 − 10,000 = 9,500</div><div>Rule: (400 − 8t) = 0.1(−500 + 400t − 4t²) = −50 + 40t − 0.4t²</div><div>⟹ 0.4t² − 48t + 450 = 0 ⟹ t² − 120t + 1125 = 0</div><div>t = [120 ± √(14400 − 4500)]/2 = [120 ± 99.50]/2 ⟹ t* = 10.25 (the other root is beyond the peak)</div><div>V(t*) = 3,179.95; bank it until t = 50: ×1.1^39.7 ≈ 140,525 versus 9,500 by waiting.</div></div></div>
+<div class="key"><b>Exam tip for the forest question:</b> (1) write V′/V = r; (2) cross-multiply; (3) collect into t² − bt + c = 0; (4) factor/quadratic formula; (5) reject the root past the peak of V; (6) compare terminal wealth.</div>
+</section>
+
+<section id="s9"><h2>9. Perpetuities, Annuities and Bonds (Lecture 7)</h2>
+<p>Real assets pay many times (a stock pays dividends for ages; a home loan has 200+ monthly payments). Adding a hundred discounted terms by hand is painful, so we use shortcut formulas valid when the cash flow has a pattern and r is constant.</p>
+<h3>9.1 Perpetuity: C every period forever, first payment at t = 1</h3>
+<div class="math"><div>PV = C/(1+r) + C/(1+r)² + C/(1+r)³ + …</div><div>Geometric series: first term a = C/(1+r), ratio q = 1/(1+r), |q| &lt; 1 since r &gt; 0</div><div>PV = a/(1 − q) = [C/(1+r)] / [r/(1+r)] = <b>C/r</b></div></div>
+<p><b>Quick second proof:</b> a perpetuity at time 1 is worth the same PV again, so PV = C/(1+r) + PV/(1+r). Then PV·r/(1+r) = C/(1+r), so PV = C/r. <b>Intuition:</b> put C/r in the bank: the interest each year is exactly C, and the principal is never touched.</p>
+<div class="box eg"><b class="t">Example</b>10% rate, receive 20 a year forever from next year: PV = 20/0.1 = <b>200</b>. If the first payment comes <i>today</i> (t = 0): PV = C + C/r = 20 + 200 = 220.</div>
+<h3>9.2 Growing perpetuity: C₁ next year, then growing at g</h3>
+<div class="math"><div>PV = C₁/(1+r) + C₁(1+g)/(1+r)² + C₁(1+g)²/(1+r)³ + …</div><div>a = C₁/(1+r), q = (1+g)/(1+r); needs q &lt; 1, i.e. <b>g &lt; r</b></div><div>PV = a/(1−q) = [C₁/(1+r)] / [(r−g)/(1+r)] = <b>C₁/(r − g)</b></div></div>
+<div class="box eg"><b class="t">Example</b>C₁ = 20, g = 5%, r = 10%: PV = 20/(0.10 − 0.05) = <b>400</b>. Growth doubled the value versus the flat 200.</div>
+<div class="warn box"><b class="t">If g ≥ r</b>the series does not converge (the formula would give a negative or infinite value). It would mean payments grow faster than the discounting, which cannot persist forever.</div>
+<h3>9.3 Annuity: C for T periods only</h3>
+<p><b>Trick:</b> annuity = (perpetuity starting at t = 1) − (perpetuity starting at t = T+1).</p>
+<table><tr><th>Period</th><th>1</th><th>2</th><th>…</th><th>T</th><th>T+1</th><th>T+2…</th></tr><tr><td>Perpetuity 1</td><td>C</td><td>C</td><td>C</td><td>C</td><td>C</td><td>C…</td></tr><tr><td>minus Perpetuity 2</td><td></td><td></td><td></td><td></td><td>−C</td><td>−C…</td></tr><tr><td><b>Left over</b></td><td>C</td><td>C</td><td>C</td><td>C</td><td>0</td><td>0…</td></tr></table>
+<div class="math"><div>Perpetuity 1 today: C/r</div><div>Perpetuity 2 is worth C/r at time T (its payments start at T+1), so today it is [C/r]/(1+r)^T</div><div><b>PV = (C/r)[1 − 1/(1+r)^T]</b></div></div>
+<div class="box eg"><b class="t">Example: 50 a year for 3 years at 10%</b>Long way: 50/1.1 + 50/1.21 + 50/1.331 = 45.45 + 41.32 + 37.57 = 124.34. Formula: 500[1 − 1/1.331] = 500 × 0.2487 = <b>124.34</b> ✓</div>
+<h3>9.4 Application: the quiz-show "millionaire"</h3>
+<p>David wins 50,000 a year for 20 years (total 1,000,000), first payment in a year, r = 10%. Is he a millionaire?</p>
+<div class="math"><div>PV = (50,000/0.10)[1 − 1/1.1²⁰] = 500,000 × (1 − 1/6.7275) = 500,000 × 0.8514 ≈ <b>425,678</b></div></div>
+<p>Today's value is under 500,000 (even a perpetuity would only be 500,000). His finance-student relative is right; the headline adds money from different years without discounting.</p>
+<h3>9.5 Bonds</h3>
+<ul><li><b>Zero-coupon bond:</b> one payment (face value F) at maturity.</li><li><b>Level-coupon bond:</b> equal coupons every period plus F at the end. Price = PV(coupons) + PV(principal):</li></ul>
+<div class="math"><div><b>P = (C/r)[1 − 1/(1+r)^T] + F/(1+r)^T</b></div></div>
+<p><b>Naming:</b> "3% semiannual coupon bond" = yearly coupons ÷ principal = 3,000/100,000. It is only a label; it is <b>not</b> the interest rate used for discounting.</p>
+<div class="box eg"><b class="t">Example: F = 100,000; coupon 1,500 every half-year for 5 years; market rate 5% a year</b></div>
+<div class="flow"><div style="background:#3b6fd4">Step 1 – List payments: 1,500 at 0.5, 1.0, …, 4.5 years; 101,500 at year 5</div><i>↓</i><div style="background:#7a54c8">Step 2 – Half-year rate: (1+r)² = 1.05 ⟹ r = √1.05 − 1 = 2.4695% (<b>not</b> 2.5%)</div><i>↓</i><div style="background:#0f9d8a">Step 3 – Coupons are a 10-period annuity</div><i>↓</i><div style="background:#f2a516;color:#1d2a44">Step 4 – Principal is a single payment at year 5</div></div>
+<div class="math"><div>(1+r)¹⁰ = 1.05⁵ = 1.276282; 1/1.276282 = 0.783526</div><div>PV(coupons) = (1500/0.024695)(1 − 0.783526) = 60,741 × 0.216474 ≈ <b>13,148.81</b></div><div>PV(principal) = 100,000/1.276282 = <b>78,352.62</b></div><div><b>Price ≈ 91,501.4</b></div></div>
+<div class="warn box"><b class="t">Check your source numbers</b>The slides give 13,148.81 and a total of <b>91,501.42</b>, and my recomputation matches. The lecture-summary text shows 13,198.80 and 91,551.42, which is a calculation slip (a 50-rupee difference). Use 91,501.42 in the exam.</div>
+<table><tr><th>Price vs face value</th><th>Name</th></tr><tr><td>P &lt; F</td><td><b>Discount</b> (this bond: coupon 3% &lt; market 5%, so it must be cheaper)</td></tr><tr><td>P = F</td><td>Par</td></tr><tr><td>P &gt; F</td><td>Premium</td></tr></table>
+<h3>9.6 Picture: annuity = perpetuity minus perpetuity (T = 4)</h3>
+<svg viewBox="0 0 470 150" width="470" role="img" aria-label="Annuity as difference of perpetuities"><g text-anchor="middle">
+<text x="14" y="38" text-anchor="start">Perp. A</text><text x="14" y="82" text-anchor="start">Perp. B</text><text x="14" y="126" text-anchor="start">Annuity</text>
+<rect x="70" y="20" width="36" height="26" fill="#3b6fd4"/><text x="88" y="38" style="fill:#fff">C</text><rect x="115" y="20" width="36" height="26" fill="#3b6fd4"/><text x="133" y="38" style="fill:#fff">C</text><rect x="160" y="20" width="36" height="26" fill="#3b6fd4"/><text x="178" y="38" style="fill:#fff">C</text><rect x="205" y="20" width="36" height="26" fill="#3b6fd4"/><text x="223" y="38" style="fill:#fff">C</text><rect x="250" y="20" width="36" height="26" fill="#3b6fd4"/><text x="268" y="38" style="fill:#fff">C</text><rect x="295" y="20" width="36" height="26" fill="#3b6fd4"/><text x="313" y="38" style="fill:#fff">C</text><rect x="340" y="20" width="36" height="26" fill="#3b6fd4"/><text x="358" y="38" style="fill:#fff">C</text><rect x="385" y="20" width="36" height="26" fill="#3b6fd4"/><text x="403" y="38" style="fill:#fff">C</text>
+<text x="440" y="38">…</text><rect x="250" y="64" width="36" height="26" fill="#e8574b" opacity=".85"/><text x="268" y="82" style="fill:#fff">C</text><rect x="295" y="64" width="36" height="26" fill="#e8574b" opacity=".85"/><text x="313" y="82" style="fill:#fff">C</text><rect x="340" y="64" width="36" height="26" fill="#e8574b" opacity=".85"/><text x="358" y="82" style="fill:#fff">C</text><rect x="385" y="64" width="36" height="26" fill="#e8574b" opacity=".85"/><text x="403" y="82" style="fill:#fff">C</text>
+<text x="440" y="82">…</text><rect x="70" y="108" width="36" height="26" fill="#0f9d8a"/><text x="88" y="126" style="fill:#fff">C</text><rect x="115" y="108" width="36" height="26" fill="#0f9d8a"/><text x="133" y="126" style="fill:#fff">C</text><rect x="160" y="108" width="36" height="26" fill="#0f9d8a"/><text x="178" y="126" style="fill:#fff">C</text><rect x="205" y="108" width="36" height="26" fill="#0f9d8a"/><text x="223" y="126" style="fill:#fff">C</text>
+<text x="88" y="146" style="font-size:10px">t=1</text><text x="133" y="146" style="font-size:10px">t=2</text><text x="178" y="146" style="font-size:10px">t=3</text><text x="223" y="146" style="font-size:10px">t=4</text><text x="268" y="146" style="font-size:10px">t=5</text><text x="313" y="146" style="font-size:10px">t=6</text><text x="358" y="146" style="font-size:10px">t=7</text><text x="403" y="146" style="font-size:10px">t=8</text></g></svg>
+<p>Perpetuity A pays from t = 1 forever (value C/r). Perpetuity B starts at t = 5 (value C/r <i>at t = 4</i>, so C/r ÷ (1+r)⁴ today). Subtract B from A and the payments after t = 4 cancel, leaving exactly four payments.</p>
+<h3>9.7 Perpetuity checks and extras</h3>
+<ul><li><b>Why the first payment must be at t = 1:</b> the formula C/r values the stream one period before the first payment. If the first payment is at t = 0 add C (as in the note). If it starts at t = 3, then C/r is the value at t = 2, so discount that by (1+r)².</li><li><b>Intuition for C/r:</b> deposit C/r in a bank at rate r. Each year interest is (C/r)·r = C, which you can withdraw while leaving the deposit untouched forever.</li><li><b>Sensitivity:</b> as r falls, perpetuity value explodes. At r = 10%, C = 20: 200. At r = 5%: 400. At r = 1%: 2,000.</li></ul>
+<div class="box eg"><b class="t">Delayed perpetuity:</b> 100 a year forever, first payment at t = 4, r = 10%. Value at t = 3 is 100/0.1 = 1,000. Today: 1,000/1.1³ = <b>751.32</b>.</div>
+<h3>9.8 Growing perpetuity checks</h3>
+<table><tr><th>r</th><th>g</th><th>C₁</th><th>PV = C₁/(r−g)</th></tr><tr><td>10%</td><td>0%</td><td>20</td><td>200</td></tr><tr><td>10%</td><td>5%</td><td>20</td><td>400</td></tr><tr><td>10%</td><td>8%</td><td>20</td><td>1,000</td></tr><tr><td>10%</td><td>9.9%</td><td>20</td><td>20,000</td></tr></table>
+<p>As g approaches r, value blows up, which explains why r &gt; g is required. Sanity check: with g = 0 we get back the plain perpetuity.</p>
+<h3>9.9 Annuity extras</h3>
+<div class="math"><div><b>Annuity factor</b> A(r,T) = [1 − (1+r)^−T]/r, so PV = C × A(r,T)</div><div>Limit: as T → ∞, (1+r)^−T → 0, so A → 1/r and PV → C/r (annuity becomes a perpetuity)</div><div>Check: T = 20, r = 10%: A = 8.5136; ×50,000 = 425,678 ✓ (the quiz show)</div></div>
+<table><tr><th>Years T (r = 10%)</th><th>5</th><th>10</th><th>20</th><th>50</th><th>∞</th></tr><tr><td>Annuity factor</td><td>3.791</td><td>6.145</td><td>8.514</td><td>9.915</td><td>10.000</td></tr></table>
+<p>Even a 50-year stream is worth almost the same as a perpetuity, because far-future payments are worth so little.</p>
+<h3>9.10 Using the annuity formula backwards: loan instalments</h3>
+<p>Borrow L today, repay a level instalment C for T periods. The loan's value to the bank equals PV of the instalments, so L = C × A(r,T), and therefore <b>C = L·r / [1 − (1+r)^−T]</b>.</p>
+<div class="box eg"><b class="t">Example (extension of the lecture formula):</b> ₹10,00,000 home loan, effective 8% a year, repaid monthly for 20 years (T = 240). Monthly rate r = 1.08^(1/12) − 1 = 0.6434%. Instalment C = 10,00,000 × 0.006434 / (1 − 1.08⁻²⁰) = <b>₹8,192</b> a month. Total repaid = 1,965,961, so about 965,961 is interest. (Banks usually quote 8%/12 per month instead; the method is the same.)</div>
+<h3>9.11 Bond pricing: more cases</h3>
+<p>The bond (F = 100,000; 10 half-year periods; half-year market rate r = 2.4695%) can be priced for different coupons using P = C·A + F/(1+r)^10:</p>
+<table><tr><th>Bond</th><th>Half-year coupon</th><th>Price</th><th>Status</th></tr><tr><td>3% coupon (lecture)</td><td>1,500.00</td><td>91,501.42</td><td>Discount</td></tr><tr><td>Coupon rate that gives par</td><td>2,469.51</td><td>100,000.00</td><td>Par</td></tr><tr><td>7% coupon</td><td>3,500.00</td><td>109,033.16</td><td>Premium</td></tr></table><div class="key"><b>Rule of thumb:</b> coupon rate &lt; market rate → discount; equal → par; greater → premium. The lecture bond pays 3% while the market pays 5%, so buyers need a discount to make up the difference.</div>
+<div class="box eg"><b class="t">Price falls as the market rate rises (same 3% bond):</b><br>Market rate 3% → price 100,102<br>Market rate 5% → price 91,501<br>Market rate 7% → price 83,811</div>
+<p>Same inverse relation as the zero-coupon bond in Section 4. Longer-maturity bonds react more strongly (more distant cash flows are more sensitive to r).</p>
+<h3>9.12 Zero-coupon vs coupon bond summary</h3>
+<table><tr><th></th><th>Zero-coupon</th><th>Level-coupon</th></tr><tr><td>Payments</td><td>Single face value at T</td><td>Coupons each period + face value at T</td></tr><tr><td>Price formula</td><td>F/(1+r)^T</td><td>C·A(r,T) + F/(1+r)^T</td></tr><tr><td>Price vs face value (r&gt;0)</td><td>Always below F</td><td>Discount / par / premium by coupon vs r</td></tr></table>
+</section>
+
+<section id="sp"><h2>10. Practice Problems with Full Solutions</h2>
+<p>Try each problem first, then compare. They follow the types the lectures use. The working is shown so you can copy the layout in an exam.</p>
+<div class="box eg"><b class="t">P1. Buy at 250, receive dividend 12, sell at 230. Total return? Split it.</b><div class='math'><div>Total = (230 + 12 − 250)/250 = −8/250 = <b>−3.2%</b></div><div>Capital gain yield = −20/250 = −8%; dividend yield = 12/250 = 4.8%; sum = −3.2% ✓</div></div>The dividend reduced the loss but did not remove it.</div>
+<div class="box eg"><b class="t">P2. A 2-year return is 44%. Equivalent yearly rate? And how long to double at that rate?</b><div class='math'><div>(1+r)² = 1.44 ⟹ 1+r = 1.2 ⟹ <b>r = 20%</b></div><div>Doubling: ln2/ln1.2 = 0.6931/0.1823 = <b>3.80 years</b></div></div></div>
+<div class="box eg"><b class="t">P3. Half-year rate if the yearly rate is 12%? Why is it not 6%?</b><div class='math'><div>(1+r₀.₅)² = 1.12 ⟹ r₀.₅ = √1.12 − 1 = <b>5.830%</b></div><div>6% twice gives 1.06² − 1 = 12.36% &gt; 12%, so 6% is too high.</div></div></div>
+<div class="box eg"><b class="t">P4. NPV: pay 5,000 today; receive 1,500, 2,000, 2,500, 1,000 in years 1–4; r = 8%. Accept?</b><div class='math'><div>Discount factors: 0.9259, 0.8573, 0.7938, 0.7350</div><div>PVs: 1,388.89, 1,714.68, 1,984.58, 735.03; total 5,823.18</div><div>NPV = 823.18 &gt; 0 → <b>accept</b></div></div></div>
+<div class="box eg"><b class="t">P5. A prize pays 12,000 a year for 15 years (first payment in a year). r = 7%. Value today?</b><div class='math'><div>PV = (12,000/0.07)[1 − 1.07⁻¹⁵] = 171,428.57 × (1 − 0.36245) = <b>109,294.97</b></div></div>Advertised total 180,000; true value is about 61% of that.</div>
+<div class="box eg"><b class="t">P6. A stock pays 6 next year, and dividends grow 4% a year forever. r = 9%. Price?</b><div class='math'><div>PV = C₁/(r − g) = 6/(0.09 − 0.04) = <b>120</b></div><div>Check conditions: g (4%) &lt; r (9%) ✓; first payment at t = 1 ✓</div></div></div>
+<div class="box eg"><b class="t">P7. Bond: face 1,000, annual coupon 8% (80 a year), 3 years, market rate 10%. Price?</b><div class='math'><div>Coupons: 80/0.1 × (1 − 1.1⁻³) = 800 × 0.24869 = 198.95</div><div>Principal: 1000/1.331 = 751.31</div><div>Price = <b>950.26</b> → below 1,000 → <b>discount</b> (coupon 8% &lt; market 10%)</div></div></div>
+<div class="box eg"><b class="t">P8. An asset will certainly be worth 220 next year. r = 10%. It trades at 210. Show the arbitrage.</b><div class='math'><div>Fair price = 220/1.1 = 200. Market price 210 &gt; 200 (overpriced).</div><div>Today: short sell at 210, deposit 210. Tomorrow: 210 × 1.1 = 231; buy back at 220.</div><div>Profit = 231 − 220 = <b>11</b>, with no money invested and no risk.</div></div>Selling pressure pushes the price down to 200.</div>
+<div class="box eg"><b class="t">P9. Nominal rate 12%, inflation 7%. Real rate (exact and approximate)?</b><div class='math'><div>Exact: 1.12/1.07 − 1 = <b>4.67%</b>; approximate: 12 − 7 = 5%</div></div></div>
+<div class="box eg"><b class="t">P10. m₁ = 200, m₂ = 121, r = 10%, p = 1. (a) Max c₁? (b) Max c₂? (c) If c₁ = 250, what is c₂?</b><div class='math'><div>(a) 200 + 121/1.1 = <b>310</b> &nbsp;(b) 200 × 1.1 + 121 = <b>341</b></div><div>(c) c₂ = 121 + 1.1(200 − 250) = 121 − 55 = <b>66</b>; check: 250 + 66/1.1 = 310 ✓</div></div></div>
+<div class="box eg"><b class="t">P11. Forest V(t) = −500 + 400t − 4t², r = 10%. Cutting time?</b><div class='math'><div>V′/V = 0.1 ⟹ t² − 120t + 1125 = 0 ⟹ t = (120 − √9900)/2 = <b>10.25 years</b> (the other root 109.7 is rejected)</div></div>The naive peak at t = 50 is wrong.</div>
+<div class="box eg"><b class="t">P12. 100 a year forever starting at t = 4. r = 10%. PV today?</b><div class='math'><div>At t = 3 the stream is a standard perpetuity: 100/0.1 = 1,000. Discount 3 years: 1,000/1.331 = <b>751.32</b></div></div></div>
+<div class="key"><b>How to attack any finance numerical:</b> (1) draw the timeline; (2) check units, i.e. is r per year while payments are monthly? (3) pick the tool: single flow (PV/FV), several flows (NPV), constant stream (annuity/perpetuity); (4) compute; (5) sanity check: does the sign and size make sense?</div>
+</section>
+
+<section id="s10"><h2>11. Revision Sheet</h2>
+<h3>Formula table</h3>
+<table><tr><th>Concept</th><th>Formula</th></tr>
+<tr><td>Rate of return</td><td>r = (C₁ + D₁ − C₀)/C₀ = capital-gain yield + dividend yield</td></tr>
+<tr><td>Future value</td><td>C_t = C₀(1+r)^t; &nbsp;1 + r_t = (1+r)^t</td></tr>
+<tr><td>Equivalent yearly rate</td><td>r = (1 + r_t)^(1/t) − 1</td></tr>
+<tr><td>Doubling time</td><td>x = ln 2 / ln(1+r)</td></tr>
+<tr><td>Half-period rate</td><td>r₀.₅ = √(1+r₁) − 1</td></tr>
+<tr><td>Present value</td><td>PV = C_t/(1+r)^t</td></tr>
+<tr><td>NPV</td><td>C₀ + Σ C_t/(1+r)^t</td></tr>
+<tr><td>Intertemporal budget</td><td>c₁ + c₂/(1+r) = m₁ + m₂/(1+r); with prices p₁c₁ + p₂c₂/(1+r) = …</td></tr>
+<tr><td>Real rate</td><td>1+ρ = (1+r)/(1+π); ρ ≈ r − π</td></tr>
+<tr><td>No arbitrage</td><td>p₀ = p₁/(1+r)</td></tr>
+<tr><td>Continuous compounding</td><td>FV = C₀e^(rt); PV = Ce^(−rt)</td></tr>
+<tr><td>Forest cutting</td><td>V′(t)/V(t) = r</td></tr>
+<tr><td>Perpetuity / growing</td><td>C/r &nbsp;|&nbsp; C₁/(r − g), g &lt; r</td></tr>
+<tr><td>Annuity</td><td>(C/r)[1 − (1+r)^−T]</td></tr>
+<tr><td>Level coupon bond</td><td>annuity of coupons + F/(1+r)^T</td></tr></table>
+<h3>Glossary</h3>
+<table><tr><th>Term</th><th>Plain meaning</th></tr><tr><td>Opportunity cost of capital</td><td>What your money would earn in its next-best use</td></tr><tr><td>Compounding</td><td>Earning interest on past interest</td></tr><tr><td>Discount factor</td><td>The number you multiply by to bring future money to today</td></tr><tr><td>Arbitrage</td><td>Risk-free profit from a price mismatch</td></tr><tr><td>Short sell</td><td>Sell something you borrowed, buy it back later</td></tr><tr><td>Real vs nominal rate</td><td>Nominal = in rupees; real = in purchasing power (after inflation)</td></tr><tr><td>Maturity / principal / coupon</td><td>Final date / amount repaid at the end / regular interest payments</td></tr></table>
+<h3>Common mistakes</h3>
+<ul><li>Adding cash flows from different dates without discounting.</li><li>Halving a rate for half a year (use the square root). Dividing 50% by 2 for a yearly rate.</li><li>Forgetting that the annuity and perpetuity formulas give the value <b>one period before the first payment</b>.</li><li>Using the bond's coupon rate as the discount rate.</li><li>Thinking a fast-growing firm is automatically a good investment (price already includes growth).</li><li>Choosing the forest's cutting time at the peak of V(t).</li></ul>
+<h3>Likely exam questions and the outline to write</h3>
+<ul><li><b>Prove bond price falls when rates rise.</b> P = C/(1+r), dP/dr = −C/(1+r)² &lt; 0, plus the 952.38 → 943.40 example.</li><li><b>Derive the perpetuity / growing perpetuity / annuity formulas.</b> Geometric series, ratio q, condition |q| &lt; 1 (g &lt; r), then the "difference of two perpetuities" trick.</li><li><b>Derive the intertemporal budget line and explain its slope.</b> s₁ = m₁ − c₁, c₂ = m₂ + (1+r)s₁, divide by (1+r), PV of consumption = PV of income; then the three special points.</li><li><b>Real interest rate.</b> p₂ = (1+π)p₁ → slope −(1+r)/(1+π) → ρ ≈ r − π.</li><li><b>Explain arbitrage and show the price must be p₁/(1+r).</b> Sell/short, bank, buy back, profit p₀(1+r) − p₁, price adjusts.</li><li><b>Forest problem.</b> State the rule, prove with e^(−rt), solve the quadratic, compare 24,000 with 362,074.</li><li><b>NPV numerical.</b> Draw the timeline, discount each flow, sum, apply the rule; for G vs S, show both return 10%.</li><li><b>Bond price.</b> Half-year rate √1.05 − 1, annuity for coupons, discounted principal, classify as discount/par/premium.</li></ul>
+<p>Send me your questions when exam time comes and I'll walk through each one step by step.</p>
+</section>
+</main></body></html>
