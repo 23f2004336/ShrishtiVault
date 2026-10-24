@@ -1,0 +1,1487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Foundations of Finance - Week 1 Notes</title>
+<style>
+:root{
+  --bg:#f6f4ee; --card:#ffffff; --ink:#1f2430; --muted:#5d6475; --line:#e3dfd2;
+  --blue:#2457c5; --blue-bg:#e8effc;
+  --red:#c23b3b; --red-bg:#fdeaea;
+  --purple:#6b3fc4; --purple-bg:#f0eafc;
+  --teal:#0e8a7d; --teal-bg:#e0f5f2;
+  --amber:#b8740a; --amber-bg:#fff3d9;
+  --green:#2e8540; --green-bg:#e6f4e8;
+  --code:#f1eee5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#14161c; --card:#1d2029; --ink:#e8e9ee; --muted:#a0a6b6; --line:#323644;
+    --blue:#7ea4ff; --blue-bg:#1b2742;
+    --red:#ff8a8a; --red-bg:#3a1f22;
+    --purple:#b79bff; --purple-bg:#2a2144;
+    --teal:#52d3c3; --teal-bg:#12302d;
+    --amber:#f0b45a; --amber-bg:#3a2d12;
+    --green:#7fd18f; --green-bg:#17301c;
+    --code:#262a35;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.layout{display:flex;max-width:1280px;margin:0 auto}
+nav.toc{position:sticky;top:0;align-self:flex-start;height:100vh;overflow:auto;width:270px;flex:0 0 270px;padding:20px 14px;border-right:1px solid var(--line);font-size:14px}
+nav.toc h2{font-size:15px;margin:0 0 10px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+nav.toc a{display:block;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;line-height:1.35}
+nav.toc a:hover{background:var(--line)}
+nav.toc a.p{font-weight:700;margin-top:10px}
+nav.toc a.s{padding-left:20px;color:var(--muted)}
+main{flex:1;min-width:0;padding:24px 32px 80px}
+@media (max-width:900px){
+  nav.toc{display:none}
+  main{padding:16px 16px 60px}
+}
+header.hero{background:linear-gradient(135deg,#2457c5,#6b3fc4 60%,#c23b3b);color:#fff;border-radius:18px;padding:34px 30px;margin-bottom:24px}
+header.hero h1{margin:0 0 6px;font-size:32px;line-height:1.2}
+header.hero p{margin:4px 0;opacity:.95}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:4px 12px;border-radius:99px;font-size:13px}
+section.part{margin:46px 0 0}
+.partbar{display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:14px;color:#fff;margin-bottom:18px}
+.partbar .tag{background:rgba(255,255,255,.22);padding:2px 10px;border-radius:8px;font-size:13px;font-weight:700}
+.partbar h2{margin:0;font-size:24px;line-height:1.25}
+.p0 .partbar{background:#4b5563}.p1 .partbar{background:var(--blue)}.p2 .partbar{background:var(--red)}
+.p3 .partbar{background:var(--purple)}.p4 .partbar{background:var(--teal)}.p5 .partbar{background:var(--amber)}.p6 .partbar{background:#374151}
+@media (prefers-color-scheme: dark){.partbar{color:#10131a}.partbar .tag{background:rgba(0,0,0,.18)}}
+h3{font-size:21px;margin:34px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--line)}
+h4{font-size:17px;margin:22px 0 6px}
+p{margin:8px 0}
+ul,ol{margin:8px 0;padding-left:24px}
+li{margin:4px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.box{border-radius:12px;padding:12px 16px;margin:14px 0;border-left:6px solid}
+.box b.t{display:block;font-size:13px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px}
+.def{background:var(--blue-bg);border-color:var(--blue)}.def b.t{color:var(--blue)}
+.key{background:var(--amber-bg);border-color:var(--amber)}.key b.t{color:var(--amber)}
+.ex{background:var(--green-bg);border-color:var(--green)}.ex b.t{color:var(--green)}
+.warn{background:var(--red-bg);border-color:var(--red)}.warn b.t{color:var(--red)}
+.trick{background:var(--purple-bg);border-color:var(--purple)}.trick b.t{color:var(--purple)}
+.extra{background:var(--code);border-color:var(--muted)}.extra b.t{color:var(--muted)}
+code,.m{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--code);padding:1px 6px;border-radius:5px;font-size:.92em}
+.math{background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:10px 14px;margin:10px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:15px;overflow-x:auto;line-height:1.9}
+table{border-collapse:collapse;width:100%;margin:12px 0;font-size:14.5px;background:var(--card)}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--code)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+.tw{overflow-x:auto}
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px;margin:14px 0}
+.flow.col{flex-direction:column;align-items:center}
+.node{background:var(--card);border:2px solid var(--blue);border-radius:12px;padding:8px 12px;font-size:14px;text-align:center;min-width:120px;flex:0 1 auto}
+.node small{display:block;color:var(--muted);font-size:12px}
+.node.r{border-color:var(--red)}.node.g{border-color:var(--green)}.node.p{border-color:var(--purple)}.node.t{border-color:var(--teal)}.node.a{border-color:var(--amber)}
+.node.fill-r{background:var(--red-bg)}.node.fill-g{background:var(--green-bg)}.node.fill-b{background:var(--blue-bg)}.node.fill-a{background:var(--amber-bg)}.node.fill-p{background:var(--purple-bg)}.node.fill-t{background:var(--teal-bg)}
+.arr{align-self:center;font-size:22px;color:var(--muted);line-height:1}
+.flow.col .arr{transform:rotate(90deg)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--blue);border-radius:12px;padding:10px 14px}
+.mini.r{border-top-color:var(--red)}.mini.g{border-top-color:var(--green)}.mini.p{border-top-color:var(--purple)}.mini.t{border-top-color:var(--teal)}.mini.a{border-top-color:var(--amber)}
+.mini h5{margin:0 0 4px;font-size:15px}
+svg{max-width:100%;height:auto}
+.fig svg{display:block;margin:0 auto;max-width:700px}
+svg text{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;fill:var(--ink)}
+svg .mut{fill:var(--muted)}
+.fig{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin:14px 0}
+.fig figcaption,.cap{font-size:13px;color:var(--muted);margin-top:6px}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:10px 0}
+details>summary{cursor:pointer;font-weight:600}
+details[open]>summary{margin-bottom:8px}
+.q{border-left:5px solid var(--amber);padding-left:12px;margin:18px 0 6px;font-weight:600}
+.tools{display:grid;gap:10px}
+.tools label{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14.5px}
+.tools input[type=range]{flex:1;min-width:160px}
+.out{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{height:18px;border-radius:9px;background:var(--line);overflow:hidden;margin:3px 0 8px}
+.bar>i{display:block;height:100%;border-radius:9px;transition:width .15s}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;margin:6px 0}
+.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.src{font-size:12.5px;color:var(--muted)}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:700;color:#fff}
+.pill.s{background:var(--blue)}.pill.x{background:var(--muted)}
+@media print{nav.toc{display:none}body{background:#fff}.card,.box{break-inside:avoid}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7a8194"/></marker>
+  </defs>
+</svg>
+<div class="layout">
+<nav class="toc">
+  <h2>Week 1 Index</h2>
+  <a class="p" href="#p0">0. Basics (finance ki ABC)</a>
+  <a class="s" href="#tvm">Time value of money</a>
+  <a class="s" href="#risk-basic">Return, risk, diversification</a>
+  <a class="s" href="#lev-basic">Liquidity aur leverage</a>
+  <a class="p" href="#p1">1. Assets, markets, bubbles (1A)</a>
+  <a class="s" href="#bonds">Bonds</a>
+  <a class="s" href="#stocks">Stocks</a>
+  <a class="s" href="#risk">Systematic vs idiosyncratic risk</a>
+  <a class="s" href="#trading">Trading strategies</a>
+  <a class="s" href="#markets">Financial markets, order book</a>
+  <a class="s" href="#bubbles">Asset bubbles</a>
+  <a class="p" href="#p2">2. 2008 crisis (1B)</a>
+  <a class="s" href="#housing">Housing aur subprime</a>
+  <a class="s" href="#intermediaries">Banks, SIVs, wholesale funding</a>
+  <a class="s" href="#policy">Policy response</a>
+  <a class="p" href="#p3">3. Structured finance (1C)</a>
+  <a class="s" href="#rise-fall">Rise and fall</a>
+  <a class="s" href="#raters">Rating agencies</a>
+  <a class="s" href="#manufacture">AAA kaise banta hai</a>
+  <a class="s" href="#twobond">Two-bond example</a>
+  <a class="s" href="#threebond">Three-bond, CDO-squared</a>
+  <a class="s" href="#corr">Correlation ka role</a>
+  <a class="p" href="#p4">4. Rating ki challenge (1D)</a>
+  <a class="s" href="#ratingtable">Default tables</a>
+  <a class="s" href="#sim">Simulation</a>
+  <a class="s" href="#sens">Sensitivity</a>
+  <a class="p" href="#p5">5. Practice problems</a>
+  <a class="p" href="#p6">6. Revision + glossary</a>
+</nav>
+<main>
+<header class="hero">
+  <h1>Foundations of Finance: Week 1</h1>
+  <p>Introduction to Finance. Basic se advanced tak, Hinglish mein, bina time waste kiye.</p>
+  <div class="chips"><span class="chip">FF_1A: Assets, markets, bubbles</span><span class="chip">FF_1B: 2008 crisis</span><span class="chip">FF_1C: Structured finance</span><span class="chip">FF_1D: Rating ki challenge</span></div>
+</header>
+
+<div class="card">
+  <b>Ye notes kaise padhne hain</b>
+  <ul>
+    <li>Pehle <b>Part 0</b> padho. Isme wo sab hai jo finance mein pehle se maan liya jata hai (interest, risk, leverage). Agar ye clear hai to baaki aasaan hai.</li>
+    <li>Har part slides ke order mein hai: 1A, 1B, 1C, 1D.</li>
+    <li>Rang ka matlab: <span class="pill s" style="background:var(--blue)">definition</span> <span class="pill s" style="background:var(--amber)">important</span> <span class="pill s" style="background:var(--green)">example</span> <span class="pill s" style="background:var(--red)">galti se bacho</span> <span class="pill s" style="background:var(--purple)">yaad rakhne ki trick</span> <span class="pill x">extra (slides mein nahi, bas samajhne ke liye)</span></li>
+    <li>Jahan sliders hain, unhe hila ke dekho. Number badalte dekhoge to concept ghar kar jayega.</li>
+    <li>Part 5 mein solved practice problems hain, answer chhupe hue hain. Pehle khud try karo.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <b>Week 1 ki poori kahani ek flowchart mein</b>
+  <div class="flow">
+    <div class="node fill-b"><b>1A</b><small>Asset ki value kaise tay hoti hai, market kaise chalta hai</small></div><div class="arr">&#10142;</div>
+    <div class="node fill-a"><b>Bubbles</b><small>Kabhi kabhi price value se bahut door chala jata hai</small></div><div class="arr">&#10142;</div>
+    <div class="node fill-r"><b>1B</b><small>2008 mein housing bubble phati, banking system hil gaya</small></div><div class="arr">&#10142;</div>
+    <div class="node fill-p"><b>1C</b><small>Structured finance: risky cheez ko "safe" bana kar becha gaya</small></div><div class="arr">&#10142;</div>
+    <div class="node fill-t"><b>1D</b><small>Rating galat kyun hui: chhoti galti, bada nuksan</small></div>
+  </div>
+</div>
+<section class="part p0" id="p0">
+<div class="partbar"><span class="tag">PART 0</span><h2>Basics: finance ki ABC</h2></div>
+<p>Slides mein kuch cheezein bina bataye use hui hain (interest rate, return, risk, leverage). Pehle inhe clear kar lete hain. Ye ek ghante ka kaam nahi hai, 10 minute ka hai.</p>
+
+<h3>0.1 Finance kya hai?</h3>
+<div class="box def"><b class="t">Simple definition</b>Finance ka matlab hai: <b>paisa aaj aur paisa kal</b> ke beech ka khel, jisme <b>risk</b> bhi hai. Koi aaj paisa lagata hai, kal usse zyada milne ki umeed mein. Ye umeed pakki nahi hoti. Bas itna hi hai.</div>
+<p>Isliye finance ke do sawaal hamesha aate hain:</p>
+<div class="grid2">
+  <div class="mini"><h5>Sawaal 1: Kitna milega?</h5>Future mein kitna paisa aane ki umeed hai (cash flow).</div>
+  <div class="mini r"><h5>Sawaal 2: Kitna pakka hai?</h5>Wo paisa sach mein aayega ya nahi (uncertainty / risk).</div>
+</div>
+<p>Slide 1A ki pehli hi baat yahi hai: asset ki value in dono cheezon se tay hoti hai.</p>
+
+<h3 id="tvm">0.2 Time value of money: aaj ka Rs 100 kal ke Rs 100 se zyada kyun hai</h3>
+<p>Maan lo tumhare paas aaj Rs 100 hain. Tum bank mein 5% interest pe rakh do to ek saal baad Rs 105 milenge. Matlab Rs 100 aaj = Rs 105 ek saal baad.</p>
+<div class="math">Ek saal baad ki raqam = aaj ki raqam x (1 + i)<br>
+Aaj ki raqam = ek saal baad ki raqam / (1 + i)</div>
+<p>Yahan <code>i</code> = interest rate (ek saal ka). Doosri line hi sabse zyada kaam aayegi. Isse pata chalta hai ki <b>future ka paisa aaj kitne ka hai</b>.</p>
+<div class="box ex"><b class="t">Example</b>Koi bole "ek saal baad Rs 10,000 dunga". Agar interest rate 5% hai to ye Rs 10,000 / 1.05 = <b>Rs 9,523.81</b> ke barabar hai aaj. Agar interest rate 12% hai to Rs 10,000 / 1.12 = <b>Rs 8,928.57</b>. Interest rate jitna zyada, future ka paisa aaj utna kam kaam ka.</div>
+<div class="key box"><b class="t">Ye baat yaad rakho</b>Interest rate upar jata hai to future ke paise ki aaj ki value neeche aati hai. Isi se aage chal ke "bond ka price aur interest rate ulte chalte hain" wala result nikalega.</div>
+
+<h3>0.3 Asset, security, cash flow</h3>
+<ul>
+  <li><b>Asset</b>: koi bhi cheez jo value rakhti hai aur future mein fayda de sakti hai. Ghar, painting, sona, share, bond.</li>
+  <li><b>Real asset</b>: dikhne wala. Ghar, painting.</li>
+  <li><b>Financial asset / security</b>: ek kaagaz (ya electronic record) jo batata hai ki tumhe future mein paisa milega. Share aur bond isi category ke hain.</li>
+  <li><b>Cash flow</b>: asset se aane wala paisa (rent, dividend, interest, ya bechne ka paisa).</li>
+</ul>
+
+<h3 id="risk-basic">0.4 Return, risk aur diversification</h3>
+<div class="math">Return = (jo mila - jo lagaya) / jo lagaya</div>
+<p>Example: Rs 9,000 lagaye, saal baad Rs 10,000 mile. Return = 1,000 / 9,000 = 11.1%. Slide 1A ke bond example mein exactly yahi hai.</p>
+<div class="box def"><b class="t">Risk</b>Risk ka matlab hai ki result pakka nahi hai. Kabhi zyada mil sakta hai, kabhi kam, kabhi kuch nahi. Zyada risk wali cheez ke liye log <b>zyada return maangte hain</b>, warna koi lega hi nahi.</div>
+<p><b>Diversification</b> = saare ande ek tokri mein mat rakho. Agar tumne 10 alag companies ke share liye hain aur ek company ki factory jal gayi, to sirf 10% nuksan. Ye wala risk diversify ho jata hai. Lekin agar poori economy hi mandi mein chali gayi, to saari tokriyan ek saath girengi. Is wale risk ko diversify nahi kar sakte. Ye hi slide mein <b>idiosyncratic</b> aur <b>systematic</b> risk ka fark hai (Part 1 mein aayega).</p>
+
+<h3 id="lev-basic">0.5 Liquidity aur leverage</h3>
+<div class="grid2">
+  <div class="mini t"><h5>Liquidity</h5>Kisi asset ko kitni jaldi aur bina nuksan ke cash mein badal sakte ho. Bank deposit liquid hai. Ghar illiquid hai, bechne mein mahine lagte hain. Jaldi bechna pade to sasta bechna padta hai (<b>fire sale</b>).</div>
+  <div class="mini a"><h5>Leverage</h5>Udhaar lekar invest karna. Jitna zyada udhaar apni poonji ke muqable, utna zyada leverage. Isse fayda bhi bada hota hai aur nuksan bhi.</div>
+</div>
+<div class="box ex"><b class="t">Leverage ka worked example (extra, samajhne ke liye)</b>
+Tumhare paas apne Rs 100 hain. Tum Rs 900 udhaar lekar Rs 1,000 ka asset khareedte ho.
+<table><tr><th>Asset ka price</th><th>Asset ki value</th><th>Udhaar chukane ke baad tumhare paas</th><th>Tumhara return</th></tr>
+<tr><td>+10%</td><td>Rs 1,100</td><td>Rs 200</td><td>+100%</td></tr>
+<tr><td>-5%</td><td>Rs 950</td><td>Rs 50</td><td>-50%</td></tr>
+<tr><td>-10%</td><td>Rs 900</td><td>Rs 0</td><td>-100% (sab gaya)</td></tr></table>
+Sirf 10% ki giravat se poori poonji khatam. Banks aise hi leverage pe chalte hain, aur 2008 mein yahi hua (Part 2).</div>
+
+<h3>0.6 Part 0 ka ek line mein summary</h3>
+<div class="flow">
+  <div class="node fill-b">Future ka paisa<small>kitna aur kab</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-a">Interest rate se discount<small>aaj ki value</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Risk ka adjustment<small>zyada risk, zyada return chahiye</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-g">Asset ka price</div>
+</div>
+</section>
+<section class="part p1" id="p1">
+<div class="partbar"><span class="tag">PART 1 / FF_1A</span><h2>Assets, markets aur bubbles</h2></div>
+
+<h3>1.1 Assets ka market, goods ke market se alag kyun hai</h3>
+<p>Slide ka sawaal: ek ghar, ek painting ya ek company ka share, in sab ki <b>value</b> kaise tay hoti hai?</p>
+<p>Jab tum aloo khareedte ho, tum use khaoge. Bas. Lekin jab tum ghar khareedte ho, to do wajah hoti hain:</p>
+<div class="flow">
+  <div class="node fill-b"><b>Wajah 1</b><small>Khud us se fayda lena (ghar mein rehna, rent lena, dividend lena)</small></div>
+  <div class="node fill-a"><b>Wajah 2</b><small>Baad mein bech sakna (resale)</small></div>
+</div>
+<div class="box key"><b class="t">Isse kya farak padta hai?</b>Asset ka price sirf us se milne wale fayde pe nahi tikta. Is pe bhi tikta hai ki <b>doosre log kal kitne mein khareedenge</b>. Yahi baat aage chal ke bubbles ki jad banti hai.</div>
+
+<h3>1.2 Financial asset (security) ki value kya tay karta hai</h3>
+<p>Future mein kya hoga, kisi ko nahi pata. To value kaise nikalein? Slide kehti hai ki security ki value do cheezon pe depend karti hai:</p>
+<div class="grid2">
+  <div class="mini"><h5>1. Cash flow ka size</h5>Asset se kitna paisa aane ki umeed hai. Zyada umeed, zyada value.</div>
+  <div class="mini r"><h5>2. Forecast ki uncertainty</h5>Is umeed pe kitna bharosa hai. Zyada uncertainty, kam value.</div>
+</div>
+<div class="flow col">
+  <div class="node fill-b">Expected cash flows (kitna aayega)</div>
+  <div class="arr">&#10142;</div>
+  <div class="node fill-r">Uncertainty se adjust (kitna pakka hai)</div>
+  <div class="arr">&#10142;</div>
+  <div class="node fill-g">Security ki value / price</div>
+</div>
+<p>Ab dekhte hain do sabse common securities: bonds aur stocks.</p>
+
+<h3 id="bonds">1.3 Bonds</h3>
+<div class="box def"><b class="t">Bond</b>Ek security jo <b>fixed amount</b> ek tay time pe dene ka vaada karti hai. Matlab tum company ya government ko udhaar dete ho, aur wo vaada karte hain ki itne paise itne time pe wapas denge.</div>
+
+<h4>Bond ka price aur interest rate (slide ka main derivation)</h4>
+<p>Maan lo ek bond hai jo <b>ek saal baad Rs 10,000</b> dega. Aaj uska price <code>P</code> hai. Agar tum aaj <code>P</code> dekar kharidte ho aur ek saal rakhte ho, to:</p>
+<div class="math">Return = (10,000 - P) / P<br>
+Isi ko bond ka interest rate i kehte hain:<br>
+<b>i = (10,000 - P) / P</b></div>
+<div class="box ex"><b class="t">Slide ka example</b>Agar P = 9,000 to i = 1,000 / 9,000 = 0.111 = <b>11.1% per year</b>.</div>
+<p>Ab isse P nikalte hain (algebra step by step):</p>
+<div class="math">i = (10,000 - P) / P<br>
+i x P = 10,000 - P<br>
+i x P + P = 10,000<br>
+P (1 + i) = 10,000<br>
+<b>P = 10,000 / (1 + i)</b></div>
+<p>Ye wahi formula hai jo Part 0 mein tha. Matlab bond ka price = us future payment ki aaj ki value.</p>
+
+<div class="tw"><table>
+<tr><th>Price P (Rs)</th><th class="n">Interest rate i = (10,000 - P)/P</th><th>Matlab</th></tr>
+<tr><td>9,500</td><td class="n">5.26%</td><td>Price zyada, rate kam</td></tr>
+<tr><td>9,000</td><td class="n">11.11%</td><td>Slide ka example</td></tr>
+<tr><td>8,500</td><td class="n">17.65%</td><td>Price kam, rate zyada</td></tr>
+<tr><td>8,000</td><td class="n">25.00%</td><td>Aur zyada</td></tr>
+</table></div>
+
+<figure class="fig">
+<svg viewBox="0 0 540 290" role="img" aria-label="Bond price vs interest rate curve">
+  <line x1="60" y1="250" x2="500" y2="250" stroke="#7a8194"/><line x1="60" y1="30" x2="60" y2="250" stroke="#7a8194"/>
+  <polyline fill="none" stroke="#2457c5" stroke-width="3" points="60,50 102,69.5 144,88.1 186,105.8 228,122.7 270,138.9 312,154.3 354,169.1 396,183.4 438,197 480,210"/>
+  <circle cx="246.7" cy="130" r="6" fill="#c23b3b"/>
+  <line x1="246.7" y1="130" x2="246.7" y2="250" stroke="#c23b3b" stroke-dasharray="4 3"/><line x1="60" y1="130" x2="246.7" y2="130" stroke="#c23b3b" stroke-dasharray="4 3"/>
+  <text x="256" y="124" font-size="13" fill="#c23b3b" style="fill:#c23b3b">P = 9,000, i = 11.1%</text>
+  <text x="60" y="270" font-size="12" class="mut">0%</text><text x="144" y="270" font-size="12" class="mut">5%</text><text x="228" y="270" font-size="12" class="mut">10%</text><text x="312" y="270" font-size="12" class="mut">15%</text><text x="396" y="270" font-size="12" class="mut">20%</text><text x="470" y="270" font-size="12" class="mut">25%</text>
+  <text x="250" y="286" font-size="13" text-anchor="middle">Interest rate i</text>
+  <text x="54" y="54" font-size="12" text-anchor="end" class="mut">10,000</text><text x="54" y="134" font-size="12" text-anchor="end" class="mut">9,000</text><text x="54" y="214" font-size="12" text-anchor="end" class="mut">8,000</text>
+  <text x="14" y="16" font-size="13">Bond price P (Rs)</text>
+</svg>
+<figcaption>Curve neeche ki taraf jaata hai: interest rate badhta hai to price girta hai. Ye ulta (inverse) rishta hai.</figcaption>
+</figure>
+
+<div class="card">
+<b>Khud try karo: bond calculator</b>
+<div class="tools">
+  <label>Bond ka price P = Rs <span class="out" id="bP">9000</span> <input type="range" id="bPr" min="7500" max="9990" step="10" value="9000"></label>
+  <div>Interest rate i = <span class="out" id="bI">11.11%</span> &nbsp; (bond ka vaada: Rs 10,000 ek saal baad)</div>
+  <label>Ya market rate i dalo = <span class="out" id="bI2">12</span>% <input type="range" id="bIr" min="1" max="30" step="0.5" value="12"></label>
+  <div>Tab bond ka sahi price P = <span class="out" id="bP2">8,928.57</span></div>
+</div>
+</div>
+
+<h4>Interest rate badhe to bond ka price kyun girta hai (intuition)</h4>
+<div class="box key"><b class="t">Slide ka logic</b>Investor tabhi bond khareedega aur rakhega jab uska return <b>baaki similar assets ke return se compare karne layak</b> ho. Agar economy mein baaki rates badh gaye, to bond ka rate bhi badhna padega. Bond ka payment to fixed hai (Rs 10,000), to rate badhne ka ek hi tareeka hai: <b>price girna</b>.</div>
+<div class="box ex"><b class="t">Example</b>Tumne Rs 9,000 mein bond liya (11.1%). Ab market mein naye bonds 12.5% de rahe hain. Koi tumhara bond 9,000 mein kyun lega, jab naya wala zyada de raha hai? To tumhare bond ka price girna padega jab tak uska rate bhi 12.5% na ho jaye. P = 10,000 / 1.125 = Rs 8,889.</div>
+
+<h4>Government bond vs corporate bond: default risk</h4>
+<ul>
+  <li><b>Government bond</b>: default ka risk usually negligible (sarkar ke paas paise chhapne aur tax lene ki power hai).</li>
+  <li><b>Corporate bond</b>: company doob sakti hai, to default ka risk hota hai.</li>
+</ul>
+<div class="flow">
+  <div class="node fill-r">Default ka risk zyada</div><div class="arr">&#10142;</div>
+  <div class="node fill-a">Investor zyada interest rate maangta hai</div><div class="arr">&#10142;</div>
+  <div class="node fill-b">Bond ka price kam</div>
+</div>
+<div class="box ex"><b class="t">Example (do bond, same vaada)</b>Dono bond Rs 10,000 dene ka vaada karte hain ek saal baad.<br>
+Government bond: price Rs 9,500, vaada kiya hua rate = 5.26%.<br>
+Risky company ka bond: price Rs 9,000, vaada kiya hua rate = 11.11%.<br>
+Same payment, lekin risky wale ka price kam. Yahi slide ka point hai: <b>same stream of payments ho to riskier bond ka price kam hoga</b>.</div>
+<div class="box warn"><b class="t">Galti se bacho</b>Risky bond ka <i>promised</i> rate zyada hota hai. Agar wo default nahi karta to investor ko zyada kamayi hoti hai. Lekin default kar gaya to paise doob bhi sakte hain. Slide ke shabdon mein: investor ko higher rate milega agar bond default nahi karta, lekin is risk ke saath ki <b>promised payments poori nahi aayengi</b>.</div>
+
+<h3 id="stocks">1.4 Stocks (shares)</h3>
+<div class="box def"><b class="t">Stock</b>Company ke <b>assets aur profit ke ek hisse pe claim</b>. Share kharidna matlab company ka thoda sa malik banna.</div>
+<ul>
+  <li>Company ka profit shareholders ka hota hai, jitne share utna hissa.</li>
+  <li>Profit do jagah jaata hai: <b>dividend</b> (seedha shareholders ko) aur <b>retained earnings</b> (company ke andar rakh ke business badhane ke liye).</li>
+  <li>Stock mein <b>koi fixed vaada nahi hota</b>, na amount ka, na time ka. Bond mein dono fixed hote hain.</li>
+  <li>Jis company se zyada net earnings ki umeed hai, uski valuation zyada, matlab share price zyada.</li>
+</ul>
+<div class="tw"><table>
+<tr><th></th><th>Bond</th><th>Stock</th></tr>
+<tr><td>Kya hai</td><td>Udhaar dena</td><td>Company ka hissa lena</td></tr>
+<tr><td>Payment</td><td>Fixed amount, fixed time</td><td>Koi vaada nahi (dividend + growth)</td></tr>
+<tr><td>Price kya tay karta hai</td><td>Interest rate aur default risk</td><td>Expected earnings aur risk</td></tr>
+<tr><td>Risk</td><td>Kam (government mein negligible)</td><td>Zyada</td></tr>
+</table></div>
+
+<h3 id="risk">1.5 Risk: systematic vs idiosyncratic</h3>
+<p>Bond aur stock dono ki value <b>earnings ki uncertainty</b> pe depend karti hai. Slide risk ko do type mein todti hai:</p>
+<div class="grid2">
+  <div class="mini r"><h5>Systematic risk</h5>Wo events jo <b>bahut saari financial assets ko ek saath</b> hit karte hain. <b>Diversify nahi ho sakta (undiversifiable)</b>.<br><i>Examples</i>: trade policy mein badlav, interest rate mein badlav, poori economy mein demand ka girna.</div>
+  <div class="mini g"><h5>Idiosyncratic risk</h5>Wo events jo <b>sirf ek firm ya ek asset</b> ko hit karte hain. <b>Diversify ho jata hai</b>, isliye valuation mein irrelevant.<br><i>Examples</i>: company ka naya product successful hona, ya company ka koi lawsuit haar jana.</div>
+</div>
+<figure class="fig">
+<svg viewBox="0 0 560 220" role="img" aria-label="Diversification diagram">
+  <text x="140" y="22" font-size="14" text-anchor="middle" font-weight="700">Ek company: poora risk</text>
+  <rect x="60" y="40" width="160" height="40" rx="8" fill="#fdeaea" stroke="#c23b3b"/><text x="140" y="65" font-size="13" text-anchor="middle" style="fill:#1f2430">Systematic + Idiosyncratic</text>
+  <text x="420" y="22" font-size="14" text-anchor="middle" font-weight="700">Bahut companies ka portfolio</text>
+  <rect x="340" y="40" width="160" height="40" rx="8" fill="#e6f4e8" stroke="#2e8540"/><text x="420" y="65" font-size="13" text-anchor="middle" style="fill:#1f2430">Sirf Systematic bacha</text>
+  <path d="M230 60 L330 60" stroke="#7a8194" stroke-width="2" marker-end="url(#ah)"/><text x="280" y="52" font-size="11" text-anchor="middle" class="mut">diversify</text>
+  <text x="280" y="115" font-size="13" text-anchor="middle">Idiosyncratic risk gayab (ek ka nuksan, doosre ke fayde se cut)</text>
+  <text x="280" y="140" font-size="13" text-anchor="middle">Systematic risk bacha rehta hai (sab ek saath girte hain)</text>
+  <rect x="40" y="160" width="480" height="44" rx="10" fill="#fff3d9" stroke="#b8740a"/><text x="280" y="187" font-size="13" text-anchor="middle" style="fill:#1f2430">Isliye market sirf systematic risk ka extra return deta hai</text>
+</svg>
+</figure>
+
+<h4>Required rate of return</h4>
+<ul>
+  <li>Jis company mein systematic risk zyada hai, uske share ki earnings zyada hilti-dulti hain, aur ye hilna-dulna diversify nahi hota.</li>
+  <li>Isliye investor aise shares pe <b>zyada average return maangte hain</b>.</li>
+  <li>Wo return jo investor ko share kharidne ke liye convince kare, usse <b>required rate of return</b> ya <b>market capitalization rate</b> kehte hain.</li>
+  <li>Systematic risk zyada, to ye rate zyada.</li>
+  <li>Conclusion (slide ka): <b>same expected earnings ho to jis company ka market capitalization rate kam, uske share ki value zyada</b>.</li>
+</ul>
+<div class="box extra"><b class="t">Extra intuition (slides mein formula nahi hai, bas idea ke liye)</b>
+Maan lo ek company se har saal Rs 100 ki earnings aane ki umeed hai, hamesha ke liye. Ek simple approximation:
+<div class="math">Value = Expected earnings / Required rate of return</div>
+Required rate 10% to value = 100 / 0.10 = <b>Rs 1,000</b>. Required rate 20% (zyada systematic risk) to value = 100 / 0.20 = <b>Rs 500</b>.<br>
+Earnings same hain, sirf risk zyada hai, aur value aadhi. Isi ko slide "lower market capitalization rate, higher value" kehti hai. Ye formula sirf samajhne ke liye hai, exam mein slides ki language use karo.</div>
+
+<h3 id="trading">1.6 Trading strategies</h3>
+<p>Ab tak humne ye dekha ki asset ki <b>fundamental value</b> kaise tay hoti hai. Lekin log sirf fundamental value dekh ke trade nahi karte.</p>
+<div class="grid2">
+  <div class="mini"><h5>Strategy 1: Fundamental value pe</h5>Jo asset apni fundamental value se <b>sasta</b> lag raha hai usse kharido, jo <b>mehenga</b> lag raha hai usse becho. Active mutual funds aur kuch hedge funds ye karte hain. Soch ye hai ki price jaldi hi fundamental value pe wapas aayega.</div>
+  <div class="mini a"><h5>Strategy 2: Momentum</h5>Fundamental value dekhte hi nahi. Bas ye dekhte hain ki price kidhar ja raha hai. Badh raha hai to kharido (aur badhega), gir raha hai to becho (aur girega).</div>
+</div>
+<div class="box ex"><b class="t">Momentum ka example</b>Ek share ki fundamental value Rs 100 hai, lekin price Rs 120 chal raha hai aur roz badh raha hai. Momentum trader Rs 125 mein bhi khareed lega, kyunki use lagta hai ki kal Rs 130 hoga. Wo fundamental value se zyada de raha hai, lekin bech ke profit ban jayega, <b>agar</b> price sach mein badhta raha.</div>
+<div class="box key"><b class="t">Speculation</b>Dono strategies speculation hain. Pehli mein belief ye hai ki price jaldi fundamentals pe wapas aayega. Doosri mein belief ye hai ki short-run trend aage bhi chalega. Ye saari strategies aaj ke markets mein hain, aur wahi prices ka behaviour aur bubbles/crashes ki possibility tay karti hain.</div>
+
+<h3 id="markets">1.7 Financial assets ka market</h3>
+<h4>Primary aur secondary market</h4>
+<div class="flow">
+  <div class="node fill-b"><b>IPO</b><small>Company pehli baar naye shares public ko bechti hai</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-g"><b>Stock exchange pe listing</b><small>Shares ka marketplace (jaise Sensex wala BSE)</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-a"><b>Secondary market</b><small>Ab log aapas mein shares trade karte hain</small></div>
+</div>
+<ul>
+  <li><b>IPO (Initial Public Offering)</b>: company ke naye shares pehli baar public ko bechna. Paisa company ke paas jaata hai.</li>
+  <li><b>Secondary market</b>: IPO ke baad ka trading. Ab paisa company ko nahi, ek investor se doosre investor ko jaata hai.</li>
+  <li><b>Stock exchange</b>: wo financial marketplace jahan shares aur doosre financial assets trade hote hain.</li>
+</ul>
+<p>Slide mein ek graph tha: April 2020 mein ek din mein Reliance Industries Limited (RIL) ka share price Sensex pe kaise ghoomta raha (upar wale panel mein price, neeche mein har point pe kitne shares trade hue). Point ye hai ki <b>secondary market mein price constantly badalta hai</b>.</p>
+
+<h4>Price kaise tay hota hai: reservation price</h4>
+<ul>
+  <li>Har existing shareholder ka ek <b>reservation price</b> hota hai: wo sabse kam price jis par wo bechne ko tayyar hai.</li>
+  <li>Doosre log khareedne aaye hain, agar unhe acceptable price mile.</li>
+  <li>Jaise traders ki RIL ki profitability ke baare mein soch badalti hai, unki khareedne aur bechne ki ichha bhi badalti hai.</li>
+</ul>
+
+<figure class="fig">
+<svg viewBox="0 0 540 300" role="img" aria-label="Supply and demand for RIL shares">
+  <line x1="60" y1="260" x2="500" y2="260" stroke="#7a8194"/><line x1="60" y1="30" x2="60" y2="260" stroke="#7a8194"/>
+  <line x1="130" y1="50" x2="330" y2="250" stroke="#c23b3b" stroke-width="2.5"/><text x="334" y="248" font-size="12" style="fill:#c23b3b">Demand</text>
+  <line x1="205" y1="50" x2="400" y2="245" stroke="#c23b3b" stroke-width="2.5" stroke-dasharray="7 4"/><text x="404" y="243" font-size="12" style="fill:#c23b3b">Nayi demand</text>
+  <line x1="150" y1="230" x2="380" y2="92" stroke="#2457c5" stroke-width="2.5"/><text x="384" y="92" font-size="12" style="fill:#2457c5">Supply</text>
+  <line x1="130" y1="231" x2="360" y2="93" stroke="#2457c5" stroke-width="2.5" stroke-dasharray="7 4"/><text x="268" y="62" font-size="12" style="fill:#2457c5">Nayi supply</text>
+  <circle cx="250" cy="170" r="6" fill="#1f2430" style="fill:var(--ink)"/><text x="232" y="164" font-size="13" font-weight="700">A</text>
+  <circle cx="290" cy="135" r="6" fill="#2e8540"/><text x="296" y="128" font-size="13" font-weight="700" style="fill:#2e8540">B</text>
+  <line x1="250" y1="170" x2="250" y2="260" stroke="#7a8194" stroke-dasharray="4 3"/><line x1="60" y1="170" x2="250" y2="170" stroke="#7a8194" stroke-dasharray="4 3"/>
+  <line x1="290" y1="135" x2="290" y2="260" stroke="#7a8194" stroke-dasharray="4 3"/><line x1="60" y1="135" x2="290" y2="135" stroke="#7a8194" stroke-dasharray="4 3"/>
+  <text x="250" y="277" font-size="12" text-anchor="middle">27</text><text x="290" y="277" font-size="12" text-anchor="middle">30</text>
+  <text x="54" y="174" font-size="12" text-anchor="end">1162</text><text x="54" y="139" font-size="12" text-anchor="end">1167</text>
+  <text x="300" y="294" font-size="13" text-anchor="middle">Shares traded per hour (thousands)</text>
+  <text x="14" y="20" font-size="13">Share price (Rs)</text>
+</svg>
+<figcaption>Slide ka diagram. A se B: demand badhi (right shift) aur supply ghati (left shift, kyunki sellers ka reservation price badh gaya). Price 1162 se 1167, aur quantity 27k se 30k.</figcaption>
+</figure>
+<div class="box key"><b class="t">Is graph se kya samajhna hai</b>Demand curve kitni right gayi aur supply kitni left, ye dono mil ke tay karte hain ki naya price kya hoga. Yahan demand ka shift zyada tha, isliye price badha aur quantity bhi badhi. Agar sirf supply ghatti to price badhta lekin quantity ghatti. Isi tarah ke 2-3 variants exam mein aa sakte hain.</div>
+
+<h3>1.8 Continuous double auction aur order book</h3>
+<p>Asli stock market mein "ek ghante ke time period" jaisa kuch nahi hota. Trade continuously hota hai aur price hamesha badalta rehta hai. Is mechanism ko <b>continuous double auction</b> kehte hain. "Double" isliye ki buyers aur sellers dono bid/offer lagate hain.</p>
+
+<div class="box def"><b class="t">Limit order</b>Koi bhi khareedne ya bechne wala ek <b>price aur quantity ka combination</b> submit kar sakta hai. Ye limit order hai.<br>
+<b>Limit buy order</b>: "Main 1,000 RIL shares Rs 1,162 ya usse kam price pe khareedunga." Ye buyer ka reservation price hai (isse upar nahi dega).<br>
+<b>Limit sell order</b>: "Main itne shares bechunga, par price is amount se kam nahi." Ye seller ka reservation price hai.</div>
+
+<h4>Limit order place karne par kya hota hai</h4>
+<div class="flow">
+  <div class="node"><b>Limit buy order aaya</b></div><div class="arr">&#10142;</div>
+  <div class="node a"><b>Kya koi pehle se pending sell order hai jiska price buyer ke price ke barabar ya kam hai?</b></div>
+  <div class="arr">&#10142;</div>
+  <div class="grid2" style="min-width:300px">
+    <div class="node fill-g"><b>Haan</b><small>Turant trade ho jata hai</small></div>
+    <div class="node fill-b"><b>Nahi</b><small>Order <b>order book</b> mein jata hai aur naye sell orders ka intezaar karta hai</small></div>
+  </div>
+</div>
+<ul>
+  <li><b>Order book</b>: ek electronic record, jisme abhi tak fill na hue orders ki list hoti hai.</li>
+  <li>Khareedne wale orders = <b>bids</b>. Bechne wale orders = <b>asks</b>.</li>
+  <li>Order book mein bids <b>price ke ghatte order mein</b> (sabse zyada bid upar), asks <b>badhte order mein</b> (sabse kam ask upar).</li>
+</ul>
+
+<div class="tw"><table>
+<tr><th colspan="2">BID (khareedne wale)</th><th colspan="2">ASK (bechne wale)</th></tr>
+<tr><th>Price (Rs)</th><th class="n">Quantity</th><th>Price (Rs)</th><th class="n">Quantity</th></tr>
+<tr><td><b>1,418.05</b> (best bid)</td><td class="n">15</td><td><b>1,418.20</b> (best ask)</td><td class="n">50</td></tr>
+<tr><td>1,417.90</td><td class="n">240</td><td>1,418.25</td><td class="n">1</td></tr>
+<tr><td>1,417.85</td><td class="n">500</td><td>1,418.30</td><td class="n">1,686</td></tr>
+<tr><td>1,417.80</td><td class="n">433</td><td>1,418.35</td><td class="n">1</td></tr>
+<tr><td>1,417.60</td><td class="n">459</td><td>1,418.40</td><td class="n">2</td></tr>
+</table></div>
+<p class="cap">Dhyan do: best bid (1,418.05) hamesha best ask (1,418.20) se kam hota hai. Agar ye barabar ya ulta ho jaye to turant trade ho jata hai. In dono ke beech ka fark (0.15) ko <b>bid-ask spread</b> kehte hain (ye term slide mein nahi hai, par common hai).</p>
+
+<h4>Slide ke worked examples (is order book pe)</h4>
+<div class="box ex"><b class="t">Example 1: Buy 100 shares @ Rs 1,418.10</b>
+Best ask 1,418.20 hai, jo buyer ke limit (1,418.10) se zyada hai. Koi seller itne kam pe nahi bech raha. To order <b>fill nahi hota</b> aur order book mein bid side ke <b>sabse upar</b> baith jata hai (1,418.10 > 1,418.05).</div>
+<div class="box ex"><b class="t">Example 2: Buy 1,500 shares @ Rs 1,418.30</b>
+Buyer 1,418.30 tak dene ko tayyar hai, to wo asks se match hoga, sabse sasta pehle:
+<table><tr><th>Price</th><th class="n">Shares</th><th class="n">Kitna paisa (Rs)</th></tr>
+<tr><td>1,418.20</td><td class="n">50</td><td class="n">70,910.00</td></tr>
+<tr><td>1,418.25</td><td class="n">1</td><td class="n">1,418.25</td></tr>
+<tr><td>1,418.30</td><td class="n">1,449 (baaki)</td><td class="n">2,055,116.70</td></tr>
+<tr><td><b>Total</b></td><td class="n"><b>1,500</b></td><td class="n"><b>2,127,444.95</b></td></tr></table>
+Average price = 2,127,444.95 / 1,500 = Rs 1,418.297. Ask side mein 1,418.30 pe 1,686 shares the, to 237 abhi bhi bache hain. <b>Order poora fill ho gaya</b>, isliye order book mein nahi gaya.</div>
+<div class="box key"><b class="t">Rule</b>Jab buy order turant fill hota hai to trade <b>buyer ke liye best price (ask price)</b> pe hota hai. Jab sell order turant fill hota hai to trade <b>seller ke liye best price (bid price)</b> pe hota hai. Yani jis side ne order pehle se book mein daal rakha tha, uska price chalta hai.</div>
+<div class="box extra"><b class="t">Extra worked example (sell side, khud samajhne ke liye)</b>
+Koi 600 shares ka limit sell order Rs 1,417.80 pe dalta hai. Bids se match hoga, sabse zyada bid pehle:
+15 @ 1,418.05 + 240 @ 1,417.90 + 345 @ 1,417.85 = 600 shares. Total = Rs 850,725.00, average Rs 1,417.875. Ab bid side mein 1,417.85 pe 155 shares bache, to <b>best bid gir kar 1,417.85 ho gaya</b>. Price neeche gaya.</div>
+
+<h4>Price time ke saath kaise badalta hai</h4>
+<ul>
+  <li><b>Bura news</b> (jaise rumour ki board member resign karne wala hai): jisko ye lagta hai ki price mein ye news abhi tak shamil nahi hui, wo bada <b>sell order</b> 1,418.05 se neeche ke price pe daalta hai. Wo existing bids se match hota hai. Bids order book se hat-te jaate hain aur price girta hai.</li>
+  <li><b>Acchi news</b>: log lowest ask se upar ke price pe buy orders daalte hain. Wo existing sell orders se match hote hain aur trades badhte hue prices pe hote hain.</li>
+</ul>
+<div class="flow">
+  <div class="node fill-r">Bura news aaya</div><div class="arr">&#10142;</div>
+  <div class="node">Bade sell orders</div><div class="arr">&#10142;</div>
+  <div class="node">Bids khatam hote gaye</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Price gira</div>
+</div>
+<div class="box key"><b class="t">Equilibrium ki baat</b>Kyunki price lagatar ghoomta hai, is market ko equilibrium mein sochna aasaan nahi. Lekin price <b>hamesha supply aur demand ko reconcile</b> karne ki taraf adjust hota rehta hai. Jo log khareedne mein fayda dekhte hain wo bid lagate hain, jo bechne mein fayda dekhte hain wo ask lagate hain. Kisi bhi pal ka price <b>sabhi logo ke behaviour ka combined result</b> hai, unka bhi jo bas apne shares pakad ke baithe hain.</div>
+
+<h3 id="bubbles">1.9 Asset market bubbles</h3>
+<p>Share prices sirf ghante-ghante ya din-din mein hi nahi hilte. Kabhi kabhi bahut bade swing bhi aate hain. Slide ka example: <b>Nasdaq Composite Index, 1995 se 2004</b>. Ye index kai stocks ke prices ka weighted average hai, aur us time isme bahut saari tez badhne wali, value karne mein mushkil technology companies thi.</p>
+
+<figure class="fig">
+<svg viewBox="0 0 560 290" role="img" aria-label="Nasdaq composite schematic">
+  <line x1="60" y1="250" x2="520" y2="250" stroke="#7a8194"/><line x1="60" y1="30" x2="60" y2="250" stroke="#7a8194"/>
+  <line x1="60" y1="40" x2="520" y2="40" stroke="#e3dfd2" stroke-dasharray="3 3"/>
+  <polyline fill="none" stroke="#c23b3b" stroke-width="3" points="60,218.5 105,206 150,195.5 195,183 240,153.5 294,40 312,82 330,145 352,168 375,168 411,203.8 420,193.3 465,166 510,157.5"/>
+  <circle cx="294" cy="40" r="5" fill="#c23b3b"/><text x="304" y="38" font-size="12">Peak: 5,000 se upar (early 2000)</text>
+  <circle cx="411" cy="204" r="5" fill="#2457c5"/><text x="418" y="224" font-size="12">Bottom: ~1,100</text>
+  <circle cx="60" cy="218.5" r="5" fill="#2e8540"/><text x="66" y="238" font-size="12">Start: 750 se kam (1995)</text>
+  <text x="60" y="268" font-size="12" class="mut">1995</text><text x="150" y="268" font-size="12" class="mut">1997</text><text x="240" y="268" font-size="12" class="mut">1999</text><text x="330" y="268" font-size="12" class="mut">2001</text><text x="420" y="268" font-size="12" class="mut">2003</text><text x="495" y="268" font-size="12" class="mut">2005</text>
+  <text x="14" y="20" font-size="13">Nasdaq closing value</text>
+</svg>
+<figcaption>Schematic: slide ke graph ko dekh ke approximate redraw kiya hai (sirf shape samajhne ke liye). Slide ke exact numbers: shuru mein 750 se kam, 5 saal mein 5,000 se upar, phir bottom ~1,100.</figcaption>
+</figure>
+
+<div class="box ex"><b class="t">Slide ke numbers aur unka calculation</b>
+<ul>
+<li>5 saal mein 750 se 5,000+ ho gaya. Annual rate = (5000/750)^(1/5) - 1 = <b>~46%</b>. Slide kehti hai "around 45%".</li>
+<li>Phir ek saal se kam mein <b>do-tihai value</b> kho di.</li>
+<li>Bottom ~1,100 pe, peak se <b>lagbhag 80% neeche</b> (1 - 1,100/5,000 = 78%).</li>
+<li>Is episode ko <b>tech bubble</b> kehte hain.</li>
+</ul></div>
+
+<div class="box def"><b class="t">Bubble ki definition (slide)</b>Kisi bhi asset (financial ya koi aur) ke price ka uski <b>fundamental value se lamba aur bada gap</b> ban jana.</div>
+
+<h4>Prices mein news kaise aati hai</h4>
+<p>Kabhi kabhi asset ki fundamental value ki nayi information market mein jaldi aur sahi tareeke se price mein aa jaati hai. Firm ki future earnings growth ki beliefs badalte hi share price lagbhag turant adjust hota hai. Patents ya lawsuits ki acchi/buri news, important logon ki bimari ya jaana, earnings surprises, mergers aur acquisitions, ye sab active trading aur tez price movement laate hain. Ye <b>normal aur healthy</b> hai.</p>
+
+<h4>Bubble kaise banta hai</h4>
+<div class="box key"><b class="t">Slide ka core argument</b>Price ke movement mein firm ki financial health ke baare mein <b>information hoti hai</b>. Jinke paas wo information nahi hai, wo price movement dekh ke use samajhne ki koshish karte hain. Yani <b>price changes messages hain</b>. Agar market theek chalna hai to traders ko in messages pe react karna padega. Lekin jab wo price badhne ko <b>aur badhne ka sign</b> samajhne lagte hain (momentum strategy), to cycle khud ko mazboot karne lagti hai.</div>
+<div class="flow col">
+  <div class="node fill-b">Price badhna shuru hua</div><div class="arr">&#10142;</div>
+  <div class="node fill-a">Traders ise "aur badhega" ka signal samajhte hain</div><div class="arr">&#10142;</div>
+  <div class="node fill-g">Momentum buying badhti hai, demand badhti hai</div><div class="arr">&#10142;</div>
+  <div class="node fill-b">Price aur badhta hai (loop wapas upar)</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Achanak bharosa toot-ta hai, sab bechna chahte hain</div><div class="arr">&#10142;</div>
+  <div class="node fill-r"><b>Crash</b> (sudden price decline)</div>
+</div>
+
+<h4>Bubbles ke liye 3 favourable features</h4>
+<div class="grid3">
+  <div class="mini a"><h5>1. Resale value</h5>Asset mein price ke badalne pe speculation ka mauka hai. Jaise ghar, painting.</div>
+  <div class="mini a"><h5>2. Ease of trading</h5>Financial markets mein khareedar se vikreta aur wapas banna bahut aasaan hai. Isse speculative trading badhti hai.</div>
+  <div class="mini a"><h5>3. Ease of borrowing</h5>Agar log udhaar lekar apni demand badha sakein, to price ka upar jaana jaari reh sakta hai.</div>
+</div>
+
+<h4>Kya bubbles sach mein hote hain? Fama vs Shiller</h4>
+<p>Slide ka sawaal: kya bubble ek real cheez hai, ya sirf hindsight (peeche mudke dekhne) ka illusion? Kya crash se pehle jaana ja sakta hai ki market bubble mein hai?</p>
+<div class="grid2">
+  <div class="mini"><h5>Eugene Fama ka view</h5>
+  <ul><li>"Bubble" word ka koi matlab nahi, bas fashion hai. Crash ke baad kehna aasaan hai "wo bubble thi".</li>
+  <li>Hamesha koi na koi kehta rehta hai ki prices zyada hain. Jab wo sahi nikalte hain to log unhe sar pe bithate hain, galat nikalte hain to bhool jaate hain. Wo <b>lagbhag aadhi baar sahi, aadhi baar galat</b> hote hain.</li>
+  <li>Tech bubble mein prices us waqt ki available best information pe based the. Prices isliye hile kyunki companies ke prospects ki information tezi se badal rahi thi.</li></ul></div>
+  <div class="mini r"><h5>Robert Shiller ka view</h5>
+  <ul><li>Simple, publicly visible statistics (jaise <b>price-to-earnings ratio</b>) se bubbles ko banta hua pehchana ja sakta hai.</li>
+  <li>"Leaning against the wind": jo asset cheap hai usse kharido, jo mehenga hai usse becho. Short run mein loss ho sakta hai, lekin long run mein diversified portfolio se zyada gain.</li>
+  <li>1990s ke late mein prices isliye badhe ki log <b>expect karte the ki price aur badhega</b>. Ye <b>irrational exuberance</b> thi.</li></ul></div>
+</div>
+
+<div class="box def"><b class="t">Efficient Market Hypothesis (EMH)</b>Fundamental values ke baare mein <b>saari generally available information prices mein lagbhag turant shamil ho jaati hai</b>.<br>
+Slide ka quote: agar koi economist ke paas aisa formula hota jo ek hafte pehle crisis predict kar sake, to wo formula bhi generally available information ban jata aur prices ek hafte pehle hi gir jaate. Matlab crisis ko predict karna possible hi nahi (is hypothesis ke hisaab se).</div>
+
+<div class="box warn"><b class="t">Counter-argument (slide ka)</b>Practice mein har investor ko ye nahi pata hota ki baaki investors bubble ke against trade kab shuru karenge. Is uncertainty ki wajah se koi bhi akela investor bubble ke khilaf lagne se ghabrata hai, kyunki ho sakta hai bubble aur lambi chale aur wo pehle hi kat jaye. Isliye investors <b>bubble ke saath chalna hi pasand karte hain</b>, aur price correction ek lambi der ke baad achanak hota hai.</div>
+<div class="box ex"><b class="t">Citibank CEO, 2007</b>"When the music stops, things will be complicated. But as long as the music is playing, you've got to get up and dance. We're still dancing." Matlab: bubble dikh rahi thi, par jo chhodega wo competition mein peeche reh jayega, isliye sab naachte rahe.</div>
+<div class="box extra"><b class="t">Fun fact (extra)</b>Fama aur Shiller, dono ko 2013 mein economics ka Nobel Prize mila (Lars Peter Hansen ke saath), jabki dono bubbles pe bilkul ulta soch rakhte hain.</div>
+<div class="tw"><table>
+<tr><th></th><th>Fama</th><th>Shiller</th></tr>
+<tr><td>Bubble real hai?</td><td>Meaningless word, hindsight</td><td>Haan, pehchani ja sakti hai</td></tr>
+<tr><td>Tech bubble ka reason</td><td>Information tezi se badal rahi thi</td><td>Irrational exuberance, "aur badhega" ki umeed</td></tr>
+<tr><td>Tool</td><td>EMH: prices mein sab information hai</td><td>P/E ratio jaise statistics</td></tr>
+<tr><td>Strategy</td><td>Predict nahi kar sakte</td><td>Cheap kharido, dear becho (long run mein fayda)</td></tr>
+</table></div>
+</section>
+<section class="part p2" id="p2">
+<div class="partbar"><span class="tag">PART 2 / FF_1B</span><h2>2008 ka financial crisis</h2></div>
+<p>Part 1 mein bubbles ki baat hui. Ab dekhte hain ki ek bubble (US ka housing) kaise poore financial system ko le doobi. Slide ka focus ye hai: <b>asli missing cheez financial system ka role tha</b>.</p>
+
+<h3 id="housing">2.1 Housing prices ka chadhna aur girna</h3>
+<figure class="fig">
+<svg viewBox="0 0 600 290" role="img" aria-label="US housing price index schematic">
+  <line x1="60" y1="250" x2="570" y2="250" stroke="#7a8194"/><line x1="60" y1="30" x2="60" y2="250" stroke="#7a8194"/>
+  <polyline fill="none" stroke="#2457c5" stroke-width="3" points="60,250 124,214 188,157 220,107 252,71 284,86 316,136 348,179 380,168 412,179 444,186 476,157 508,129 540,114"/>
+  <circle cx="252" cy="71" r="5" fill="#c23b3b"/><text x="262" y="68" font-size="12">Peak ~2006</text>
+  <circle cx="444" cy="186" r="5" fill="#2e8540"/><text x="420" y="208" font-size="12">Trough ~2009 se 2012</text>
+  <text x="60" y="268" font-size="12" class="mut">2000</text><text x="188" y="268" font-size="12" class="mut">2004</text><text x="316" y="268" font-size="12" class="mut">2008</text><text x="444" y="268" font-size="12" class="mut">2012</text><text x="540" y="268" font-size="12" class="mut">2015</text>
+  <text x="54" y="254" font-size="12" text-anchor="end" class="mut">100</text><text x="54" y="154" font-size="12" text-anchor="end" class="mut">170</text><text x="54" y="74" font-size="12" text-anchor="end" class="mut">225</text>
+  <text x="14" y="20" font-size="13">US housing price index (Jan 2000 = 100)</text>
+</svg>
+<figcaption>Schematic: slide ke graph ka shape. 2000 mein 100 se chadhkar 2006 ke aas paas 225 ke qareeb, phir gira.</figcaption>
+</figure>
+
+<h4>Prices kyun chadhe (slide ke 2 reasons)</h4>
+<div class="grid2">
+  <div class="mini"><h5>1. Interest rate environment</h5>2000s ki shuruaat mein interest rates bahut neeche aa gaye the. Isse <b>mortgage rate</b> (home loan ka rate) kam hua. EMI sasti hui, to ghar khareedne ki demand badhi, aur isliye housing price badha.</div>
+  <div class="mini a"><h5>2. Financial products ki innovation</h5>Naye products, jaise <b>subprime mortgages</b>, ne <b>zyada risky borrowers</b> tak loans pahunchana possible kiya.</div>
+</div>
+<div class="box def"><b class="t">Subprime mortgage</b>Aisa home loan jo kamzor credit wale (risky) borrowers ko diya jaata hai, jinke loan chukane ki sambhavna kam hai.</div>
+
+<h4>Phir kya galat hua</h4>
+<div class="flow">
+  <div class="node fill-g">Jab tak ghar ke prices badhte rahe, sab theek laga</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">2006 se prices girne lage</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Mortgage ki value &gt; ghar ki value</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Mortgages risky nikle, kai borrowers default</div>
+</div>
+<div class="box ex"><b class="t">Example: "underwater" mortgage (extra numbers)</b>
+Tumne Rs 100 ka ghar Rs 100 ke loan pe liya (down payment ~0). Ghar ka price Rs 80 ho gaya. Ghar bechke bhi loan nahi chuka sakte, Rs 20 ka gap. Aise borrower ke paas loan chukane ka <b>incentive kam</b> hota hai, aur default karna aasaan lagta hai. Bank ko collateral (ghar) Rs 80 ka milta hai jabki loan Rs 100 ka tha. Nuksan Rs 20.</div>
+
+<div class="box key"><b class="t">Analysts ne kya miss kiya</b>Analysts ko ye andaza tha ki 2006 ke baad housing price ke girne se <b>demand kam hogi aur growth slow hogi</b>. Kam logon ne socha ki isse <b>major macroeconomic crisis</b> aayega. Key missing analysis: <b>financial system aur economy pe iska effect</b>.</div>
+
+<h3 id="intermediaries">2.2 Financial intermediaries (banks) kyun toote</h3>
+<p>Financial intermediary = jo savers aur borrowers ke beech ka kaam karta hai (bank sabse bada example). Slide kehti hai ki 3 cheezein milke risk badhati hain:</p>
+<div class="grid3">
+  <div class="mini r"><h5>1. High leverage</h5>Apni poonji kam, udhaar bahut zyada.</div>
+  <div class="mini r"><h5>2. Illiquid assets</h5>Assets jinko jaldi aur sahi price pe bechna mushkil hai.</div>
+  <div class="mini r"><h5>3. Liquid liabilities</h5>Jo paisa unhone udhaar liya hai wo <b>kabhi bhi wapas maanga ja sakta hai</b> (short-term).</div>
+</div>
+<div class="box key"><b class="t">Samajhne wali baat</b>Assets (jaise mortgages) lambe time ke aur bechne mein mushkil, lekin liabilities (short-term debt) turant maangi ja sakti hain. Is mismatch ki wajah se jab log paise wapas maangte hain to bank ke paas dene ko cash nahi hota. 2008 mein ye teeno cheezein ek saath maujood thi.</div>
+
+<h4>Banks itne leveraged kyun the? (slide ke 3 reasons)</h4>
+<ol>
+  <li>Unhone <b>risk ko underestimate</b> kiya.</li>
+  <li>Managers ko <b>high expected returns wale projects</b> lene ka incentive tha (zyada return, zyada bonus).</li>
+  <li>Banks ne <b>structured investment vehicles (SIVs)</b> ke zariye regulation se bachna sikh liya.</li>
+</ol>
+
+<h4>SIV kya hai</h4>
+<figure class="fig">
+<svg viewBox="0 0 600 270" role="img" aria-label="SIV structure">
+  <rect x="230" y="14" width="140" height="44" rx="10" fill="#e8effc" stroke="#2457c5"/><text x="300" y="42" font-size="14" text-anchor="middle" style="fill:#1f2430">Bank (sponsor)</text>
+  <rect x="20" y="120" width="140" height="56" rx="10" fill="#fff3d9" stroke="#b8740a"/><text x="90" y="145" font-size="14" text-anchor="middle" style="fill:#1f2430">Investors</text><text x="90" y="163" font-size="11" text-anchor="middle" style="fill:#1f2430">(paisa dene wale)</text>
+  <rect x="230" y="120" width="140" height="56" rx="10" fill="#f0eafc" stroke="#6b3fc4"/><text x="300" y="152" font-size="16" text-anchor="middle" font-weight="700" style="fill:#1f2430">SIV</text>
+  <rect x="440" y="120" width="140" height="56" rx="10" fill="#fdeaea" stroke="#c23b3b"/><text x="510" y="145" font-size="14" text-anchor="middle" style="fill:#1f2430">Securities</text><text x="510" y="163" font-size="11" text-anchor="middle" style="fill:#1f2430">(mortgage-backed etc.)</text>
+  <path d="M160 140 L226 140" stroke="#7a8194" stroke-width="2" marker-end="url(#ah)"/><text x="193" y="132" font-size="11" text-anchor="middle" class="mut">short-term</text><text x="193" y="168" font-size="11" text-anchor="middle" class="mut">debt (paisa)</text>
+  <path d="M370 148 L436 148" stroke="#7a8194" stroke-width="2" marker-end="url(#ah)"/><text x="403" y="140" font-size="11" text-anchor="middle" class="mut">khareedta</text>
+  <path d="M300 58 L300 116" stroke="#7a8194" stroke-width="2" stroke-dasharray="6 4" marker-end="url(#ah)"/><text x="310" y="92" font-size="11" class="mut">guarantee: zarurat padi to bank paisa dega</text>
+  <rect x="40" y="206" width="520" height="48" rx="10" fill="#fff3d9" stroke="#b8740a"/><text x="300" y="228" font-size="13" text-anchor="middle" style="fill:#1f2430">Liability side: investors se short-term debt. Asset side: alag alag securities.</text><text x="300" y="246" font-size="13" text-anchor="middle" style="fill:#1f2430">SIV ne bank ko leverage ke regulatory requirements se bachne diya.</text>
+</svg>
+</figure>
+<ul>
+  <li>Liability side pe SIV ne investors se <b>short-term debt</b> liya.</li>
+  <li>Asset side pe SIV ne alag alag type ki <b>securities</b> rakhi.</li>
+  <li>Bank ne guarantee di thi ki zarurat padi to wo SIV ko <b>funds</b> degi.</li>
+  <li>Isse banks <b>leverage ke regulatory requirements</b> se bach pa rahe the.</li>
+  <li>Jab ghar ke prices gire aur mortgage loans pe default badhe, to SIVs aur unhe back karne wale banks ki <b>solvency</b> pe sawaal uthe (solvency = kya unke assets unki liabilities se zyada hain).</li>
+</ul>
+
+<h4>Securitization aur mortgage-backed security (MBS)</h4>
+<ul>
+  <li><b>Securitization</b> = bahut saare loans ko ek jagah jod ke unse naye securities banana aur bechna.</li>
+  <li>Agar bank sirf local loans deta hai, to us shehar ke ghar ke prices girne pe bank khud musibat mein aa jata hai.</li>
+  <li>Agar bank ke portfolio mein mortgages <b>alag alag jagah ke</b> hon, to ek jagah ki giravat se bachna possible hai (diversification).</li>
+  <li>Aisi hi ek product thi <b>mortgage-backed security</b>.</li>
+</ul>
+<div class="box warn"><b class="t">Securitization ke side effects (slide)</b>
+Banks ye dhyan dena kam kar dene lage ki borrower <b>sach mein loan chuka payega ya nahi</b> (kyunki loan to bech dena hai). Aur <b>rating agencies ne</b> aise securities ki value ko <b>galat assess kiya</b>. Dono ne milke risk badha diya.</div>
+
+<h4>Illiquidity aur fire sale</h4>
+<p>Jab ghar ke prices girne lage, to investors in securities ko <b>hold karne se</b> ya SIVs ko <b>udhaar dene se</b> ghabrane lage. Banks aur SIVs ke bahut saare assets illiquid ho gaye: unhe <b>assess karna aur bechna</b> dono bahut mushkil tha, bas <b>fire sale prices</b> (bahut sasti keemat) pe hi bik sakte the.</p>
+
+<h4>Wholesale funding</h4>
+<ul>
+  <li>Banks ne <b>doosre banks ya investors se short-term debt</b> ke form mein paisa lena badhaya. Ise <b>wholesale funding</b> kehte hain.</li>
+  <li>SIVs ki poori funding aisi hi thi.</li>
+  <li><b>Checkable deposits</b> (aam logon ke bank deposits) <b>deposit insurance</b> se protected the, lekin baaki investors nahi.</li>
+  <li>Jab investors ko SIVs ke assets ki value pe shak hua, to unhone <b>apna paisa wapas maangna</b> shuru kar diya.</li>
+</ul>
+<div class="box extra"><b class="t">Ye ek tarah ka bank run hi hai (extra)</b>Purane zamane mein log bank ke bahar line lagake paisa nikalte the. 2008 mein wahi hua, par "line" wholesale lenders ki thi, aur wo digital tha. Deposit insurance wale aam depositors ke liye ye safety net tha, par wholesale lenders ke liye nahi.</div>
+
+<h4>Poora chakra (death spiral)</h4>
+<div class="flow col">
+  <div class="node fill-r">High leverage + liquid liabilities + illiquid assets</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Assets ki value girti hai, banks/SIVs ka capital tezi se ghatta hai</div><div class="arr">&#10142;</div>
+  <div class="node fill-a">Unhe kuch assets bechne padte hain</div><div class="arr">&#10142;</div>
+  <div class="node fill-a">Assets complex the, to <b>firesale prices</b> pe bechne pade</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Assets ki value aur ghat gayi (aur capital aur kam)</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">Investors ne in SIVs aur banks ko udhaar dena bhi band kar diya</div><div class="arr">&#10142;</div>
+  <div class="node fill-r"><b>Financial crisis</b></div>
+</div>
+
+<div class="box ex"><b class="t">Leverage ka numerical example (extra, numbers khud ke)</b>
+Ek bank/SIV: assets Rs 100, apni poonji (equity) Rs 4, udhaar Rs 96. Leverage = 100/4 = 25 guna.
+<ul>
+<li>Assets 4% gir gaye: assets Rs 96, udhaar abhi bhi Rs 96. Equity = <b>Rs 0</b>. Bank technically doob gaya (insolvent).</li>
+<li>Panic mein bank Rs 10 ke assets bechta hai, par market mein buyers nahi to Rs 8 mila (fire sale). Ek aur Rs 2 ka nuksan, ab bank Rs 2 ki negative equity pe hai.</li>
+<li>Lenders ye dekh ke aur paisa wapas maangte hain. Bank ko aur bechna padta hai. Chakra chalta rehta hai.</li>
+</ul></div>
+
+<h3>2.3 Macroeconomic implications</h3>
+<p>Financial system ka jam hona poori economy tak pahuncha:</p>
+<div class="flow">
+  <div class="node fill-r">Loan ka interest rate (jis par log aur firms borrow kar sakte the) bahut badha</div>
+  <div class="node fill-r">Confidence mein badi giravat</div>
+</div>
+<div class="flow">
+  <div class="node fill-a">Lower confidence + lower stock prices + lower housing prices</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Consumption (kharch) kam</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Consumption + investment ki giravat</div><div class="arr">&#10142;</div>
+  <div class="node fill-r"><b>Aggregate demand girti hai</b></div>
+</div>
+<div class="box key"><b class="t">Aggregate demand</b>Poori economy mein goods aur services ki kul demand (log + firms + sarkar ka kharch). Ye girti hai to firms kam bechte hain, kam hire karte hain, jobs jaati hain, income girti hai, aur demand aur kam hoti hai.</div>
+
+<h3 id="policy">2.4 Policy responses (sarkar aur central bank ne kya kiya)</h3>
+<div class="tw"><table>
+<tr><th>Step</th><th>Kya kiya</th><th>Kyun</th></tr>
+<tr><td>Deposit insurance expand</td><td>Federal deposit insurance ka cover badhaya</td><td>Depositors ka bharosa bana rahe, bank run na ho</td></tr>
+<tr><td>Fed ne liquidity di</td><td>Federal Reserve (US central bank) ne financial system ko liquidity di, banks ke liye Fed se udhaar lena aasaan banaya</td><td>Short-term funding sukhne ki problem solve karna</td></tr>
+<tr><td><b>TARP</b> (Troubled Asset Relief Program)</td><td>Bank balance sheets se complex assets hatane ke liye fund. Baad mein ye paisa <b>banks ki capital badhane</b> ke liye use hua</td><td>Banks ka capital bachana</td></tr>
+<tr><td>Policy rate cut</td><td>Fed ne policy rate ghatana shuru kiya. <b>December 2008 tak rate zero</b> ho gaya</td><td>Borrowing sasti karna, demand badhana</td></tr>
+<tr><td>Unconventional monetary policy</td><td>Rate aur neeche nahi ja sakta tha, to Fed ko <b>unconventional</b> tareeke apnane pade</td><td>Zero lower bound ki wajah se</td></tr>
+<tr><td>Fiscal policy</td><td>Sarkar ne <b>taxes ghataye aur spending badhayi</b></td><td>Demand badhane ke liye</td></tr>
+</table></div>
+<div class="box def"><b class="t">Zero lower bound (ZLB)</b>Central bank ke liye policy rate ko zero se neeche le jaana (lagbhag) mumkin nahi, kyunki log paisa bank mein rakhne ki jagah nakad cash rakh lenge. Jab rate zero tak aa gaya aur economy phir bhi kamzor thi, to normal monetary policy ke tools khatam ho gaye. Ise "monetary policy constrained by the zero lower bound" kehte hain.</div>
+<div class="box extra"><b class="t">Unconventional monetary policy ka example (extra)</b>Slide mein example nahi hai. Jaise Fed ka bonds khareedkar economy mein paisa daalna (quantitative easing). Exam mein agar "unconventional" ka matlab poochhe to slide ke hisaab se: "jab rate zero ho gaya aur aur ghata nahi sakte, to normal rate-cutting ke alawa doosre tareeke".</div>
+<div class="box key"><b class="t">Monetary vs fiscal (exam mein confuse hota hai)</b>
+<b>Monetary policy</b> = central bank karta hai (interest rate, liquidity). <b>Fiscal policy</b> = sarkar karti hai (tax aur spending).</div>
+</section>
+<section class="part p3" id="p3">
+<div class="partbar"><span class="tag">PART 3 / FF_1C</span><h2>Structured finance: risky cheez ko "safe" kaise banaya gaya</h2></div>
+<p>Part 2 mein humne dekha ki banks ke paas mortgage-backed securities the. Ab ye samajhna hai ki ye securities <b>banti kaise thi</b> aur unhe AAA rating kaise mil jati thi. Ye is week ka sabse important aur sabse numerical part hai.</p>
+
+<h3 id="rise-fall">3.1 Rise and fall</h3>
+<ul>
+  <li>Global Financial Crisis ke pehle ki sabse hairan karne wali kahaniyon mein se ek: structured finance products ka tezi se chadhna aur girna.</li>
+  <li>10 saal se kam mein US mein in products ka issuance <b>dus guna se zyada</b> badh gaya.</li>
+</ul>
+<figure class="fig">
+<svg viewBox="0 0 560 270" role="img" aria-label="Structured finance issuance schematic">
+  <line x1="60" y1="220" x2="520" y2="220" stroke="#7a8194"/><line x1="60" y1="30" x2="60" y2="220" stroke="#7a8194"/>
+  <rect x="100" y="148" width="90" height="72" fill="#6b3fc4" opacity=".85"/><text x="145" y="140" font-size="12" text-anchor="middle">$25 se 40 bn</text><text x="145" y="240" font-size="12" text-anchor="middle">2005 ke pehle 3 quarters</text><text x="145" y="255" font-size="11" text-anchor="middle" class="mut">(har quarter)</text>
+  <rect x="250" y="40" width="90" height="180" fill="#c23b3b" opacity=".9"/><text x="295" y="32" font-size="12" text-anchor="middle">~$100 bn</text><text x="295" y="240" font-size="12" text-anchor="middle">Q4 2006 se Q2 2007</text><text x="295" y="255" font-size="11" text-anchor="middle" class="mut">(har quarter, peak)</text>
+  <rect x="400" y="212" width="90" height="8" fill="#2e8540"/><text x="445" y="204" font-size="12" text-anchor="middle">$5 bn se kam</text><text x="445" y="240" font-size="12" text-anchor="middle">2008 ke pehle 2 quarters</text><text x="445" y="255" font-size="11" text-anchor="middle" class="mut">(har quarter)</text>
+  <text x="14" y="20" font-size="13">Structured finance issuance (US, har quarter)</text>
+</svg>
+<figcaption>Slide ke numbers ko bar chart mein rakha hai (schematic). Peak se 2008 tak lagbhag 95% se zyada giravat.</figcaption>
+</figure>
+
+<div class="box def"><b class="t">Structured finance</b>Economic assets (loans, bonds, mortgages) ko ek <b>pool</b> mein ikattha karna, aur phir us pool ke against <b>prioritized claims</b> issue karna. Un claims ko <b>tranches</b> kehte hain.<br>
+Prioritization ki wajah se bahut saari banayi hui tranches pool ke <b>average asset se kaafi safe</b> hoti hain.</div>
+<div class="box key"><b class="t">Core idea ek line mein</b>Risky collateral ko repackage karke usme se "safe" assets nikalna. Isi se bahut zyada "safe" securities banin aur investors ko virtually risk-free lagi (rating agencies ne bhi aisa hi certify kiya). 2008 ke crisis ke core mein ye discovery thi ki ye securities <b>originally advertise kiye gaye risk se kaafi zyada risky</b> thi.</div>
+
+<h4>Do sawaal jo poori story ko explain karte hain</h4>
+<ol>
+  <li><b>Rating ki fragility</b>: securities ko high rating tabhi mil sakti hai jab rating agencies underlying securities ke default risk aur defaults ke <b>correlated hone</b> ka sahi estimate lagayein. Parameters mein chhoti si galti se tranche ka default risk itna badal sakta hai ki <b>AAA tranche bhi reasonable probability se default</b> kar jaye.</li>
+  <li><b>Systematic risk ka substitute</b>: securitization wo risk jo bade hisse mein diversifiable tha, use <b>highly systematic risk</b> se badal deta hai. To ye securities kisi severe economic downturn mein survive karne ke chance mein <b>same rating ke traditional corporate securities se bahut kam</b> hain. Investors ko aisi claims ke liye same rating ke corporate bond se <b>kaafi zyada risk premium</b> maangna chahiye tha.</li>
+</ol>
+<p>Dono features (rating ki nazakat aur systematic risk ka exposure) mil ke structured finance ke spectacular rise aur fall ko samjhate hain. Inka detail aage aayega.</p>
+
+<h3 id="raters">3.2 Credit rating agencies</h3>
+<ul>
+  <li><b>Moody's, Standard & Poor's, Fitch</b>: 100 saal se zyada se ye agencies financial, industry aur economic information analyse karke alag alag entities ki <b>creditworthiness</b> (loan chukane ki kabiliyat) ka independent assessment deti hain. Isse rating scales bane: <b>AAA, AA, A, BBB</b> aur aage.</li>
+  <li>Historically unka zyada kaam <b>single-name corporate finance</b> tha, matlab aisi cheezein jinki creditworthiness ek hi company se judi ho.</li>
+  <li>Crisis se pehle ke saalon mein unka business model us se aage badh kar <b>structured finance</b> tak phail gaya.</li>
+</ul>
+<div class="box ex"><b class="t">Origin story: structured securities "rated" market kyun bane</b>
+<ul>
+<li>Shuru se ye market "rated" market tha, jisme tranches ka risk credit rating agencies assess karti thi.</li>
+<li>Issuers chahte the ki naye products bhi <b>bonds wali scale pe rate ho</b>, taki wo investors bhi khareed saken jo <b>ratings-based constraints</b> mein hain (jaise koi fund jise sirf investment grade bonds rakhne ki ijazat hai).</li>
+<li>Rating milne se issuers ne ek <b>illusion of comparability</b> banaya: ye naye securities purane "single-name" securities jaise lagne lage.</li>
+<li>Isse ek bade pool ke buyers mil gaye un products ke liye jo warna <b>bahut complex derivative securities</b> maane jaate.</li>
+</ul></div>
+
+<h4>Rise: numbers jo yaad rakhne hain</h4>
+<div class="tw"><table>
+<tr><th>Stat</th><th>Number</th></tr>
+<tr><td>Mid-2007 mein US mein top rating (AAA) wale structured finance issues</td><td class="n">37,000</td></tr>
+<tr><td>Global structured products jo AAA-rated the (Fitch, 2007)</td><td class="n">~60%</td></tr>
+<tr><td>Corporate issues jo AAA the</td><td class="n">1% se kam</td></tr>
+<tr><td>Moody's ki revenue ka hissa structured finance rating se (2006)</td><td class="n">44%</td></tr>
+</table></div>
+<p>Ye products AAA rating <b>aur</b> attractive yield dono dete the, wo bhi low interest rate period mein, to duniya bhar ke investors ne unhe utsah se khareeda. Structured finance Wall Street aur rating agencies ke revenue ka bada hissa ban gaya. 2006 mein structured finance issuance ki wajah se Wall Street ke record revenue aur compensation hue.</p>
+
+<h4>Fall</h4>
+<div class="flow">
+  <div class="node fill-p"><b>2005 se 2007</b><small>Boom, AAA ki baadh</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-r"><b>2007</b><small>Badi sankhya mein downgrades</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-r"><b>2008</b><small>CDO issuance ruk gayi, banks ne bade writedowns kiye, rating agencies ki revenue ghayab, stock prices 50% gire</small></div><div class="arr">&#10142;</div>
+  <div class="node"><b>Mid-2008</b><small>Structured finance activity practically band</small></div>
+</div>
+<ul>
+  <li>Bahut saare products ki ratings <b>downgrade</b> hui, khaaskar <b>asset-backed security CDOs</b> mein (jo mortgage, credit card aur auto loan securities ke pool se bante the).</li>
+  <li>Example: Merrill Lynch ne 2007 mein jo asset-backed CDO tranches underwrite ki thi, unme se <b>30 mein se 27</b> ki AAA rating <b>"junk"</b> mein gir gayi.</li>
+  <li>2007 mein Moody's ne apni rate ki hui asset-backed CDO tranches mein se <b>31%</b> ko downgrade kiya, aur unme se jo shuru mein AAA thi unme se <b>14%</b> ko.</li>
+  <li>Rating agencies ke stock prices 50% gire. Matlab market ne maana ki revenue ki giravat permanent hai.</li>
+</ul>
+<div class="box def"><b class="t">CDO (Collateralized Debt Obligation)</b>Ek structured product jisme bahut saare debt assets (loans, bonds, mortgage securities) ka pool banta hai, aur uske against tranches issue hoti hain. Seedha shabdon mein: <b>debt ka pool + tranches</b>.</div>
+
+<h3 id="manufacture">3.3 AAA-rated securities kaise "banaye" jaate hain</h3>
+<div class="box key"><b class="t">Goal</b>Kisi bhi given credit rating wali security banane ke liye uska <b>cashflow risk</b> rating agencies ke guidelines ke hisaab se tailor karna padta hai. <b>Cashflow risk</b> = default ki probability + default hone par loss kitna hoga. Structured finance ye do steps se karta hai: <b>Pooling</b> aur <b>Tranching</b>.</div>
+
+<div class="flow">
+  <div class="node fill-b"><b>Step 1: Pooling</b><small>Bahut saare credit-sensitive assets ek portfolio mein</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-p"><b>Step 2: Tranching</b><small>Pool ke against prioritized claims issue karna</small></div><div class="arr">&#10142;</div>
+  <div class="node fill-g"><b>Result</b><small>Alag alag risk wali securities (kuch AAA bhi)</small></div>
+</div>
+
+<h4>Step 1: Pooling aur SPV</h4>
+<ul>
+  <li>Bahut saare credit-sensitive assets ek portfolio mein jama kiye jaate hain. Ise typically <b>special purpose vehicle (SPV)</b> kehte hain.</li>
+  <li>SPV <b>originator ki balance sheet se alag</b> hota hai. Taki uski liabilities (tranches) ka credit risk originator ki balance sheet se isolate ho jaye.</li>
+</ul>
+<div class="box def"><b class="t">Originator</b>Wo bank ya institution jisne original loans diye (ya assets banaye) aur ab unhe pool mein daal raha hai.</div>
+
+<h4>Pass-through securitization (jisme tranching nahi hai)</h4>
+<p>Maan lo SPV ne <b>prioritized nahi, simple fractional claims</b> issue kiye, matlab har claim underlying portfolio ke payoff ka ek barabar hissa. Isse <b>pass-through securitization</b> kehte hain.</p>
+<ul>
+  <li>Portfolio ka expected loss = underlying securities ke mean expected loss ke barabar.</li>
+  <li>To portfolio ki rating = pool ke securities ki <b>average rating</b>.</li>
+  <li>Claims ko wahi rating mil jaati hai. <b>Koi credit enhancement nahi hua.</b></li>
+</ul>
+
+<h4>Step 2: Tranching (asli jadoo yahan hai)</h4>
+<p>Alag alag cashflow risk wali securities banane ke liye ek <b>capital structure of prioritized claims</b> issue hota hai, jise <b>tranches</b> kehte hain. Tranches isme alag hoti hain ki <b>loss kaun pehle absorb karega</b>.</p>
+<figure class="fig">
+<svg viewBox="0 0 580 300" role="img" aria-label="Tranche waterfall">
+  <rect x="20" y="70" width="130" height="160" rx="12" fill="#e8effc" stroke="#2457c5"/>
+  <text x="85" y="130" font-size="14" text-anchor="middle" font-weight="700" style="fill:#1f2430">Collateral pool</text><text x="85" y="150" font-size="12" text-anchor="middle" style="fill:#1f2430">loans / mortgages</text><text x="85" y="170" font-size="12" text-anchor="middle" style="fill:#1f2430">(SPV mein)</text>
+  <path d="M155 150 L230 150" stroke="#7a8194" stroke-width="2.5" marker-end="url(#ah)"/><text x="192" y="140" font-size="11" text-anchor="middle" class="mut">tranching</text>
+  <rect x="240" y="30" width="170" height="90" fill="#e6f4e8" stroke="#2e8540" stroke-width="2"/><text x="325" y="70" font-size="14" text-anchor="middle" font-weight="700" style="fill:#1f2430">SENIOR</text><text x="325" y="90" font-size="12" text-anchor="middle" style="fill:#1f2430">sabse safe, sabse baad mein loss</text>
+  <rect x="240" y="120" width="170" height="70" fill="#fff3d9" stroke="#b8740a" stroke-width="2"/><text x="325" y="150" font-size="14" text-anchor="middle" font-weight="700" style="fill:#1f2430">MEZZANINE</text><text x="325" y="170" font-size="12" text-anchor="middle" style="fill:#1f2430">beech ka</text>
+  <rect x="240" y="190" width="170" height="50" fill="#fdeaea" stroke="#c23b3b" stroke-width="2"/><text x="325" y="213" font-size="14" text-anchor="middle" font-weight="700" style="fill:#1f2430">JUNIOR</text><text x="325" y="230" font-size="12" text-anchor="middle" style="fill:#1f2430">sabse risky, pehle loss</text>
+  <path d="M440 235 L440 40" stroke="#c23b3b" stroke-width="3" marker-end="url(#ah)"/><text x="450" y="130" font-size="12" style="fill:#c23b3b">Loss neeche se</text><text x="450" y="146" font-size="12" style="fill:#c23b3b">upar ki taraf</text><text x="450" y="162" font-size="12" style="fill:#c23b3b">bharta hai</text>
+  <rect x="20" y="254" width="540" height="36" rx="8" fill="#f1eee5" stroke="#e3dfd2"/><text x="290" y="277" font-size="13" text-anchor="middle" style="fill:#1f2430">Junior ki capital khatam hone ke baad hi mezzanine ko loss lagta hai, uske baad hi senior ko.</text>
+</svg>
+<figcaption>Isko "waterfall" bhi kehte hain. Pani (loss) neeche se bharta hai.</figcaption>
+</figure>
+<div class="box key"><b class="t">Subordination / overcollateralization</b>Senior tranche tabhi loss uthata hai jab junior claims (uske neeche wali) <b>khatam</b> ho chuki hon. Isse senior tranche ko pool ki average rating se <b>zyada rating</b> mil sakti hai. Junior claims jo protection deti hain, use <b>overcollateralization</b> kehte hain, aur ye senior tranche ki rating tay karne mein bahut important hai, kyunki ye tay karta hai ki senior claim impair hone se pehle portfolio ka sabse bada loss kitna sah sakta hai.</div>
+
+<h3 id="twobond">3.4 Do-bond example (poora derivation)</h3>
+<p>Ye example slide ka sabse important hissa hai. Ek ek step dhyan se dekho.</p>
+<div class="box def"><b class="t">Setup</b>
+<ul>
+<li>Do identical bonds hain. Har ek ki default probability = <code>p</code> (slide mein <code>pD</code>).</li>
+<li>Har bond: default hone par <b>0</b> deta hai, nahi to <b>1</b> deta hai.</li>
+<li>Dono ko ek pool mein daalte hain. Total notional value = 2.</li>
+<li>Pool ke against do tranches issue karte hain, har ek <b>1</b> pay karti hai.</li>
+</ul></div>
+<div class="grid2">
+  <div class="mini r"><h5>Junior tranche</h5>Portfolio ka <b>pehla 1</b> loss bear karti hai. To <b>1 tab deti hai jab dono bonds default na karein</b>. Koi ek bhi default kare to 0.</div>
+  <div class="mini g"><h5>Senior tranche</h5>Tab loss uthati hai jab junior ki capital khatam ho chuki ho. To ye <b>1 deti hai agar koi bhi default na kare ya sirf ek default kare</b>. Sirf <b>dono default</b> hon to 0.</div>
+</div>
+
+<h4>Case 1: Defaults uncorrelated (ek bond ka default doosre se independent)</h4>
+<p>Maan lo <b>p = 10%</b>. Independent hone ka matlab probabilities multiply hoti hain.</p>
+<div class="tw"><table>
+<tr><th>State</th><th>Probability</th><th class="n">Pool ka loss</th><th>Junior pays</th><th>Senior pays</th></tr>
+<tr><td>Dono bonds survive</td><td>0.9 x 0.9 = <b>0.81</b></td><td class="n">0</td><td>1</td><td>1</td></tr>
+<tr><td>Sirf bond 1 default</td><td>0.1 x 0.9 = 0.09</td><td class="n">1</td><td>0</td><td>1</td></tr>
+<tr><td>Sirf bond 2 default</td><td>0.9 x 0.1 = 0.09</td><td class="n">1</td><td>0</td><td>1</td></tr>
+<tr><td>Dono default</td><td>0.1 x 0.1 = <b>0.01</b></td><td class="n">2</td><td>0</td><td>0</td></tr>
+</table></div>
+<div class="math">Junior default = 1 - 0.81 = <b>0.19 (19%)</b>   (kisi bhi ek ka default)<br>
+Senior default = <b>0.01 (1%)</b>   (dono ka default)<br>
+Original bond ka default = 10%</div>
+<div class="box ex"><b class="t">Matlab</b>Do bonds jo har ek 10% default risk wale the, unse humne ek claim banayi jo <b>sirf 1% default</b> karti hai (senior). Ye slide ka exact example hai. Isi ko credit enhancement kehte hain: senior tranche ki rating underlying bonds se kai notch upar ho sakti hai. Doosri taraf junior ka risk (19%) bonds se zyada ho gaya. Risk gayab nahi hua, bas <b>junior ke upar shift ho gaya</b>.</div>
+
+<h4>Case 2: Defaults correlated</h4>
+<p>Slide kehti hai ki is example mein default dependence ko <b>ek parameter</b> se describe kar sakte hain: ya to joint probability of default, ya default correlation. Dono equivalent hain. Isse nikalte hain:</p>
+<div class="math">Dono bonds ke default indicators: D1, D2 (default hone par 1, nahi to 0).<br>
+Correlation  rho = Cov(D1, D2) / (sd1 x sd2)<br>
+Cov(D1, D2) = P(dono default) - p x p<br>
+sd = sqrt(p(1-p)) har bond ke liye, to sd1 x sd2 = p(1-p)<br>
+=> rho = [P(dono default) - p^2] / [p(1-p)]<br>
+<b>=> P(dono default) = p^2 + rho x p(1-p)</b></div>
+<p>Ab:</p>
+<div class="math">Senior default = P(dono default) = <b>p^2 + rho p(1-p)</b><br>
+Junior default = P(kam se kam ek default) = 2p - P(dono default) = <b>2p - p^2 - rho p(1-p)</b></div>
+<div class="tw"><table>
+<tr><th>Correlation rho</th><th class="n">Senior default (p = 10%)</th><th class="n">Junior default (p = 10%)</th><th>Kya hua</th></tr>
+<tr><td>0 (independent)</td><td class="n"><b>1.00%</b></td><td class="n">19.00%</td><td>Senior sabse safe</td></tr>
+<tr><td>0.25</td><td class="n">3.25%</td><td class="n">16.75%</td><td></td></tr>
+<tr><td>0.50</td><td class="n">5.50%</td><td class="n">14.50%</td><td></td></tr>
+<tr><td>0.75</td><td class="n">7.75%</td><td class="n">12.25%</td><td></td></tr>
+<tr><td>1 (perfect)</td><td class="n"><b>10.00%</b></td><td class="n">10.00%</td><td>Dono bonds jaise, <b>koi credit enhancement nahi</b></td></tr>
+</table></div>
+<div class="box key"><b class="t">Slide ke 2 extreme</b>Perfectly correlated: dono bonds ek saath survive ya default karte hain, to senior tranche ko <b>koi credit enhancement nahi</b> milta. Senior default = underlying jitna, <b>10%</b>. Uncorrelated: senior default <b>1%</b>. Beech ke correlation pe senior ka default risk <b>1% aur 10% ke beech</b> hoga.</div>
+<div class="card">
+<b>Slider se khud dekho: correlation ka asar</b>
+<div class="tools">
+  <label>Har bond ki default probability p = <span class="out" id="cP">10</span>% <input type="range" id="cPr" min="1" max="30" step="1" value="10"></label>
+  <label>Default correlation rho = <span class="out" id="cR">0.00</span> <input type="range" id="cRr" min="0" max="1" step="0.05" value="0"></label>
+  <div>Senior tranche default: <span class="out" id="cS"></span></div>
+  <div class="bar"><i id="cSb" style="background:var(--green);width:0"></i></div>
+  <div>Junior tranche default: <span class="out" id="cJ"></span></div>
+  <div class="bar"><i id="cJb" style="background:var(--red);width:0"></i></div>
+  <div>Original bond default: <span class="out" id="cB"></span></div>
+  <div class="bar"><i id="cBb" style="background:var(--blue);width:0"></i></div>
+</div>
+</div>
+<div class="box trick"><b class="t">Yaad rakhne ki trick</b>Correlation badhe to <b>senior ka risk badhta hai, junior ka ghatta hai</b>. Kyun? Agar bonds ek saath hi default karte hain, to "dono ek saath default" wale case ki probability badh jaati hai (senior ke liye bura), aur "sirf ek default" wala case kam ho jata hai (junior ke liye accha). Total risk wahi hai, bas kaun uthata hai wo badalta hai.</div>
+
+<h4>Price aur return</h4>
+<ul>
+  <li><b>Junior tranches</b> risky hain, to unke prices <b>kam</b> aur promised returns <b>zyada</b> honge.</li>
+  <li><b>Senior tranches</b> relatively safe hain, to unke prices <b>zyada</b> aur promised returns <b>kam</b> honge.</li>
+  <li>Isi se highly risky securities ko repackage karke kuch tranches aise investors ko bechi ja sakti hain jo sirf safe investments chahte hain.</li>
+</ul>
+
+<h3 id="threebond">3.5 Teen-bond example aur "central insight"</h3>
+<div class="box key"><b class="t">Central insight of structured finance</b>Pool mein <b>jitne zyada securities</b>, utna zyada fraction tranches ka, jo <b>pool ki average rating se zyada rating</b> pa sakta hai.</div>
+<p>Teen bonds lete hain (har ek p = 10%, uncorrelated). Teen claims issue hoti hain, har ek ka notional 1.</p>
+<ul>
+  <li><b>Pehli (junior) tranche</b>: default tab jab <b>koi bhi ek bond</b> default kare.</li>
+  <li><b>Doosri (mezzanine) tranche</b>: default tab jab <b>do ya zyada bonds</b> default karein.</li>
+  <li><b>Teesri (senior) tranche</b>: default sirf jab <b>teeno bonds</b> default karein.</li>
+</ul>
+<p>Derivation (binomial): k bonds ke default hone ki probability = C(3,k) x 0.1^k x 0.9^(3-k).</p>
+<div class="tw"><table>
+<tr><th>Defaults (k)</th><th>Calculation</th><th class="n">Probability</th></tr>
+<tr><td>0</td><td>0.9^3</td><td class="n">0.729</td></tr>
+<tr><td>1</td><td>3 x 0.1 x 0.9^2</td><td class="n">0.243</td></tr>
+<tr><td>2</td><td>3 x 0.1^2 x 0.9</td><td class="n">0.027</td></tr>
+<tr><td>3</td><td>0.1^3</td><td class="n">0.001</td></tr>
+</table></div>
+<div class="tw"><table>
+<tr><th>Tranche</th><th>Kab default</th><th class="n">Default probability</th><th>Bond (10%) se tulna</th></tr>
+<tr><td>Junior</td><td>k &ge; 1</td><td class="n">0.243 + 0.027 + 0.001 = <b>27.1%</b></td><td>Zyada risky</td></tr>
+<tr><td>Mezzanine</td><td>k &ge; 2</td><td class="n">0.027 + 0.001 = <b>2.8%</b></td><td>Kam risky</td></tr>
+<tr><td>Senior</td><td>k = 3</td><td class="n"><b>0.1%</b></td><td>Bahut kam risky</td></tr>
+</table></div>
+<figure class="fig">
+<svg viewBox="0 0 520 190" role="img" aria-label="Three bond tranche default bars">
+  <text x="10" y="22" font-size="13">Default probability (bond ka apna 10% dotted line)</text>
+  <line x1="150" y1="36" x2="150" y2="170" stroke="#7a8194"/>
+  <rect x="150" y="40" width="271" height="26" fill="#c23b3b"/><text x="14" y="58" font-size="13">Junior</text><text x="428" y="58" font-size="13">27.1%</text>
+  <rect x="150" y="78" width="28" height="26" fill="#b8740a"/><text x="14" y="96" font-size="13">Mezzanine</text><text x="186" y="96" font-size="13">2.8%</text>
+  <rect x="150" y="116" width="2" height="26" fill="#2e8540"/><text x="14" y="134" font-size="13">Senior</text><text x="160" y="134" font-size="13">0.1%</text>
+  <line x1="250" y1="36" x2="250" y2="160" stroke="#2457c5" stroke-dasharray="4 4"/><text x="254" y="168" font-size="12" style="fill:#2457c5">10% (ek bond)</text>
+</svg>
+</figure>
+<div class="box ex"><b class="t">Slide ka conclusion</b>Teesra bond add karne se <b>capital ka do-tihai hissa</b> (notional ke hisaab se: mezzanine aur senior, yani 3 mein se 2) un claims mein repackage ho gaya jo <b>underlying bonds se kam risky</b> hain.</div>
+<div class="box extra"><b class="t">Aur zyada bonds (extra)</b>Agar N bonds hon aur sab uncorrelated, to sabse senior tranche (jo tabhi default kare jab sabhi N default karein) ki probability = p^N. p = 0.1 aur N = 10 ho to 0.1^10 = 0.00000001%. Isi ko dekhke 100 bonds ke pools banane ka craze aya. Lekin ye <b>sirf tab sach hai jab defaults sach mein independent hon</b>. Real life mein ghar ke prices girne se sab mortgage ek saath default karte hain (correlation high), aur formula toot jata hai.</div>
+
+<h3>3.6 Re-securitization aur CDO-squared</h3>
+<p>Ek aur tareeka "highly rated" securities ka total notional badhane ka: pehle round mein bani <b>junior tranches par dobara securitization machinery lagana</b>.</p>
+<div class="flow col">
+  <div class="node fill-b">Pool A (2 bonds, p = 10%) &rarr; junior tranche A: default 19%</div>
+  <div class="node fill-b">Pool B (2 bonds, p = 10%) &rarr; junior tranche B: default 19%</div>
+  <div class="arr">&#10142;</div>
+  <div class="node fill-p">Dono junior tranches ko ek naye pool mein jod do (capital = 2)</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">Dobara tranching: do prioritized claims, har ek 1 ki</div><div class="arr">&#10142;</div>
+  <div class="grid2" style="min-width:320px">
+    <div class="node fill-g"><b>Senior (CDO-squared)</b><small>Default tab jab <b>dono pools mein kam se kam ek bond default</b> kare</small></div>
+    <div class="node fill-r"><b>Junior (CDO-squared)</b><small>Default jab <b>koi ek bhi</b> junior tranche fail ho</small></div>
+  </div>
+</div>
+<div class="math">Pool A mein junior default = 0.19, Pool B mein bhi 0.19 (independent pools).<br>
+<b>Senior^2 default = 0.19 x 0.19 = 0.0361 = 3.6%</b>   (dono juniors fail hon)<br>
+Junior^2 default = 1 - (1 - 0.19)^2 = 1 - 0.6561 = 0.3439 = 34.4%   (extra)</div>
+<div class="box ex"><b class="t">Matlab</b>Original claims 19% default wali (bahut risky) thi. Unhe jodke, fir se tranching karke, ek claim bani jiska default risk <b>3.6%</b> hai, jo ek individual bond ke risk (10%) se bhi kam hai. Yeh CDO ke tranches se bane CDO ko <b>CDO-squared (CDO<sup>2</sup>)</b> kehte hain.</div>
+<div class="box warn"><b class="t">Dhyan se</b>Is derivation mein maana gaya hai ki Pool A aur Pool B independent hain (defaults uncorrelated). Agar dono pools mein mortgages hain aur ghar ke prices girte hain, to dono pools ek saath girenge. Wahan 3.6% ka number bahut zyada hoga. Part 4 mein simulation exactly isi sensitivity ko dikhati hai.</div>
+
+<h3 id="corr">3.7 Correlation ka role aur systematic risk</h3>
+<div class="box key"><b class="t">Sabse important variable: default correlation</b>
+<ul>
+<li>Underlying assets ke defaults jitne <b>kam correlated</b>, utna hi <b>improbable</b> ki sab ek saath default karein, aur utna hi safe senior-most claim banaya ja sakta hai.</li>
+<li>Defaults jitne zyada correlated, senior-most claim utna kam safe.</li>
+<li>Perfectly correlated: senior claim underlying jaisa hi risky (10%). Uncorrelated: 1%. Beech mein 1% se 10% ke beech.</li>
+</ul></div>
+<div class="flow">
+  <div class="node fill-g">Low correlation</div><div class="arr">&#10142;</div>
+  <div class="node">Sab ek saath default ka chance bahut kam</div><div class="arr">&#10142;</div>
+  <div class="node fill-g">Senior tranche bahut safe (AAA possible)</div>
+</div>
+<div class="flow">
+  <div class="node fill-r">High correlation</div><div class="arr">&#10142;</div>
+  <div class="node">Ek bura event sabko ek saath gira sakta hai</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Senior tranche utna safe nahi</div>
+</div>
+
+<h4>"Diversifiable risk ko systematic risk se badalna" ka matlab</h4>
+<p>Part 1 ka systematic/idiosyncratic risk yaad karo. Ek AAA corporate bond ka default risk zyada tar <b>us ek company ke apne problems</b> se aata hai (idiosyncratic, diversifiable). Lekin senior tranche tabhi default karti hai jab pool ke <b>bahut saare assets ek saath default</b> karein. Aisa tab hota hai jab poori economy buri haalat mein ho (jaise ghar ke prices girna). Matlab senior tranche ka default risk <b>systematically bad economic states mein concentrate</b> hota hai.</p>
+<div class="box ex"><b class="t">Example (samajhne ke liye)</b>Do securities hain, dono ki default probability 1%.<br>
+<b>Corporate AAA bond</b>: 1% matlab "kisi saal is ek company ke saath kuch bura ho jaye". Baaki duniya theek chal rahi hai, tumhari naukri, ghar, doosre investments sab theek.<br>
+<b>Senior tranche</b>: 1% matlab "poori economy ka bura crash". Us time tumhari naukri, ghar, aur baaki investments bhi gir rahe hote hain. Paisa tab sabse zyada chahiye hota hai, aur wahi time tranche default karti hai.<br>
+Isliye same 1% hone par bhi senior tranche zyada khatarnak hai, aur slide kehti hai ki investors ko iske liye <b>kaafi zyada risk premium</b> maangna chahiye.</div>
+<div class="box trick"><b class="t">Exam ke liye 2-line summary</b>(1) Structured finance ki ratings <b>underlying risk ke chhote estimation errors</b> ke saamne bahut fragile hain. (2) Ye products <b>systematic risk</b> mein exposed hain. In dono ne milke rise aur fall ko explain kiya.</div>
+</section>
+<section class="part p4" id="p4">
+<div class="partbar"><span class="tag">PART 4 / FF_1D</span><h2>Structured finance ko rate karna itna mushkil kyun tha</h2></div>
+<p>Part 3 mein dekha ki tranching se safe claims ban sakti hain. Ab sawaal ye hai: <b>rating agencies ne un claims ko rate kaise kiya, aur wo itni galat kyun nikli?</b> Is part mein numbers zyada hain, lekin logic simple hai. Ek ek karke chalte hain.</p>
+
+<h3>4.1 Credit rating kya hoti hai</h3>
+<div class="box def"><b class="t">Credit rating</b>Issuer ya entity ki apni <b>future financial commitments</b> (principal aur interest ki payments) poori karne ki kabiliyat ka measure.</div>
+<p>Rating do tareeke se base ho sakti hai:</p>
+<div class="grid2">
+  <div class="mini"><h5>1. Default ki probability</h5>Default hone ki anticipated likelihood.</div>
+  <div class="mini r"><h5>2. Expected economic loss</h5>Default hone ki likelihood <b>x</b> default ke baad severity of loss.</div>
+</div>
+<div class="math">Expected loss = P(default) x Loss given default (LGD)<br>
+LGD = 1 - Recovery rate</div>
+<div class="box ex"><b class="t">Example</b>Bond ki default probability 5%, aur default hone par 50% paisa recover hota hai (recovery 50%, to LGD 50%). Expected loss = 5% x 50% = <b>2.5%</b> of face value.</div>
+<p>Intuitively rating ko security ke <b>expected cash flow</b> ka measure samajh sakte ho.</p>
+<div class="box def"><b class="t">Investment grade vs speculative grade (corporate bonds)</b>
+<b>BBB ya usse upar</b> (AAA, AA, A, BBB) = <b>investment grade</b>. Low se moderate default risk.<br>
+<b>BB+ aur neeche</b> = <b>speculative grade</b>. Ye already default mein hain ya default ke kareeb.</div>
+
+<h3 id="ratingtable">4.2 Historical default data: Table 1 (Fitch)</h3>
+<p>Slide mein Fitch ka historical data tha: jo bonds rating ke saath issue hue, unme se 10 saal mein kitne default hue. Niche wahi table hai, saath mein ek column maine <b>5-saal ki default probability</b> add kiya hai (annualized rate se nikali) kyunki simulation mein 5-saal ka hi number use hoga.</p>
+<div class="tw"><table>
+<tr><th>Rating</th><th class="n">10-year default probability</th><th class="n">Annualized default rate</th><th class="n">5-year PD (extra, derived)</th></tr>
+<tr><td colspan="4" style="background:var(--green-bg)"><b>Investment grade</b></td></tr>
+<tr><td>AAA</td><td class="n">0.19%</td><td class="n">0.02%</td><td class="n">0.10%</td></tr>
+<tr><td>AA+</td><td class="n">0.57%</td><td class="n">0.06%</td><td class="n">0.30%</td></tr>
+<tr><td>AA</td><td class="n">0.89%</td><td class="n">0.09%</td><td class="n">0.45%</td></tr>
+<tr><td>AA-</td><td class="n">1.15%</td><td class="n">0.12%</td><td class="n">0.60%</td></tr>
+<tr><td>A+</td><td class="n">1.65%</td><td class="n">0.17%</td><td class="n">0.85%</td></tr>
+<tr><td>A</td><td class="n">1.85%</td><td class="n">0.19%</td><td class="n">0.95%</td></tr>
+<tr><td>A-</td><td class="n">2.44%</td><td class="n">0.25%</td><td class="n">1.24%</td></tr>
+<tr><td>BBB+</td><td class="n">3.13%</td><td class="n">0.32%</td><td class="n">1.59%</td></tr>
+<tr><td>BBB</td><td class="n">3.74%</td><td class="n">0.38%</td><td class="n">1.89%</td></tr>
+<tr><td>BBB-</td><td class="n">7.26%</td><td class="n">0.75%</td><td class="n">3.69%</td></tr>
+<tr><td colspan="4" style="background:var(--red-bg)"><b>Speculative grade</b></td></tr>
+<tr><td>BB+</td><td class="n">10.18%</td><td class="n">1.07%</td><td class="n"><b>5.24%</b></td></tr>
+<tr><td>BB</td><td class="n">13.53%</td><td class="n">1.45%</td><td class="n">7.04%</td></tr>
+<tr><td>BB-</td><td class="n">18.46%</td><td class="n">2.04%</td><td class="n">9.79%</td></tr>
+<tr><td>B+</td><td class="n">22.84%</td><td class="n">2.59%</td><td class="n">12.30%</td></tr>
+<tr><td>B</td><td class="n">27.67%</td><td class="n">3.24%</td><td class="n">15.18%</td></tr>
+<tr><td>B-</td><td class="n">34.98%</td><td class="n">4.30%</td><td class="n">19.73%</td></tr>
+<tr><td>CCC+</td><td class="n">43.36%</td><td class="n">5.68%</td><td class="n">25.35%</td></tr>
+<tr><td>CCC</td><td class="n">48.52%</td><td class="n">6.64%</td><td class="n">29.07%</td></tr>
+<tr><td>CC</td><td class="n">77.00%</td><td class="n">14.70%</td><td class="n">54.84%</td></tr>
+<tr><td>C</td><td class="n">95.00%</td><td class="n">29.96%</td><td class="n">83.14%</td></tr>
+</table></div>
+<div class="box key"><b class="t">Is table se kya seekhna hai</b>
+<ul>
+<li>Rating jitni neeche, default probability utni tezi se badhti hai. AAA ki 10 saal ki probability 0.19% hai, BBB- ki 7.26%, aur C ki 95%.</li>
+<li>BBB- aur BB+ ke beech <b>bada jump</b> hai: 7.26% se 10.18% (10-year). Isliye investment grade ki line important hai.</li>
+<li><b>Annualized</b> = ek saal ke hisaab se default rate, 10-year probability se nikala hua: annual = 1 - (1 - PD10)^(1/10). Example: BB+ : 1 - (1 - 0.1018)^(0.1) = 1.07%.</li>
+<li>5-year PD = 1 - (1 - annual)^5. BB+ ke liye 5.24%. Yani <b>5% ki 5-saal ki default probability = BB+</b> (just-below investment grade). Isi se simulation mein har bond ko BB+ rating mili.</li>
+</ul></div>
+
+<h3>4.3 Structured finance ko rate karna alag kyun hai</h3>
+<div class="grid2">
+  <div class="mini"><h5>Single-name rating (pehle ka business)</h5>Har security ko <b>doosre se independent</b> assess kiya jaata hai. Rating agency ko ye sochne ki zarurat nahi ki ek company ka default doosre se kitna jura hua hai (<b>correlation ke baare mein agnostic</b> reh sakti hai).</div>
+  <div class="mini r"><h5>Structured finance rating</h5>Agency ko poore collateral pool ke <b>payoffs ki joint distribution</b> samajhni padti hai: matlab kaun kitna ek saath default karega. CDO tranches ka risk <b>defaults ki commonality</b> ke prati sensitive hai.</div>
+</div>
+<div class="box warn"><b class="t">Magnification (multiple rounds ka asar)</b>
+<ul>
+<li>CDO ka structure default likelihoods, default correlation ke estimates ki imprecision, aur default dependence ke model errors ka effect <b>magnify</b> kar deta hai.</li>
+<li>Ye problems tab aur badhti hain jab alag alag financial securities ko mila diya jata hai (jaise <b>CDO-squared</b> mein).</li>
+<li>Multiple rounds of structuring mein underlying securities mein itni chhoti galtiyan, jo us security ki apni rating nahi badaltin, structured securities ki ratings ko <b>dramatically</b> badal sakti hain.</li>
+</ul></div>
+
+<h3 id="sim">4.4 Simulation exercise (setup)</h3>
+<p>Slide ne ek simulation dikhaya ki ratings kitni sensitive hoti hain. Pehle setup samjho.</p>
+<div class="tw"><table>
+<tr><th>Parameter</th><th>Value</th><th>Matlab</th></tr>
+<tr><td>Collateral pools</td><td>40 CDO pools</td><td>Har ek ek alag CDO</td></tr>
+<tr><td>Har pool mein</td><td>100 bonds</td><td>Zyada diversification</td></tr>
+<tr><td>5-year default probability (har bond)</td><td>5%</td><td>Historical table se ye BB+ (just below investment grade)</td></tr>
+<tr><td>Recovery rate</td><td>50% of face value</td><td>Default par aadha paisa wapas, LGD = 50%</td></tr>
+<tr><td>Pairwise default correlation (pool ke andar)</td><td>0.20</td><td>Ek pool ke bonds thode correlated</td></tr>
+<tr><td>Pools ke beech correlation</td><td>0</td><td>Alag pools independent maane gaye</td></tr>
+</table></div>
+<p>Har pool mein capital structure ke <b>3 tranches</b> hain:</p>
+<figure class="fig">
+<svg viewBox="0 0 560 250" role="img" aria-label="Attachment points">
+  <rect x="40" y="30" width="60" height="150" fill="#fdeaea" stroke="#c23b3b" stroke-width="2"/><text x="70" y="100" font-size="13" text-anchor="middle" style="fill:#1f2430">Junior</text><text x="70" y="118" font-size="11" text-anchor="middle" style="fill:#1f2430">0 to 6%</text>
+  <rect x="100" y="30" width="60" height="150" fill="#fff3d9" stroke="#b8740a" stroke-width="2"/><text x="130" y="100" font-size="13" text-anchor="middle" style="fill:#1f2430">Mezz</text><text x="130" y="118" font-size="11" text-anchor="middle" style="fill:#1f2430">6 to 12%</text>
+  <rect x="160" y="30" width="360" height="150" fill="#e6f4e8" stroke="#2e8540" stroke-width="2"/><text x="340" y="100" font-size="14" text-anchor="middle" style="fill:#1f2430">Senior: 12% se upar, baki sab (12 to 100%)</text>
+  <line x1="40" y1="195" x2="520" y2="195" stroke="#7a8194" marker-end="url(#ah)"/>
+  <text x="40" y="215" font-size="12">0%</text><text x="100" y="215" font-size="12">6%</text><text x="160" y="215" font-size="12">12%</text><text x="505" y="215" font-size="12">100%</text>
+  <text x="280" y="238" font-size="13" text-anchor="middle">Pool ka portfolio loss: pehle junior bharta hai, phir mezz, phir senior</text>
+</svg>
+<figcaption>0%, 6%, 12% ko <b>attachment points</b> kehte hain: wo loss level jahan se us tranche ko nuksan lagna shuru hota hai.</figcaption>
+</figure>
+<div class="box def"><b class="t">Attachment point</b>Wo portfolio-loss level jahan se tranche loss absorb karna <b>shuru</b> karti hai. Junior ka 0%, mezzanine ka 6%, senior ka 12%. Matlab junior ko loss pehle rupaye se lagta hai, mezzanine ko tab jab pool loss 6% se upar jaye (aur 12% par wo poori khatam ho jaati hai), aur senior ko sirf tab jab pool loss 12% se upar jaye.</div>
+
+<h4>Pool loss ko tranche loss mein kaise badlein (worked example)</h4>
+<ul>
+  <li>Ek bond default hone par pool ka loss = (1/100) x LGD (0.5) = <b>0.5% of pool</b>.</li>
+  <li>To pool loss = 0.5% x (defaults ki sankhya).</li>
+  <li>Junior (0 se 6%) poori khatam hone ke liye <b>12 defaults</b> chahiye (12 x 0.5% = 6%). Mezz (6 se 12%) ke liye <b>24 defaults</b> tak.</li>
+</ul>
+<div class="box ex"><b class="t">Example: 16 bonds default ho gaye</b>
+Pool loss = 16 x 0.5% = 8%.<br>
+Junior: pura 6% ka loss le chuki, <b>100% gaya</b>.<br>
+Mezz: (8% - 6%) = 2% ka loss, jabki mezz ka size 6% hai. 2/6 = <b>33.3% gaya</b>.<br>
+Senior: loss 12% tak pahunchta hi nahi, <b>0 loss</b>.</div>
+<div class="card">
+<b>Tranche loss calculator</b>
+<div class="tools">
+  <label>Pool mein kitne bonds default hue (100 mein se) = <span class="out" id="tN">16</span> <input type="range" id="tNr" min="0" max="40" step="1" value="16"></label>
+  <label>Recovery rate = <span class="out" id="tRv">50</span>% <input type="range" id="tRvr" min="0" max="90" step="5" value="50"></label>
+  <div>Pool ka loss = <span class="out" id="tL"></span></div>
+  <div>Junior ka loss: <span class="out" id="tJ"></span></div><div class="bar"><i id="tJb" style="background:var(--red);width:0"></i></div>
+  <div>Mezzanine ka loss: <span class="out" id="tM"></span></div><div class="bar"><i id="tMb" style="background:var(--amber);width:0"></i></div>
+  <div>Senior ka loss: <span class="out" id="tS"></span></div><div class="bar"><i id="tSb" style="background:var(--green);width:0"></i></div>
+</div>
+</div>
+
+<h4>CDO-squared kaise bana</h4>
+<p>40 original CDOs ban gaye. Ab un <b>40 mezzanine tranches</b> ko ek naye pool mein jod diya. Is naye pool ke against dobara wahi 3 tranches issue ki (0-6%, 6-12%, 12-100%). Ye <b>CDO-squared</b> hai. Slide mein isko CDO<sup>2</sup> ([6, 12]) likha hai: matlab collateral original CDOs ki 6% se 12% wali tranches hain.</p>
+<div class="flow">
+  <div class="node fill-b">40 pools x 100 bonds</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">Har pool ki 3 tranches</div><div class="arr">&#10142;</div>
+  <div class="node fill-a">40 mezzanine tranches nikalo</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">Naya pool, dobara 3 tranches = <b>CDO<sup>2</sup></b></div>
+</div>
+
+<h4>Rating kaise assign hui</h4>
+<ol>
+  <li>Simulate karo ki underlying collateral ke payoffs kya aate hain (bahut baar).</li>
+  <li>Har tranche ka <b>impairment likelihood</b> (simulation mein kitni baar loss hua) nikalo.</li>
+  <li>Use Table 1 ki <b>5-saal ki default probability</b> se compare karo (upar wala derived column) aur uski rating de do.</li>
+</ol>
+<div class="box ex"><b class="t">Example: CDO mezzanine ko BBB- kyun mili</b>
+Simulation mein mezzanine ki default probability = 2.07%. Hamare 5-year table mein: BBB ki 1.89% hai, BBB- ki 3.69%. 2.07% BBB se zyada hai, BBB- ke andar aati hai. Isliye rating <b>BBB-</b>, lowest investment grade.</div>
+
+<h3>4.5 Table 2: baseline results</h3>
+<div class="tw"><table>
+<tr><th></th><th>Attachment points</th><th class="n">Default probability</th><th class="n">Expected payoff</th><th>Rating</th></tr>
+<tr><td colspan="5" style="background:var(--blue-bg)"><b>CDO</b> (original, 100 bonds ka pool)</td></tr>
+<tr><td>Junior</td><td>0% - 6%</td><td class="n">97.52%</td><td class="n">0.59</td><td>NR</td></tr>
+<tr><td>Mezzanine</td><td>6% - 12%</td><td class="n">2.07%</td><td class="n">&gt; 0.99</td><td><b>BBB-</b></td></tr>
+<tr><td>Senior</td><td>12% - 100%</td><td class="n">&lt; 0.00%</td><td class="n">&gt; 0.99</td><td><b>AAA</b></td></tr>
+<tr><td colspan="5" style="background:var(--purple-bg)"><b>CDO<sup>2</sup></b> ([6, 12]): 40 mezzanine tranches ka pool</td></tr>
+<tr><td>Junior</td><td>0% - 6%</td><td class="n">56.94%</td><td class="n">0.93</td><td>C</td></tr>
+<tr><td>Mezzanine</td><td>6% - 12%</td><td class="n">&lt; 0.00%</td><td class="n">&gt; 0.99</td><td><b>AAA</b></td></tr>
+<tr><td>Senior</td><td>12% - 100%</td><td class="n">&lt; 0.00%</td><td class="n">&gt; 0.99</td><td><b>AAA</b></td></tr>
+</table></div>
+<p class="cap">NR = Not Rated: default probability itni zyada hai ki rating scale ke bhi neeche hai. Expected payoff 1 se kam hone ka matlab hai ki average mein investor ko poora paisa wapas nahi milta. 0.59 = 59% wapas.</p>
+<div class="box key"><b class="t">Table se seekhne wali baatein</b>
+<ul>
+<li>Original CDO ki <b>senior tranche AAA</b> hai, mezz BBB-. Pool ke bond khud BB+ the. Matlab BB+ bonds ke pool se AAA nikal aaya (credit enhancement).</li>
+<li>Junior ki default probability <b>97.52%</b> hai. Isse samajh aata hai ki junior tranche bahut thin hai (6%) aur pool mein <b>kam se kam ek bond default</b> hona lagbhag pakka hai. Simple check: 100 bonds mein se 5% default karte hain, to ek bhi na default ho ki probability sirf ~0.6% (agar independent hota); correlation ke saath 2.5% hai. Isse 97.5% match karta hai.</li>
+<li><b>CDO-squared ki mezzanine AAA</b> hai, jabki uske collateral ke andar BBB- wale tranches hain! BBB- tranches ke pool se AAA bana liya.</li>
+<li>CDO<sup>2</sup> junior ki 56.94% default probability ek simple check se samajh aati hai: har mezz tranche ke 2.07% impair hone ke chance, 40 independent tranches, to kisi ek ka impair hona = 1 - (1 - 0.0207)^40 = <b>56.7%</b>. Table ka 56.94% usse match karta hai.</li>
+</ul></div>
+<div class="box warn"><b class="t">Ye AAA kitna bharose layak hai?</b>Ye sab number <b>2 assumptions</b> pe tike hain: (1) pool ke andar correlation sirf 0.20, (2) alag pools ke beech correlation bilkul 0. Real mortgages mein sab ek hi housing market ke gire par depend karte hain. To dono assumption galat ho sakte hain. Aage ka section yahi test karta hai.</div>
+
+<h3 id="sens">4.6 Sensitivity: assumptions galat nikle to kya hoga</h3>
+<p>Rating isliye aise badhiya aayi kyunki parameters (correlation, default probability) sahi maane gaye. Ab dekho agar inme se koi thoda galat nikle.</p>
+
+<h4>Graph 1: Default correlation badle to tranche payoff kaise badlega (CDO)</h4>
+<p>Graph mein y-axis = <b>expected payoff, baseline payoff se scale kiya hua</b> (1.00 ka matlab baseline jaisa). X-axis = default correlation, 0 se 1 tak.</p>
+<ul>
+  <li><b>Collateral</b> (pool khud): flat 1.0. Pool ka expected payoff correlation se nahi badalta, kyunki har bond ki apni default probability wahi hai.</li>
+  <li><b>Senior</b>: lagbhag 1.0 ke aas paas, dikhne mein barely hilti hai.</li>
+  <li><b>Mezzanine</b> (dashed): thodi si neeche jaati hai (~0.92 tak), phir wapas.</li>
+  <li><b>Junior</b>: correlation badhne par <b>upar jaata hai</b> (1.6 tak). Wajah: high correlation mein loss kuch states mein bahut bunch ho jaata hai (ya kuch nahi, ya sab kuch), jisse junior ka expected loss kam hota hai aur loss ka bojh upar wali tranches pe shift hota hai.</li>
+</ul>
+<div class="box key"><b class="t">Seedha seekh</b>Correlation badhne se value junior ki taraf jaati hai aur mezzanine/senior se door. Jinhone mezz ya senior kharidi thi, unke liye ye bura hai. Part 3 ke do-bond example mein bhi yahi dikha tha (senior risk badha, junior ka ghata).</div>
+
+<h4>Graph 2: Default probability badle to (CDO)</h4>
+<ul>
+  <li><b>Junior</b>: sabse zyada sensitive. PD = 0 par baseline se ~1.7 guna payoff, aur PD 0.2 se 0.25 aate aate lagbhag 0 tak gir jata hai.</li>
+  <li><b>Mezzanine</b>: shuru mein flat rehti hai (PD chhota hone par wo protected hai), phir PD 0.1 se 0.3 ke beech tezi se <b>girkar lagbhag 0</b> par pahunch jati hai. Ye ek cliff jaisa hai.</li>
+  <li><b>Senior aur collateral</b>: dono dheere dheere girte hain. Senior collateral ke thoda upar rehta hai.</li>
+</ul>
+
+<h4>Table 3: Ratings kitni badal jaati hain (Slide ka sabse important table)</h4>
+<div class="tw"><table>
+<tr><th rowspan="2"></th><th rowspan="2">Initial (rho = 20%, PD = 5%)</th><th colspan="3">Default correlation (rho) badle</th><th colspan="3">Default probability (PD) badle</th></tr>
+<tr><th>40%</th><th>60%</th><th>80%</th><th>7.5%</th><th>10%</th><th>12.5%</th></tr>
+<tr><td colspan="8" style="background:var(--blue-bg)"><b>CDO</b></td></tr>
+<tr><td>Junior</td><td>NR</td><td>D</td><td>C</td><td>CC</td><td>NR</td><td>NR</td><td>NR</td></tr>
+<tr><td>Mezzanine</td><td><b>BBB-</b></td><td>BB-</td><td>B+</td><td>B+</td><td>B+</td><td>CCC</td><td>CC</td></tr>
+<tr><td>Senior</td><td><b>AAA</b></td><td>A+</td><td>BBB-</td><td>BB</td><td>AAA</td><td>A+</td><td>BBB-</td></tr>
+<tr><td colspan="8" style="background:var(--purple-bg)"><b>CDO<sup>2</sup></b> ([6, 12])</td></tr>
+<tr><td>Junior</td><td>C</td><td>D</td><td>NR</td><td>NR</td><td>NR</td><td>NR</td><td>NR</td></tr>
+<tr><td>Mezzanine</td><td><b>AAA</b></td><td>B+</td><td>C</td><td>CC</td><td>BBB-</td><td>NR</td><td>NR</td></tr>
+<tr><td>Senior</td><td><b>AAA</b></td><td>AAA</td><td>AAA</td><td>AA+</td><td>AAA</td><td>AAA</td><td>B-</td></tr>
+</table></div>
+<p class="cap">D = actual default. C, CC, CCC... bahut risky. NR = not rated.</p>
+
+<div class="box key"><b class="t">Table 3 se 5 important conclusions</b>
+<ol>
+<li><b>Correlation 20% se 40% hone par:</b> CDO senior AAA se A+ ho gayi (chhoti giravat), lekin CDO mezz BBB- se BB- (investment se speculative grade) aur <b>CDO<sup>2</sup> mezz AAA se seedha B+</b> (bahut badi giravat). 60% par C tak.</li>
+<li><b>PD 5% se 7.5% hone par:</b> CDO senior AAA hi rahi, lekin <b>CDO<sup>2</sup> mezz AAA se BBB-</b> ho gayi. 10% PD par NR.</li>
+<li><b>PD 12.5% par:</b> CDO senior BBB-, jabki <b>CDO<sup>2</sup> senior AAA se B-</b> gir gayi.</li>
+<li>Har jagah CDO<sup>2</sup> ki rating CDO se zyada tezi se girti hai (khaaskar mezz). Yani <b>re-tranching se risk estimation ki galti magnify hoti hai.</b></li>
+<li>CDO<sup>2</sup> senior correlation badhne par kaafi der tak AAA rehti hai (80% tak bhi AA+), lekin PD badhne par girti hai. Matlab har tranche ka <b>alag parameter ke prati alag sensitivity</b> profile hai.</li>
+</ol></div>
+
+<div class="box warn"><b class="t">Yaad rakhne wali baat</b>Ye numbers <b>"chhoti si galti"</b> se aaye hain: correlation 20% ki jagah 40%, ya default probability 5% ki jagah 7.5%. Baseline PD 5% bhi to ek estimate hi tha. Ek ya do percentage point ka error normal hai. Lekin us se AAA tranches B ya C ban jaati hain. Yahi slide ka main message hai.</div>
+
+<h3>4.7 Real world: mortgage-backed CDOs kaise CDO-squared the</h3>
+<ul>
+  <li>Pichle ek dashak mein bahut saare CDOs ke underlying assets <b>subprime residential mortgage-backed securities (RMBS)</b> the.</li>
+  <li>In RMBS mein se bahut saare khud <b>bade mortgage pools ki tranches</b> the, jo pehle round ke securitization se bani thi.</li>
+  <li>To "CDO of mortgage-backed securities" = <b>effectively CDO-squared</b> (tranches ka CDO).</li>
+  <li>Subprime lending recent phenomenon tha, to is sector ki <b>defaults aur delinquencies ka historical data kam</b> tha.</li>
+  <li>Default correlations, default probabilities aur recovery rates ke estimates mein <b>galti ki sambhavna badi thi</b>.</li>
+  <li>Ye galtiyan re-securitization se <b>magnify</b> ho gayi, aur isi ne in securities ke <b>devastating losses</b> samjhaye.</li>
+</ul>
+<div class="flow">
+  <div class="node fill-b">Subprime mortgages (history kam)</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">RMBS (pehli tranching)</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">CDO of RMBS (dusri tranching)</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Parameter errors magnify, ratings gir gayi</div>
+</div>
+
+<div class="box trick"><b class="t">Week 1 ka poora argument ek paragraph mein</b>
+Asset ka price expected cash flow aur uncertainty pe tikta hai, lekin speculation ki wajah se prices bubble ban sakte hain. US housing ek aisi bubble thi. Sasti borrowing aur subprime loans ne use badhaya. Banks ne leverage aur short-term funding pe chalte hue SIVs aur securitization ke through risk badhaya. Structured finance ne tranching se risky mortgages se AAA securities banayi, jo sahi tab thi jab defaults uncorrelated hon aur parameters sahi estimate hon. Rating agencies ne imprecise estimates use kiye, aur securities systematic risk mein exposed thi. Jab housing prices gire to sab ek saath default hue, AAA claims toot gayi, banks aur SIVs mein run aaya, aur financial crisis macroeconomy mein phail gaya. Sarkar aur Fed ko deposit insurance, liquidity, TARP, zero rate aur fiscal policy se response dena pada.</div>
+
+<h4>References (slides se)</h4>
+<ul class="src">
+  <li>Chapter 11, <i>The Economy: A South Asian Perspective</i> (CORE Econ): core-econ.org/the-economy-south-asia/book/text/11.html</li>
+  <li>Olivier Blanchard, <i>Macroeconomics</i>, Pearson.</li>
+  <li>Joshua Coval, Jakub Jurek, Erik Stafford, "The Economics of Structured Finance", <i>Journal of Economic Perspectives</i> (aeaweb.org/articles?id=10.1257/jep.23.1.3). Slides 1C aur 1D ke zyada tar tables, graphs aur examples isi paper se hain. Isse padhna ho to exam ke baad hi padhna, lekin agar ek sawaal reh jaye to isme jawab milega.</li>
+</ul>
+</section>
+<section class="part p5" id="p5">
+<div class="partbar"><span class="tag">PART 5</span><h2>Practice problems (solved)</h2></div>
+<p>Har problem ke neeche answer chhupa hai. Pehle copy pe khud solve karo, phir "Answer dekho" kholo. Zyada tar numbers slides ke examples se milte julte hain, taaki exam mein same pattern aaye to dikkat na ho.</p>
+
+<div class="q">Problem 1: Bond ka interest rate aur price</div>
+<p>Ek bond ek saal baad Rs 10,000 dega. (a) Agar iska price Rs 9,200 hai to interest rate kya hai? (b) Agar market mein similar assets ka rate badhkar 10% ho jaye, to bond ka price kitna hona chahiye? (c) Price badha ya gira, aur kyun?</p>
+<details><summary>Answer dekho</summary>
+(a) i = (10,000 - 9,200) / 9,200 = 800 / 9,200 = <b>8.70%</b>.<br>
+(b) P = 10,000 / (1 + i) = 10,000 / 1.10 = <b>Rs 9,090.91</b>.<br>
+(c) Price 9,200 se 9,090.91 par <b>gira</b> (lagbhag Rs 109 ki giravat). Wajah: bond ki payment fixed (Rs 10,000) hai, aur investor ko ab 8.70% ki jagah 10% return chahiye. Return badhane ka ek hi tareeka hai ki price kam ho.</details>
+
+<div class="q">Problem 2: Risky vs safe bond</div>
+<p>Do bonds dono ek saal baad Rs 5,000 dene ka vaada karte hain. Government bond Rs 4,750 mein bikta hai, ek company ka bond Rs 4,400 mein. (a) Dono ka promised interest rate nikalo. (b) Company bond ka price kam kyun hai? (c) Agar company default kar jaye aur kuch na de, to investor ka return kya hoga?</p>
+<details><summary>Answer dekho</summary>
+(a) Government: (5,000 - 4,750) / 4,750 = 250 / 4,750 = <b>5.26%</b>. Company: (5,000 - 4,400) / 4,400 = 600 / 4,400 = <b>13.64%</b>.<br>
+(b) Company ke default ka risk zyada hai. Isliye investor zyada rate (13.64%) maangte hain, aur rate zyada hone ka matlab price kam. Same promised payment par riskier bond ka price kam hota hai.<br>
+(c) Default aur zero payment par return = (0 - 4,400) / 4,400 = <b>-100%</b>. Promised rate zyada thi, lekin default hone par saara paisa gaya.</details>
+
+<div class="q">Problem 3: Systematic vs idiosyncratic (identify karo)</div>
+<p>Neeche diye gaye events ko systematic ya idiosyncratic risk mein classify karo: (i) RBI ne repo rate badhaya. (ii) Ek pharma company ka naya drug approve ho gaya. (iii) Government ne imports pe naya tax lagaya. (iv) Ek retail company ki CFO ne resign kiya. (v) Poori economy mein demand 5% gir gayi.</p>
+<details><summary>Answer dekho</summary>
+(i) Systematic (interest rates sab assets ko affect karte hain). (ii) Idiosyncratic. (iii) Systematic (trade policy). (iv) Idiosyncratic. (v) Systematic.<br>
+Trick: poochho ki "ye ek saath bahut saari companies ko hilata hai?" Haan to systematic, nahi to idiosyncratic.</details>
+
+<div class="q">Problem 4: Required rate aur share value (extra intuition formula)</div>
+<p>Do companies se har saal Rs 200 expected earnings hain, hamesha ke liye. Company A ka market capitalization rate 8% hai aur company B ka 16%. (Simple approximation: value = earnings / rate.) Kaun si zyada valuable hai aur kitna?</p>
+<details><summary>Answer dekho</summary>
+A: 200 / 0.08 = <b>Rs 2,500</b>. B: 200 / 0.16 = <b>Rs 1,250</b>. A ki value B se <b>do guna</b>. Earnings same hain, lekin B mein systematic risk zyada hai (rate zyada), to uski value aadhi. Slide ka statement: same expected earnings par lower market capitalization rate wali company ki value zyada hoti hai.</details>
+
+<div class="q">Problem 5: Order book (is table ko dekho)</div>
+<div class="tw"><table>
+<tr><th colspan="2">Bid</th><th colspan="2">Ask</th></tr>
+<tr><th>Price</th><th class="n">Qty</th><th>Price</th><th class="n">Qty</th></tr>
+<tr><td>1,418.05</td><td class="n">15</td><td>1,418.20</td><td class="n">50</td></tr>
+<tr><td>1,417.90</td><td class="n">240</td><td>1,418.25</td><td class="n">1</td></tr>
+<tr><td>1,417.85</td><td class="n">500</td><td>1,418.30</td><td class="n">1,686</td></tr>
+</table></div>
+<p>(a) Ek trader 300 shares ka limit sell order Rs 1,417.85 pe daalta hai. Kaise fill hoga aur average price kya hoga? Naya best bid kya hoga? (b) Ek trader 60 shares ka limit buy order Rs 1,418.25 pe daalta hai. Kya hoga?</p>
+<details><summary>Answer dekho</summary>
+<b>(a)</b> Seller ko best bid se shuru karke bids milte hain:<br>
+15 @ 1,418.05 = 21,270.75<br>
+240 @ 1,417.90 = 340,296.00<br>
+45 @ 1,417.85 = 63,803.25 (500 mein se sirf 45 chahiye, kyunki 15+240+45 = 300)<br>
+Total = <b>Rs 425,370.00</b>. Average = 425,370 / 300 = <b>Rs 1,417.90</b>.<br>
+Bid side mein 1,417.85 pe 455 shares bache hain, aur uske upar ke bids khatam. Naya best bid = <b>Rs 1,417.85</b> (price gira).<br><br>
+<b>(b)</b> Buyer 1,418.25 tak dene ko tayyar hai. Asks mein 1,418.20 pe 50 shares aur 1,418.25 pe 1 share milta hai, total 51. 1,418.30 buyer ke limit se zyada hai, to wo nahi lega.<br>
+Cost = 50 x 1,418.20 + 1 x 1,418.25 = 70,910 + 1,418.25 = <b>Rs 72,328.25</b>.<br>
+Baaki 9 shares ka order <b>fill nahi hua</b>, wo order book ke bid side mein sabse upar <b>1,418.25</b> pe baith jata hai. Ye ek partially-filled order hai.</details>
+
+<div class="q">Problem 6: Bubble ka calculation</div>
+<p>Ek index 5 saal mein 750 se 5,000 hua, phir 1,100 par aa gaya. (a) 5 saal ka annual growth rate? (b) Peak se kitne percent gira? (c) 1,100 se wapas 5,000 tak jaane ke liye kitna percent badhna padega? Isse kya seekhte ho?</p>
+<details><summary>Answer dekho</summary>
+(a) (5,000/750)^(1/5) - 1 = 6.667^(0.2) - 1 = 1.4614 - 1 = <b>46.1%</b> per year (slide: lagbhag 45%).<br>
+(b) 1 - 1,100/5,000 = 1 - 0.22 = <b>78%</b> (slide: almost 80%).<br>
+(c) 5,000/1,100 = 4.545, to <b>354.5%</b> badhna padega.<br>
+Seekh: 78% ki giravat ke baad wapas pehle level pe aane ke liye 354% chahiye. Giravat ka asar badhne se zyada bhaari hota hai.</details>
+
+<div class="q">Problem 7: Leverage</div>
+<p>Ek bank ke assets Rs 200 hain, apni poonji (equity) Rs 10, baaki udhaar. (a) Leverage kitna hai? (b) Assets 3% gir jayein to equity kitni bachegi? (c) Assets kitne percent girne par bank insolvent ho jayega? (d) Slide ke hisaab se is stage ke baad kya chakra shuru hota hai?</p>
+<details><summary>Answer dekho</summary>
+(a) 200 / 10 = <b>20 guna</b>.<br>
+(b) Loss = 3% x 200 = 6. Equity = 10 - 6 = <b>Rs 4</b>.<br>
+(c) Equity 0 hone par: 10 / 200 = <b>5%</b>. Assets 5% girne par bank insolvent.<br>
+(d) Capital ghatne se bank ko assets bechne padte hain, complex assets ho to <b>firesale prices</b> par bikte hain, assets ki value aur gir jati hai, aur investors udhaar dena band kar dete hain.</details>
+
+<div class="q">Problem 8: Do-bond tranching (p = 20%)</div>
+<p>Do identical bonds, har ek ki default probability 20%. Ek senior aur ek junior tranche (har ek 1 ki). (a) Defaults uncorrelated hon to dono tranches ki default probability? (b) Default correlation 0.5 ho to? (c) Correlation 1 ho to?</p>
+<details><summary>Answer dekho</summary>
+<b>(a)</b> Dono survive = 0.8 x 0.8 = 0.64. Junior default = 1 - 0.64 = <b>36%</b>. Senior default (dono default) = 0.2 x 0.2 = <b>4%</b>.<br>
+<b>(b)</b> P(dono default) = p^2 + rho p(1-p) = 0.04 + 0.5 x 0.2 x 0.8 = 0.04 + 0.08 = 0.12. Senior = <b>12%</b>. Junior = 2p - 0.12 = 0.40 - 0.12 = <b>28%</b>.<br>
+<b>(c)</b> P(dono) = 0.04 + 1 x 0.16 = 0.20. Senior = <b>20%</b>, Junior = 0.40 - 0.20 = <b>20%</b>. Dono bond ke jaisa, koi credit enhancement nahi.<br>
+Ek aur observation: correlation 0 se 1 jaate hue senior 4% se 20% ho gayi (bura hua), junior 36% se 20% (accha hua).</details>
+
+<div class="q">Problem 9: Teen-bond tranching (p = 20%, uncorrelated)</div>
+<p>Teen identical bonds, har ek p = 20%. Teen tranches: junior (koi bhi 1 default), mezzanine (2 ya zyada default), senior (teeno default). Teeno ki default probability nikalo aur batao kitne tranches bond ke 20% se kam risky hain.</p>
+<details><summary>Answer dekho</summary>
+k defaults ki probability = C(3,k) x 0.2^k x 0.8^(3-k):<br>
+k=0: 0.8^3 = 0.512<br>
+k=1: 3 x 0.2 x 0.64 = 0.384<br>
+k=2: 3 x 0.04 x 0.8 = 0.096<br>
+k=3: 0.2^3 = 0.008<br>
+Junior = 1 - 0.512 = <b>48.8%</b>. Mezzanine = 0.096 + 0.008 = <b>10.4%</b>. Senior = <b>0.8%</b>.<br>
+Bond ka 20% hai. Mezzanine (10.4%) aur senior (0.8%) dono kam risky hain, junior (48.8%) zyada. Teen mein se do tranches kam risky, yaani capital ka 2/3 hissa. (Wahi pattern jo slide ke p = 10% wale example mein tha.)</details>
+
+<div class="q">Problem 10: CDO-squared (p = 20%)</div>
+<p>Do alag, independent two-bond pools (har bond p = 20%). Har pool ki junior tranche leke ek naya pool bana, aur uske do tranches (senior aur junior) issue kiye. Naye senior aur junior ki default probability?</p>
+<details><summary>Answer dekho</summary>
+Pehle: har pool ki junior ka default = 36% (problem 8a).<br>
+Senior^2 tab default karti hai jab <b>dono</b> junior default karein: 0.36 x 0.36 = <b>12.96%</b>.<br>
+Junior^2 tab default karti hai jab <b>koi ek</b> junior default kare: 1 - (1 - 0.36)^2 = 1 - 0.4096 = <b>59.04%</b>.<br>
+36% default wali claims se humne 12.96% wali claim banayi, jo ek bond ke 20% se bhi kam hai. Lekin ye tabhi tak sach hai jab dono pools independent hon.</details>
+
+<div class="q">Problem 11: Tranche loss (attachment points 0-6-12)</div>
+<p>100 bonds ka pool, recovery rate 40%. 15 bonds default ho gaye. Junior (0-6%), mezzanine (6-12%) aur senior (12%+) ko kitna loss hoga?</p>
+<details><summary>Answer dekho</summary>
+LGD = 1 - 0.40 = 0.60. Ek bond ka loss pool ka 0.6%. 15 x 0.6% = <b>9%</b> pool loss.<br>
+Junior: pura 6% gaya = <b>100% loss</b>.<br>
+Mezzanine: (9 - 6) = 3% loss, size 6%, to 3/6 = <b>50% loss</b>.<br>
+Senior: loss 12% tak nahi pahunchta, to <b>0 loss</b>.</details>
+
+<div class="q">Problem 12: Rating assign karna</div>
+<p>5-year default probability table (Part 4.2 ka derived column) use karke batao: ek tranche ki simulated impairment probability (a) 3%, (b) 6%, (c) 0.2% ho to rating kya hogi? (Rule: wo rating lo jiski 5-year PD tranche ki PD ke barabar ya usse zyada ho aur sabse kam ho.)</p>
+<details><summary>Answer dekho</summary>
+(a) 3%: BBB (1.89%) se zyada, BBB- (3.69%) se kam. Rating <b>BBB-</b> (investment grade ki lowest).<br>
+(b) 6%: BB+ (5.24%) se zyada, BB (7.04%) se kam. Rating <b>BB</b> (speculative grade).<br>
+(c) 0.2%: AAA (0.10%) se zyada, AA+ (0.30%) se kam. Rating <b>AA+</b>.<br>
+Dhyan do: (a) investment grade hai aur (b) speculative. Sirf 3% se 6% ke jump mein ye line cross ho gayi.</details>
+
+<div class="q">Problem 13: Short answer (theory)</div>
+<details><summary>Q13a. Bubble ki definition do aur batao ki Fama aur Shiller ke views mein kya farak hai.</summary>
+Bubble = kisi asset ke price ka uski fundamental value se sustained aur significant departure. Fama kehte hain ki "bubble" word ka koi matlab nahi, ye hindsight hai, aur prices hamesha available information reflect karte hain (EMH). Shiller kehte hain ki simple statistics (jaise P/E) se bubble pehchani ja sakti hai, aur 1990s ke prices irrational exuberance se chadhe the.</details>
+<details><summary>Q13b. Securitization se banks ka risk kam hone ki umeed thi. Phir bhi crisis kyun aaya?</summary>
+Diversification se banks local housing risk se bach sakte the (MBS ke through alag jagah ke mortgages). Lekin: banks ne borrower ki repayment capacity dekhna kam kar diya, rating agencies ne risk galat assess kiya, banks ne SIVs ke through leverage badhaya, short-term wholesale funding pe nirbhar hue, aur jab prices gire to assets illiquid hokar firesale prices pe bike.</details>
+<details><summary>Q13c. Structured finance ke "do neglected features" kya hain?</summary>
+(1) Ratings underlying risks ke estimates mein chhoti imprecision ke prati bahut fragile hain (AAA bhi reasonable probability se default kar sakti hai). (2) Ye diversifiable risk ko systematic risk se badal deta hai, to ye securities severe downturn mein same rating ke corporate securities se kam survive karti hain, aur investors ko iske liye bahut zyada risk premium maangna chahiye.</details>
+<details><summary>Q13d. Zero lower bound ka matlab aur Fed ne kya kiya?</summary>
+Policy rate ko zero se neeche nahi le ja sakte. December 2008 tak Fed ne rate zero kar diya, to monetary policy constrained ho gayi. Fed ko unconventional monetary policy apnani padi, aur sarkar ne fiscal policy (tax cuts aur spending badhana) use ki.</details>
+</section>
+
+<section class="part p6" id="p6">
+<div class="partbar"><span class="tag">PART 6</span><h2>Quick revision sheet aur glossary</h2></div>
+
+<h3>6.1 Formulas ek jagah</h3>
+<div class="math">Bond rate:      i = (F - P) / P        (F = future payment, P = price)<br>
+Bond price:     P = F / (1 + i)<br>
+Return:         (final - initial) / initial<br>
+Expected loss:  P(default) x LGD,   LGD = 1 - recovery<br>
+Joint default:  P(both) = p^2 + rho p (1 - p)    (2 bonds, same p)<br>
+Two-bond:       Senior = P(both),   Junior = 2p - P(both)<br>
+Three-bond uncorrelated:  Junior = 1-(1-p)^3,  Mezz = P(k>=2),  Senior = p^3<br>
+CDO-squared (2 pools):    Senior^2 = Junior^2,  Junior^2 = 1-(1-Junior)^2<br>
+Tranche loss:   Junior = min(L, 6)/6,  Mezz = min(max(L-6,0), 6)/6,  Senior = max(L-12,0)/88   (L = pool loss in %)<br>
+Annualized -> n-year PD:    1 - (1 - annual)^n</div>
+
+<h3>6.2 Numbers jo exam mein poochhe ja sakte hain</h3>
+<div class="grid2">
+<div class="mini"><h5>Bubble / tech</h5><ul><li>Nasdaq: &lt;750 se &gt;5,000 in 5 years, ~45% annual</li><li>Do-tihai value 1 saal se kam mein gayi</li><li>Bottom ~1,100, peak se ~80% neeche</li></ul></div>
+<div class="mini r"><h5>Order book example</h5><ul><li>Best bid 1,418.05, best ask 1,418.20</li><li>Buy 100 @ 1,418.10: fill nahi, book mein</li><li>Buy 1,500 @ 1,418.30: 50 @ 1,418.20, 1 @ 1,418.25, baaki @ 1,418.30</li></ul></div>
+<div class="mini p"><h5>Structured finance</h5><ul><li>Issuance 10 guna se zyada badha</li><li>2005: $25-40bn per quarter, peak ~$100bn, 2008: &lt;$5bn</li><li>37,000 AAA issues (mid-2007); ~60% AAA vs &lt;1% corporate</li><li>Moody's revenue: 44% from structured finance (2006)</li></ul></div>
+<div class="mini g"><h5>Downgrades</h5><ul><li>Merrill Lynch: 27 of 30 AAA tranches to junk (2007)</li><li>Moody's: 31% of ABS CDO tranches, 14% of the AAA ones</li><li>Rating agency stocks -50%</li></ul></div>
+<div class="mini t"><h5>Tranching examples (p = 10%)</h5><ul><li>2 bonds, uncorrelated: junior 19%, senior 1%</li><li>Perfect correlation: senior 10%</li><li>3 bonds: 27.1%, 2.8%, 0.1%</li><li>CDO-squared senior: 3.6%</li></ul></div>
+<div class="mini a"><h5>Simulation (1D)</h5><ul><li>40 pools x 100 bonds, PD 5% (BB+), recovery 50%, rho 0.2</li><li>Tranches: 0-6, 6-12, 12-100</li><li>CDO: junior NR, mezz BBB-, senior AAA</li><li>CDO-squared: junior C, mezz AAA, senior AAA</li></ul></div>
+</div>
+
+<h3>6.3 Concept map</h3>
+<div class="flow col">
+  <div class="node fill-b">Asset value = expected cash flows + uncertainty</div><div class="arr">&#10142;</div>
+  <div class="node fill-a">Trading strategies: fundamental + momentum (speculation)</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Bubbles & crashes (resale value, ease of trading, ease of borrowing)</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">US housing: low rates + subprime, prices fall from 2006</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Banks: high leverage, SIVs, wholesale funding, illiquid assets</div><div class="arr">&#10142;</div>
+  <div class="node fill-p">Structured finance: pooling + tranching = AAA from risky collateral</div><div class="arr">&#10142;</div>
+  <div class="node fill-t">Rating fragility (correlation, PD errors) and systematic risk</div><div class="arr">&#10142;</div>
+  <div class="node fill-r">Crisis, macro slowdown, policy response (deposit insurance, Fed, TARP, zero rate, fiscal)</div>
+</div>
+
+<h3>6.4 Exam mein ye galtiyan mat karna</h3>
+<div class="box warn"><b class="t">Common mistakes</b>
+<ul>
+<li>Bond ka price aur interest rate <b>ulte</b> chalte hain (rate badhe to price gire). Seedha mat likh dena.</li>
+<li>Risky bond ka <i>promised</i> rate zyada hota hai, <i>actual</i> return nahi. Default ho gaya to nuksan.</li>
+<li>Idiosyncratic risk diversify hota hai, isliye valuation mein irrelevant. Systematic nahi hota.</li>
+<li>Limit order ka matlab "market price pe" nahi hota. Wo sirf us price ya usse behtar pe hoga.</li>
+<li>Buy order turant fill ho to <b>ask</b> price pe hota hai, sell order <b>bid</b> price pe.</li>
+<li>Senior tranche ko loss <b>sabse baad</b> mein lagta hai. Junior ko sabse pehle.</li>
+<li>Correlation badhe to <b>senior ka risk badhta hai</b> (junior ka kam hota hai).</li>
+<li>CDO-squared = tranches ka CDO (CDO ki tranches ko dobara pool karna). CDO of mortgage-backed securities bhi effectively yahi hai.</li>
+<li>Monetary policy (central bank) aur fiscal policy (sarkar) ko mix mat karo.</li>
+</ul></div>
+
+<h3>6.5 Glossary</h3>
+<div class="tw"><table>
+<tr><th>Term</th><th>Matlab</th></tr>
+<tr><td>Asset</td><td>Value rakhne wali cheez jo future mein fayda de</td></tr>
+<tr><td>Security</td><td>Financial asset (share, bond)</td></tr>
+<tr><td>Bond</td><td>Fixed payment ka vaada karne wala security</td></tr>
+<tr><td>Stock (share)</td><td>Company ke assets aur profit pe claim</td></tr>
+<tr><td>Dividend / retained earnings</td><td>Profit ka jo hissa shareholders ko jaata hai / company ke andar rehta hai</td></tr>
+<tr><td>Systematic risk</td><td>Bahut saari assets ko ek saath affect karne wala, diversify nahi hota</td></tr>
+<tr><td>Idiosyncratic risk</td><td>Ek firm ka apna risk, diversify ho jata hai</td></tr>
+<tr><td>Required rate of return / market capitalization rate</td><td>Wo return jo investor ko share kharidne ke liye chahiye</td></tr>
+<tr><td>Fundamental value</td><td>Expected cash flows aur risk se nikli sahi value</td></tr>
+<tr><td>Momentum trading</td><td>Price trend ke aage chalne ki umeed pe kharidna/bechna</td></tr>
+<tr><td>Speculation</td><td>Price ke badalne par bet</td></tr>
+<tr><td>IPO</td><td>Pehli baar shares public ko bechna</td></tr>
+<tr><td>Secondary market</td><td>IPO ke baad ka trading</td></tr>
+<tr><td>Reservation price</td><td>Seller ka sabse kam / buyer ka sabse zyada acceptable price</td></tr>
+<tr><td>Continuous double auction</td><td>Aisa mechanism jisme trade lagatar hota hai aur buyers/sellers dono order lagate hain</td></tr>
+<tr><td>Limit order</td><td>Price + quantity wala order (iss price ya behtar pe)</td></tr>
+<tr><td>Order book</td><td>Pending orders ka electronic record</td></tr>
+<tr><td>Bid / Ask</td><td>Khareedne ka order / bechne ka order</td></tr>
+<tr><td>Bubble</td><td>Price ka fundamental value se sustained aur bada gap</td></tr>
+<tr><td>EMH</td><td>Saari available information prices mein turant shamil</td></tr>
+<tr><td>Irrational exuberance</td><td>Shiller ka term: sirf "aur badhega" ki umeed se chadhe prices</td></tr>
+<tr><td>Subprime mortgage</td><td>Risky borrower ko diya gaya home loan</td></tr>
+<tr><td>Leverage</td><td>Poonji ke muqable udhaar ka anupaat</td></tr>
+<tr><td>Illiquid</td><td>Jaldi aur sahi price pe bechna mushkil</td></tr>
+<tr><td>Fire sale</td><td>Majboori mein bahut sasti keemat pe bechna</td></tr>
+<tr><td>SIV</td><td>Structured investment vehicle: bank ka off-balance-sheet entity jo short-term debt se securities rakhta hai</td></tr>
+<tr><td>Wholesale funding</td><td>Doosre banks/investors se short-term udhaar</td></tr>
+<tr><td>Securitization</td><td>Loans ko pool karke securities banana</td></tr>
+<tr><td>MBS</td><td>Mortgage-backed security</td></tr>
+<tr><td>TARP</td><td>US ka program jisse complex assets hatane aur banks ki capital badhane ke liye fund diya gaya</td></tr>
+<tr><td>Zero lower bound</td><td>Policy rate zero se neeche nahi ja sakta</td></tr>
+<tr><td>Monetary / Fiscal policy</td><td>Central bank ke tools / sarkar ke tax-spending tools</td></tr>
+<tr><td>Structured finance</td><td>Pooling + tranching</td></tr>
+<tr><td>Tranche</td><td>Pool ke against issue ki hui prioritized claim</td></tr>
+<tr><td>Junior / Mezzanine / Senior</td><td>Pehle loss uthane wali / beech wali / sabse baad loss wali tranche</td></tr>
+<tr><td>Attachment point</td><td>Jis pool loss par tranche ko loss lagna shuru ho</td></tr>
+<tr><td>Overcollateralization / subordination</td><td>Neeche wali tranches ka protection jo senior ko milti hai</td></tr>
+<tr><td>SPV</td><td>Special purpose vehicle: originator se alag entity jisme pool rakha jaata hai</td></tr>
+<tr><td>Pass-through</td><td>Bina prioritization ke barabar hisse wali securitization (no credit enhancement)</td></tr>
+<tr><td>CDO</td><td>Collateralized debt obligation: debt ka pool + tranches</td></tr>
+<tr><td>CDO-squared</td><td>CDO jiski collateral doosre CDO ki tranches hain</td></tr>
+<tr><td>Default correlation</td><td>Defaults ek saath hone ki tendency</td></tr>
+<tr><td>Credit rating</td><td>Loan chukane ki kabiliyat ka measure (AAA sabse safe)</td></tr>
+<tr><td>Investment / speculative grade</td><td>BBB- ya upar / BB+ ya neeche</td></tr>
+<tr><td>LGD / recovery rate</td><td>Default par loss ka hissa / jo wapas milta hai</td></tr>
+</table></div>
+
+<div class="box key"><b class="t">Aage kya</b>Exam ke time par bata dena, main isse chhota revision summary bana dunga, aur jo sawaal tum share karogi unke jawab simple language mein samjha dunga.</div>
+</section>
+</main>
+</div>
+<script>
+(function(){
+  function $(id){return document.getElementById(id)}
+  function fmt(n,d){return n.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d})}
+
+  // Bond calculator
+  var bPr=$('bPr'), bIr=$('bIr');
+  if(bPr){
+    function bondA(){
+      var P=+bPr.value;
+      $('bP').textContent=fmt(P,0);
+      $('bI').textContent=(((10000-P)/P)*100).toFixed(2)+'%';
+    }
+    function bondB(){
+      var i=+bIr.value/100;
+      $('bI2').textContent=bIr.value;
+      $('bP2').textContent='Rs '+fmt(10000/(1+i),2);
+    }
+    bPr.addEventListener('input',bondA); bIr.addEventListener('input',bondB);
+    bondA(); bondB();
+  }
+
+  // Correlation tool
+  var cPr=$('cPr'), cRr=$('cRr');
+  if(cPr){
+    function corr(){
+      var p=+cPr.value/100, r=+cRr.value;
+      var both=p*p+r*p*(1-p);
+      var jun=2*p-both;
+      $('cP').textContent=cPr.value;
+      $('cR').textContent=r.toFixed(2);
+      $('cS').textContent=(both*100).toFixed(2)+'%';
+      $('cJ').textContent=(jun*100).toFixed(2)+'%';
+      $('cB').textContent=(p*100).toFixed(2)+'%';
+      $('cSb').style.width=Math.min(100,both*100*2)+'%';
+      $('cJb').style.width=Math.min(100,jun*100*2)+'%';
+      $('cBb').style.width=Math.min(100,p*100*2)+'%';
+    }
+    cPr.addEventListener('input',corr); cRr.addEventListener('input',corr); corr();
+  }
+
+  // Tranche calculator
+  var tNr=$('tNr'), tRvr=$('tRvr');
+  if(tNr){
+    function tr(){
+      var n=+tNr.value, rec=+tRvr.value/100;
+      var L=n*(1-rec); // pool loss in % (100 bonds, each 1% of pool)
+      var j=Math.min(L,6)/6, m=Math.min(Math.max(L-6,0),6)/6, s=Math.max(L-12,0)/88;
+      $('tN').textContent=n; $('tRv').textContent=tRvr.value;
+      $('tL').textContent=L.toFixed(1)+'% of pool';
+      $('tJ').textContent=(j*100).toFixed(1)+'%';
+      $('tM').textContent=(m*100).toFixed(1)+'%';
+      $('tS').textContent=(s*100).toFixed(1)+'%';
+      $('tJb').style.width=(j*100)+'%'; $('tMb').style.width=(m*100)+'%'; $('tSb').style.width=(s*100)+'%';
+    }
+    tNr.addEventListener('input',tr); tRvr.addEventListener('input',tr); tr();
+  }
+})();
+</script>
+</body>
+</html>
