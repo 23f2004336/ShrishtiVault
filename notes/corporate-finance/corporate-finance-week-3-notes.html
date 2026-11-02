@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Corporate Finance – Week-3 Notes</title>
+<style>
+:root{--ink:#1d2a44;--bg:#f6f8fc;--card:#fff;--teal:#0f9d8a;--amber:#f2a516;--coral:#e8574b;--blue:#3b6fd4;--violet:#7a54c8;--line:#d9e0ee;--soft:#eaf0fb}
+@media(prefers-color-scheme:dark){:root{--ink:#e6ebf7;--bg:#0f1626;--card:#18223a;--line:#2b3858;--soft:#1f2b49}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#1d2a44,#0f9d8a 55%,#f2a516);color:#fff;padding:36px 20px}
+header h1{margin:0;font:700 2rem Georgia,serif}header p{margin:6px 0 0;opacity:.92}
+nav{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 14px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:5px 12px;border-radius:99px;background:var(--soft);font-size:.85rem}
+main{max-width:940px;margin:auto;padding:16px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:20px 0}
+h2{font:700 1.5rem Georgia,serif;margin:0 0 10px;padding-left:12px;border-left:6px solid var(--teal)}
+h3{margin:22px 0 6px;color:var(--blue)}
+.box{border-radius:10px;padding:12px 16px;margin:12px 0;border-left:5px solid;color:#1d2a44}
+.def{background:#e7f6f3;border-color:var(--teal)}.key{background:#fff5df;border-color:var(--amber)}.warn{background:#fdeceb;border-color:var(--coral)}.eg{background:#efeafa;border-color:var(--violet)}
+.box b.t{display:block;margin-bottom:2px}
+.math{background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0;font:1rem Georgia,serif;overflow-x:auto}
+.math div{margin:4px 0}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left}th{background:var(--soft)}
+.flow{display:flex;flex-direction:column;align-items:center;margin:14px 0}
+.flow div{padding:8px 14px;border-radius:9px;color:#fff;font-size:.9rem;text-align:center;max-width:560px;width:100%}
+.flow i{font-style:normal;font-size:1.2rem;color:var(--coral);line-height:1.1}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.row>div{flex:1 1 200px;border-radius:10px;padding:10px 14px;color:#1d2a44}
+svg{max-width:100%;height:auto;background:var(--soft);border-radius:10px;margin:8px 0}
+svg text{fill:var(--ink);font:12px system-ui}
+ul{padding-left:22px}li{margin:3px 0}
+</style></head><body>
+<header><h1>Corporate Finance — Week-3 Notes</h1><p>Multi-period PV · Loans (EMI) · Stock valuation · Real vs nominal · Compounding frequency · Capital budgeting rules (NPV, IRR, PI, Payback) · Term structure &amp; forward rates</p></header>
+<nav><a href="#s0">Roadmap</a><a href="#s1">1 Multi-period PV</a><a href="#s2">2 Loans / EMI</a><a href="#s3">3 Stock value</a><a href="#s4">4 Why NPV</a><a href="#s5">5 Real vs nominal</a><a href="#s6">6 Annuity proofs</a><a href="#s7">7 Frequency &amp; EAR</a><a href="#s8">8 Payback</a><a href="#s9">9 IRR</a><a href="#s10">10 PI</a><a href="#s11">11 Term structure</a><a href="#s12">12 Practice</a><a href="#s13">13 Revision</a></nav>
+<main>
+<section id="s0"><h2>Roadmap: what Week 3 adds to Week 2</h2>
+<p>Week 2 gave you the tools (FV, PV, NPV, annuity, perpetuity). Week 3 does three things with them: <b>(1) applies them</b> to real loans and stocks, <b>(2) fixes the simplifications</b> (inflation, compounding frequency, different rates for different horizons), and <b>(3) compares decision rules</b> for choosing projects.</p>
+<div class="flow"><div style="background:#1d2a44">Part A – Use the tools: multi-period PV, home-loan EMI, stock price (Gordon), why NPV works (Sec 1–4)</div><i>↓</i>
+<div style="background:#3b6fd4">Part B – Make the tools realistic: real vs nominal rates, annuity proofs, APR vs EAR, continuous compounding (Sec 5–7)</div><i>↓</i>
+<div style="background:#7a54c8">Part C – Decision rules: Payback → IRR → Profitability Index, compared with NPV (Sec 8–10)</div><i>↓</i>
+<div style="background:#0f9d8a">Part D – Rates that differ by horizon: spot rates, yield curve, forward rates (Sec 11)</div></div>
+<div class="key"><b>One sentence to remember the week:</b> NPV is the gold standard; every other rule (payback, IRR, PI) is a shortcut that works only in special cases, and you must know exactly when each shortcut fails.</div>
+</section>
+<section id="s1"><h2>1. Present Value of Multi-Period Cash Flows (Lecture 1)</h2>
+<div class="def box"><b class="t">Time value of money (recap)</b>A rupee today is worth more than a rupee later, because today's rupee can be invested to earn a positive return r. To compare cash at different dates, convert each to <b>present value (PV)</b>, its worth today.</div>
+<h3>1.1 Deriving PV with a different rate each period</h3>
+<p>Let the rate for period 1 be r₁ and for period 2 be r₂. Invest PV today:</p>
+<div class="math"><div>After 1 period: C₁ = PV(1 + r₁) &nbsp;⟹ &nbsp;PV = C₁/(1 + r₁)</div><div>Reinvest for period 2: C₂ = PV(1 + r₁)(1 + r₂) &nbsp;⟹ &nbsp;PV = C₂/[(1 + r₁)(1 + r₂)]</div><div>For T periods: <b>PV = C_T / [(1+r₁)(1+r₂)…(1+r_T)]</b></div></div>
+<p><b>Constant rate case</b> (the benchmark: r₁ = r₂ = … = r): the product becomes (1+r)^T.</p>
+<div class="math"><div>PV of one cash flow = C_T/(1+r)^T</div><div><b>PV of a stream = C₁/(1+r) + C₂/(1+r)² + … + C_T/(1+r)^T = Σ C_t/(1+r)^t</b></div></div>
+<h3>1.2 Why can we simply add present values? (value additivity)</h3>
+<p>In a perfect market you can trade each cash flow separately. If a stream is worth the sum of its parts to you, it is worth the same to anyone, so its price must equal the sum of the prices of the parts. Otherwise someone could buy the cheap way and sell the dear way and earn free money (arbitrage, Week 2). So <b>PV(stream) = ΣPV(each flow)</b>.</p>
+<table><tr><th>Symbol</th><th>Meaning</th></tr><tr><td>C_t</td><td>net cash flow at period t (inflows minus outflows)</td></tr><tr><td>r</td><td>discount rate = opportunity cost of capital</td></tr><tr><td>T</td><td>last period</td></tr><tr><td>DF_t = 1/(1+r)^t</td><td>discount factor for t periods</td></tr></table>
+<h3>1.3 Timing conventions: end of period vs beginning of period</h3>
+<p>Formulas assume the first payment is <b>one period away</b> (end-of-period, "ordinary"). If the first payment is received <b>immediately</b> (t = 0, 1, …, T−1: "annuity due", e.g. rent paid in advance), every payment is one period closer, so the PV is <b>larger by exactly one period of compounding</b>:</p>
+<div class="math"><div><b>PV_due = PV_ordinary × (1 + r)</b></div></div>
+<svg viewBox="0 0 470 150" width="470" role="img" aria-label="End vs beginning of period payments"><text x="8" y="26">End of period</text><line x1="110" y1="22" x2="450" y2="22" stroke="#888" stroke-width="2"/>
+<g text-anchor="middle"><circle cx="130" cy="22" r="3" fill="#888"/><text x="130" y="14" style="font-size:10px">t=0</text><circle cx="230" cy="22" r="5" fill="#3b6fd4"/><text x="230" y="14" style="font-size:10px">t=1</text><text x="230" y="42">100</text><circle cx="330" cy="22" r="5" fill="#3b6fd4"/><text x="330" y="14" style="font-size:10px">t=2</text><text x="330" y="42">100</text><circle cx="430" cy="22" r="5" fill="#3b6fd4"/><text x="430" y="14" style="font-size:10px">t=3</text><text x="430" y="42">100</text></g>
+<text x="8" y="106">Beginning of period</text><line x1="110" y1="102" x2="450" y2="102" stroke="#888" stroke-width="2"/>
+<g text-anchor="middle"><circle cx="130" cy="102" r="5" fill="#0f9d8a"/><text x="130" y="94" style="font-size:10px">t=0</text><text x="130" y="122">100</text><circle cx="230" cy="102" r="5" fill="#0f9d8a"/><text x="230" y="94" style="font-size:10px">t=1</text><text x="230" y="122">100</text><circle cx="330" cy="102" r="5" fill="#0f9d8a"/><text x="330" y="94" style="font-size:10px">t=2</text><text x="330" y="122">100</text></g></svg>
+<div class="box eg"><b class="t">Example: 3 payments of 100, r = 10%</b>
+<div class="math"><div>End of period: 100/1.1 + 100/1.21 + 100/1.331 = 90.91 + 82.64 + 75.13 = <b>248.69</b></div><div>Beginning of period: 100 + 100/1.1 + 100/1.21 = 100 + 90.91 + 82.64 = <b>273.55</b></div><div>Check: 248.69 × 1.1 = <b>273.55</b> ✓</div></div></div>
+<div class="warn box"><b class="t">Exam warning</b>Always read the question: "starting next month" = end-of-period (ordinary). "Starting today / payable in advance" = annuity due. The standard annuity formula is for the ordinary case.</div>
+<h3>1.4 Simple interest vs compound interest</h3>
+<div class="math"><div>Simple: interest only on the original amount. <b>FV = C₀(1 + r·t)</b></div><div>Compound: interest on interest too. <b>FV = C₀(1 + r)^t</b></div></div>
+<table><tr><th>₹100 at 10%</th><th>Year 1</th><th>Year 2</th><th>Year 5</th><th>Year 10</th><th>Year 12</th><th>Year 30</th></tr>
+<tr><td>Simple</td><td>110.00</td><td>120.00</td><td>150.00</td><td>200.00</td><td>220.00</td><td>400.00</td></tr>
+<tr><td>Compound</td><td>110.00</td><td>121.00</td><td>161.05</td><td>259.37</td><td>313.84</td><td>1,744.94</td></tr>
+<tr><td>Gap</td><td>0.00</td><td>1.00</td><td>11.05</td><td>59.37</td><td>93.84</td><td>1,344.94</td></tr></table>
+<p>At 12 years: simple = 220.00, compound = 313.84; the 93.84 gap is the <b>compounding premium</b>. The gap is zero in year 1 and grows faster and faster. Over 30 years compounding is more than 4 times simple interest.</p>
+<h3>1.5 Irregular (non-flat) cash flows: the mining example</h3>
+<p>Cash flows need not be equal. Cost 900 now; inflows 200, 200, 400, 400; a mandatory cleanup cost of 100 at the end; r = 5%.</p>
+<table><tr><th>t</th><th>C_t</th><th>1.05^t</th><th>PV</th></tr><tr><td>0</td><td>-900</td><td>1.000000</td><td>-900.00</td></tr><tr><td>1</td><td>200</td><td>1.050000</td><td>190.48</td></tr><tr><td>2</td><td>200</td><td>1.102500</td><td>181.41</td></tr><tr><td>3</td><td>400</td><td>1.157625</td><td>345.54</td></tr><tr><td>4</td><td>400</td><td>1.215506</td><td>329.08</td></tr><tr><td>5</td><td>-100</td><td>1.276282</td><td>-78.35</td></tr><tr><th colspan="3">NPV = sum</th><th>68.15</th></tr></table>
+<p>Total PV of t = 1…5 flows = 968.145; NPV = −900 + 968.145 = <b>+68.15 &gt; 0 → accept</b>. <b>Notice the cleanup cost</b>: a negative cash flow in the future is discounted like any other. Without it NPV would be 146.50. It reduces the value by only 78.35 because it is far away. Real projects often end with costs, so never forget negative terminal flows.</p>
+</section>
+<section id="s2"><h2>2. Application: Loan Repayment (EMI) (Lecture 1 + slides)</h2>
+<div class="box eg"><b class="t">Problem</b>You take a 30-year loan of ₹500,000, repaid in equal monthly payments, at a <b>quoted</b> interest rate of 7.5% a year. What is the monthly payment?</div>
+<h3>2.1 Step 1: what monthly rate does the bank really use?</h3>
+<p>Banks quote <b>APR</b> (annual percentage rate) by multiplying the monthly rate by 12, with no compounding in the quote. So the true monthly rate is 7.5%/12 = <b>0.625%</b> (0.00625).</p>
+<div class="math"><div>Effective annual rate = (1.00625)¹² − 1 = <b>7.763%</b>, higher than the quoted 7.5% because monthly interest compounds.</div></div>
+<h3>2.2 Step 2: recognise the structure</h3>
+<p>A loan repaid in equal instalments is an <b>annuity</b>: the amount you receive today (₹500,000) equals the PV of the repayments. Payments begin next month (end-of-period), T = 30 × 12 = 360.</p>
+<div class="math"><div>500,000 = (C/0.00625)[1 − 1/(1.00625)³⁶⁰]</div><div>(1.00625)³⁶⁰ = 9.421534; &nbsp;1/that = 0.106140; &nbsp;bracket = 0.893860</div><div>Annuity factor = 0.893860/0.00625 = 143.0176</div><div><b>C = 500,000/143.0176 = ₹3,496.07 per month</b> for 360 months, first payment next month</div></div>
+<p>Total repaid = 3,496.07 × 360 = ₹1,258,586, so about ₹758,586 is <b>interest</b>: you pay back more than twice what you borrowed. This is the price of 30 years of waiting.</p>
+<h3>2.3 Step 3: how much of each payment is interest, how much is principal?</h3>
+<p>Each month the bank charges interest on the <b>balance you still owe</b>. Whatever is left of your payment reduces the balance.</p>
+<div class="math"><div>Interest_t = 0.625% × (balance at start of month t)</div><div>Principal_t = C − Interest_t</div><div>New balance = old balance − Principal_t</div></div>
+<div class="box eg"><b class="t">Months 1 and 2 (from the slides)</b>
+<div class="math"><div>Month 1: interest = 0.625% × 500,000 = <b>3,125.00</b>; principal = 3,496.07 − 3,125.00 = <b>371.07</b>; balance = 499,628.93</div><div>Month 2: interest = 0.625% × 499,628.93 = <b>3,122.68</b>; principal = 3,496.07 − 3,122.68 = <b>373.39</b>; balance = 499,255.54</div></div></div>
+<table><tr><th>Month</th><th>Opening balance</th><th>Payment</th><th>Interest</th><th>Principal</th><th>Closing balance</th></tr><tr><td>1</td><td>500,000.00</td><td>3,496.07</td><td>3,125.00</td><td>371.07</td><td>499,628.93</td></tr><tr><td>2</td><td>499,628.93</td><td>3,496.07</td><td>3,122.68</td><td>373.39</td><td>499,255.54</td></tr><tr><td>3</td><td>499,255.54</td><td>3,496.07</td><td>3,120.35</td><td>375.73</td><td>498,879.81</td></tr><tr><td>12</td><td>495,788.22</td><td>3,496.07</td><td>3,098.68</td><td>397.40</td><td>495,390.83</td></tr><tr><td>60</td><td>473,623.11</td><td>3,496.07</td><td>2,960.14</td><td>535.93</td><td>473,087.18</td></tr><tr><td>120</td><td>434,753.80</td><td>3,496.07</td><td>2,717.21</td><td>778.86</td><td>433,974.94</td></tr><tr><td>180</td><td>378,265.24</td><td>3,496.07</td><td>2,364.16</td><td>1,131.91</td><td>377,133.33</td></tr><tr><td>240</td><td>296,170.74</td><td>3,496.07</td><td>1,851.07</td><td>1,645.01</td><td>294,525.73</td></tr><tr><td>300</td><td>176,863.25</td><td>3,496.07</td><td>1,105.40</td><td>2,390.68</td><td>174,472.58</td></tr><tr><td>360</td><td>3,474.36</td><td>3,496.07</td><td>21.71</td><td>3,474.36</td><td>0.00</td></tr></table>
+<p>In month 1 only 10.6% of your payment repays principal. In the final month 99.4% does. Early payments are mostly interest, which matters for tax and for early repayment.</p>
+<svg viewBox="0 0 430 200" width="430" role="img" aria-label="Interest and principal parts of each EMI over 30 years"><line x1="50" y1="170" x2="410" y2="170" stroke="#888"/><line x1="50" y1="10" x2="50" y2="170" stroke="#888"/>
+<polyline fill="none" stroke="#e8574b" stroke-width="3" points="51.0,35.9 79.2,39.1 108.3,43.0 137.5,47.7 166.7,53.4 195.8,60.3 225.0,68.6 254.2,78.5 283.3,90.6 312.5,105.1 341.7,122.6 370.8,143.7 400.0,169.1"/><polyline fill="none" stroke="#0f9d8a" stroke-width="3" points="51.0,154.1 79.2,150.9 108.3,147.0 137.5,142.3 166.7,136.6 195.8,129.7 225.0,121.4 254.2,111.5 283.3,99.4 312.5,84.9 341.7,67.4 370.8,46.3 400.0,20.9"/>
+<text x="62" y="30" style="fill:#e8574b">Interest part (falls)</text><text x="260" y="40" style="fill:#0f9d8a">Principal part (rises)</text><text x="150" y="192">month (0 → 360)</text><text x="8" y="22">₹3,496</text></svg>
+<h3>2.4 Why principal repayment grows by exactly (1 + r) each month (derivation)</h3>
+<div class="math"><div>P_t = C − r·B_(t−1) &nbsp;&nbsp; and &nbsp;&nbsp; B_t = B_(t−1) − P_t</div><div>P_(t+1) = C − r·B_t = C − r(B_(t−1) − P_t) = [C − r·B_(t−1)] + r·P_t = P_t + r·P_t</div><div><b>P_(t+1) = P_t (1 + r)</b></div><div>Check: 371.07 × 1.00625 = 373.39 ✓ (the slide's 373.39)</div></div>
+<h3>2.5 Early repayment: what must you pay?</h3>
+<p>If you want to close the loan right after paying month t, the bank wants the <b>outstanding principal</b>. This equals the PV of the payments still to come:</p>
+<div class="math"><div>B_t = C × [1 − (1+r)^−(360−t)]/r</div><div>After 2 months: 3,496.07 × [1 − 1.00625⁻³⁵⁸]/0.00625 = <b>₹499,255.54</b> ✓ matches the slide's 499,255.54</div></div>
+<p>The unaccrued interest for months 3–360 is wiped out. After 10 years (month 120) you would still owe <b>₹433,975</b>, i.e. 87% of the loan after paying 419,529. That is the effect of interest-heavy early payments.</p>
+<h3>2.6 Extra: what if the term were 15 years?</h3>
+<table><tr><th>Term</th><th>EMI</th><th>Total paid</th><th>Total interest</th></tr><tr><td>30 years</td><td>3,496.07</td><td>1,258,586</td><td>758,586</td></tr><tr><td>15 years</td><td>4,635.06</td><td>834,311</td><td>334,311</td></tr></table>
+<p>A 15-year loan has a higher EMI but less than half the interest. The NPV-of-payments at 0.625% is ₹500,000 in both cases, so the bank is indifferent; what changes is how long you borrow.</p>
+</section>
+<section id="s3"><h2>3. Application: Stock Valuation and the Cost of Capital (Gordon Growth Model)</h2>
+<p>A stock pays dividends for a very long time. Treat them as a <b>growing perpetuity</b> (Week 2: PV = C₁/(r − g)):</p>
+<div class="math"><div><b>P₀ = Div₁ / (r − g)</b> &nbsp;&nbsp;(r &gt; g)</div></div>
+<table><tr><th>Symbol</th><th>Meaning</th></tr><tr><td>P₀</td><td>share price today</td></tr><tr><td>Div₁</td><td>dividend expected next year</td></tr><tr><td>r</td><td>required return = cost of equity capital</td></tr><tr><td>g</td><td>constant yearly growth rate of dividends</td></tr></table>
+<p>This use of the formula is called the <b>Gordon growth model</b>. It is a quick estimate, not an exact value, since real rates and growth are not constant forever.</p>
+<div class="box eg"><b class="t">Example 1 (slide): mature business</b>Profit next year ₹1,000,000, growing 2% a year, cost of capital 8%: value ≈ 1,000,000/(0.08 − 0.02) = <b>₹16,666,667</b>. The lecture calls it an approximation ("not worth more than…").</div>
+<div class="box eg"><b class="t">Example 2 (slide): share price</b>g = 5%, r = 10%, Div₁ = 10 → P₀ = 10/(0.10 − 0.05) = <b>200</b>.</div>
+<h3>3.1 Reading the model backwards: finding the cost of capital</h3>
+<div class="math"><div>P₀ = Div₁/(r − g) &nbsp;⟹ &nbsp;r − g = Div₁/P₀ &nbsp;⟹ &nbsp;<b>r = Div₁/P₀ + g</b></div></div>
+<p>Div₁/P₀ is the <b>forward dividend yield</b> (next year's expected dividend ÷ today's price). So: <i>cost of capital = dividend yield + growth rate.</i> It is the same split as Week 2's return = dividend yield + capital-gain yield, because under constant growth the price also grows at g.</p>
+<div class="box eg"><b class="t">Example 3 (slide): a firm with forward yield 2.2%</b>The company paid 6.6 billion in dividends last year, almost the same as 4 years ago, so growth g ≈ 0%. Then <b>r = 2.2% + 0% = 2.2%</b>: the market values the firm as if its cost of capital were only about 2.2%. If instead analysts expected g = 5%, r would be 7.2%. So yield alone does not tell you r; you need a view on growth.</div>
+<h3>3.2 How sensitive is the price? (Div₁ = 10, r = 10%)</h3>
+<table><tr><th>g</th><th>0%</th><th>3%</th><th>5%</th><th>8%</th><th>9%</th><th>9.9%</th></tr><tr><td>P₀ = 10/(0.10 − g)</td><td>100</td><td>143</td><td>200</td><td>500</td><td>1,000</td><td>10,000</td></tr></table>
+<div class="warn box"><b class="t">Limits of the model</b>(i) tiny changes in g or r near each other make the price explode; (ii) needs g &lt; r; (iii) real growth does not last forever; (iv) dividends are uncertain. Use it for back-of-envelope estimates and sanity checks.</div>
+</section>
+<section id="s4"><h2>4. Why Is NPV the Right Rule? Separation of Decisions and Sensitivity (slides)</h2>
+<h3>4.1 The "free money" argument</h3>
+<p>Perfect market, borrow/lend at 6%. Any project can be traded or financed at the market rate, so:</p>
+<div class="row"><div style="background:#d8f1ec"><b>Positive NPV = free money.</b> A project costing 1 and paying 1.07 next year: borrow 1 at 6% (repay 1.06), invest, keep 1.07 − 1.06 = <b>0.01</b> with no money of your own.</div><div style="background:#fdeceb"><b>Negative NPV is a gift to others.</b> Sell someone a project that costs them 1 and pays 1.05 at a time when the market pays 1.06: you pocket the 1 and invest it to get 1.06, owing only 1.05, so you earn <b>0.01</b> free.</div><div style="background:#e3ebfb"><b>Zero NPV:</b> cost 1, pays 1.06. No free money from either side.</div></div>
+<p>In a perfect world with correct inputs, NPV is <b>the</b> benchmark; other information is redundant. Positive-NPV projects should be rare, because everyone would rush to take them and competition would bid up returns (or bid down prices) until the gains disappear.</p>
+<p><b>But in practice</b> you must <i>estimate</i> cash flows and r, markets are imperfect (taxes, costs, disagreement, market power), so other rules can add useful information. NPV is still the benchmark.</p>
+<h3>4.2 Separation of investment and consumption decisions</h3>
+<div class="box eg"><b class="t">Question</b>Does a person's wish to spend now or later change which projects they should accept? Cash in hand = 150. Project: cost 100 now, pays 200 next year. r = 10%. Person A wants money <b>today</b>; Person B wants to <b>save</b> for next year.</div>
+<div class="row"><div style="background:#fff0cf"><b>Person A (impatient)</b><br>Take the project, pay 100, then <b>sell it</b> in the market for 200/1.1 = 181.82. Cash today = 150 − 100 + 181.82 = <b>231.82</b>. Without the project, A has only 150 to spend today. A is better off by 81.82 = NPV.</div><div style="background:#e3ebfb"><b>Person B (patient)</b><br>Take the project (pay 100, keep 50 in the bank). Next year: 200 + 50 × 1.1 = <b>255</b>. Without the project: 150 × 1.1 = 165. B is better off by 90 next year (= 81.82 × 1.1).</div></div>
+<div class="flow"><div style="background:#0f9d8a">Step 1 – Investment decision: take every positive-NPV project (same for everyone)</div><i>↓</i><div style="background:#7a54c8">Step 2 – Consumption decision: use the capital market (borrow or save) to move the resulting wealth to the date you want it</div></div>
+<div class="key"><b>Separation of decisions:</b> consumption preferences should not influence investment decisions. It works only when you can borrow and lend at the <b>same</b> rate. With different borrowing and lending rates (imperfect markets) it may fail.</div>
+<h3>4.3 Sensitivity (scenario) analysis: which mistake hurts more?</h3>
+<p>Inputs are estimates. Test how the PV changes if you get the cash flow or the discount rate slightly wrong.</p>
+<table><tr><th>Project</th><th>Correct PV</th><th>Cash flow 10% too high</th><th>Rate 10% too high (8% → 8.8%)</th></tr>
+<tr><td>200 in 1 year, r = 8%</td><td>185.19</td><td>203.70 (+10%)</td><td>183.82 (-0.7%)</td></tr>
+<tr><td>200 in 30 years, r = 8%</td><td>19.88</td><td>21.86 (+10%)</td><td>15.93 (-19.9%)</td></tr></table>
+<p><b>Why?</b> PV = C/(1+r)^T. A 10% error in C changes PV by 10% whatever T is. A rate error is raised to the power T: its effect ≈ T × (Δr)/(1+r). For T = 1 that is about 0.7%; for T = 30 it is about 30 × 0.8%/1.08 ≈ 22% (actual 19.9%).</p>
+<div class="key"><b>Lessons:</b> short projects: be careful with cash-flow estimates; the rate matters little. Long projects: both matter, and the rate matters a lot. In practice distant cash flows are harder to forecast than today's market discount rate.</div>
+</section>
+<section id="s5"><h2>5. Nominal vs Real Cash Flows and the Fisher Equation (Lecture 2)</h2>
+<h3>5.1 Definitions</h3>
+<div class="row"><div style="background:#e3ebfb"><b>Nominal</b><br>Actual rupees at the time they are received. Bank rates and contracts are nominal.</div><div style="background:#d8f1ec"><b>Real</b><br>Measured in constant purchasing power (today's prices), i.e. what the rupees can actually buy.</div></div>
+<div class="math"><div>Real cash flow: <b>C_t(real) = C_t(nominal)/(1+π)^t</b> &nbsp;&nbsp; (π = expected constant inflation per period)</div></div>
+<p>Example: ₹1,102.50 received in 2 years with 5% inflation buys what ₹1,102.50/1.05² = ₹1,000 buys today.</p>
+<h3>5.2 Deriving the Fisher equation step by step</h3>
+<div class="math"><div>1. Invest ₹1 of purchasing power today. It costs 1 rupee (prices at t=0 are the base).</div><div>2. At t=1 the investment pays ₹(1 + r_nom).</div><div>3. But prices have risen by (1+π), so the purchasing power of that payout is (1 + r_nom)/(1 + π). By definition this is the real growth, 1 + r_real.</div><div><b>4. (1 + r_real) = (1 + r_nom)/(1 + π) &nbsp;&nbsp;⟺&nbsp;&nbsp; (1 + r_nom) = (1 + r_real)(1 + π)</b> (exact Fisher)</div><div>5. Expand: 1 + r_nom = 1 + r_real + π + r_real·π</div><div>6. So r_nom = r_real + π + r_real·π</div><div>7. If r_real·π is tiny: <b>r_real ≈ r_nom − π</b> (approximate Fisher)</div></div>
+<p>This is exactly the real-interest-rate result of Week 2, now with a name (Fisher).</p>
+<table><tr><th>Real rate 4%, inflation π</th><th>Exact nominal</th><th>Approx (4% + π)</th><th>Error (points)</th></tr><tr><td>2%</td><td>6.08%</td><td>6.00%</td><td>0.08</td></tr><tr><td>5%</td><td>9.20%</td><td>9.00%</td><td>0.20</td></tr><tr><td>10%</td><td>14.40%</td><td>14.00%</td><td>0.40</td></tr><tr><td>20%</td><td>24.80%</td><td>24.00%</td><td>0.80</td></tr></table>
+<p>The cross-term r_real·π matters when inflation is high: at 20% inflation the shortcut is wrong by 0.8 points.</p>
+<h3>5.3 The consistency rule (most tested)</h3>
+<div class="flow"><div style="background:#3b6fd4">Nominal cash flows → discount at the NOMINAL rate</div><div style="background:#0f9d8a;margin-top:8px">Real cash flows → discount at the REAL rate</div><div style="background:#e8574b;margin-top:8px">NEVER mix them</div></div>
+<h3>5.4 Proof that both methods give the same PV</h3>
+<div class="math"><div>Method 1: PV = C_nom/(1 + r_nom)^t</div><div>Method 2: substitute C_nom = C_real(1+π)^t and 1+r_nom = (1+r_real)(1+π):</div><div>PV = C_real(1+π)^t / [(1+r_real)(1+π)]^t = C_real(1+π)^t / [(1+r_real)^t (1+π)^t] = <b>C_real/(1+r_real)^t</b> ∎</div></div>
+<p>The inflation factor (1+π)^t cancels. Inflation does not create or destroy value if you treat both numerator and denominator consistently.</p>
+<h3>5.5 Numerical check: low vs high inflation (C₁(real) = 1,000; r_real = 4%)</h3>
+<table><tr><th></th><th>π = 2% (low)</th><th>π = 20% (high)</th></tr><tr><td>Nominal rate (1.04)(1+π) − 1</td><td>6.08%</td><td>24.8%</td></tr><tr><td>Nominal cash flow 1,000(1+π)</td><td>1,020</td><td>1,200</td></tr><tr><td>PV, real method 1,000/1.04</td><td>961.54</td><td>961.54</td></tr><tr><td>PV, nominal method</td><td>1,020/1.0608 = 961.54</td><td>1,200/1.248 = 961.54</td></tr></table>
+<div class="warn box"><b class="t">Approximation trap</b>At 20% inflation, using r_nom ≈ 4% + 20% = 24% gives PV = 1,200/1.24 = <b>967.74</b>, an overvaluation of 6.20 (0.8%·cross-term ignored). At low inflation the error is negligible, but never rely on the shortcut when inflation is high.</div>
+<div class="box eg"><b class="t">Mixing mistakes (π = 2%, real 4%, nominal 6.08%)</b>Discount the real 1,000 at the nominal 6.08%: 1,000/1.0608 = <b>942.68</b> (too low by 18.86). Discount the nominal 1,020 at the real 4%: 1,020/1.04 = <b>980.77</b> (too high by 19.23). Only matching units give 961.54.</div>
+<div class="box eg"><b class="t">Multi-period example: real 100 each year for 3 years; real rate 4%; inflation 3%</b>
+<div class="math"><div>Real method: 100/1.04 + 100/1.04² + 100/1.04³ = <b>277.51</b></div><div>Nominal flows: 103.00, 106.09, 109.27; nominal rate = 1.04 × 1.03 − 1 = 7.12%</div><div>Nominal method: 96.15, 92.46, 88.90 → <b>277.51</b> ✓ same</div><div>Mismatch (nominal flows at real rate): <b>294.27</b>, wrong by 16.76</div></div></div>
+<p><b>Practical tip:</b> market interest rates you see (deposits, bond yields) are nominal. If your forecasts are in today's prices (real), convert the rate with Fisher before discounting, or inflate your cash flows.</p>
+</section>
+<section id="s6"><h2>6. Perpetuity and Annuity Formulas from First Principles (Lecture 2)</h2>
+<p>Week 2 derived these with infinite geometric series. Here is a second route that uses only the time-value idea (shifting a stream by one period multiplies its value by 1 + r). This method is useful if you forget the series formula in an exam.</p>
+<h3>6.1 Perpetuity: P = 1/r</h3>
+<div class="math"><div>Let P = PV of ₹1 paid every year forever, starting at t = 1.</div><div><b>Route 1:</b> a stream starting today has the same payments as the stream starting next year plus an extra ₹1 now: value = 1 + P.</div><div><b>Route 2:</b> the stream starting today is worth (1 + r) times the stream starting next year: value = (1 + r)·P.</div><div>Equate: 1 + P = (1 + r)P = P + rP &nbsp;⟹ &nbsp;1 = rP &nbsp;⟹ &nbsp;<b>P = 1/r</b> ∎ &nbsp;&nbsp;For payment C: <b>PV = C/r</b></div></div>
+<div class="flow"><div style="background:#3b6fd4">Stream starting at t=1: value P</div><i>↓ ×(1+r) (it is one period closer)</i><div style="background:#0f9d8a">Stream starting at t=0: value (1+r)P = 1 + P</div></div>
+<h3>6.2 Annuity: A_n = (1/r)[1 − 1/(1+r)ⁿ]</h3>
+<p>A_n = PV of ₹1 a year for n years, starting at t = 1.</p>
+<div class="math"><div><b>Route 1:</b> shift to start at t=0 (payments at 0,…,n−1). Compared with A_n we add the t = 0 payment (+1) and remove the t = n payment (−1/(1+r)ⁿ): value = 1 + A_n − 1/(1+r)ⁿ</div><div><b>Route 2:</b> the shifted stream is worth (1 + r)·A_n</div><div>Equate: 1 + A_n − 1/(1+r)ⁿ = A_n + rA_n</div><div>1 − 1/(1+r)ⁿ = r·A_n &nbsp;⟹ &nbsp;<b>A_n = (1/r)[1 − 1/(1+r)ⁿ]</b> ∎ &nbsp;&nbsp;For payment C multiply by C.</div></div>
+<div class="box eg"><b class="t">Check with n = 2, r = 10%</b>Direct: 1/1.1 + 1/1.21 = 0.9091 + 0.8264 = 1.7355. Formula: (1/0.1)(1 − 1/1.21) = 10 × 0.17355 = 1.7355 ✓.</div>
+<div class="key"><b>Why this works:</b> the proof only uses two facts: moving a payment one period earlier multiplies its value by (1+r), and values add. No infinite sums needed.</div>
+<h3>6.3 Lecture practice problem: when to harvest a forest</h3>
+<p>Forest value V(t); continuous interest r. PV of harvesting at t is V(t)e^(−rt). Maximise:</p>
+<div class="math"><div>d/dt[V e^(−rt)] = V′e^(−rt) − rVe^(−rt) = e^(−rt)[V′ − rV] = 0 &nbsp;⟹ &nbsp;<b>V′(t)/V(t) = r</b></div></div>
+<p>Meaning: harvest when the forest's own growth rate falls to the interest rate (at that moment waiting earns less than the bank).</p>
+<div class="math"><div>V(t) = −1000 + 1000t − 10t², r = 0.10, V′ = 1000 − 20t</div><div>1000 − 20t = 0.1(−1000 + 1000t − 10t²) = −100 + 100t − t² &nbsp;⟹ &nbsp;t² − 120t + 1100 = 0</div><div>t = [120 ± √(14,400 − 4,400)]/2 = [120 ± 100]/2 &nbsp;⟹ &nbsp;t = 110 or t = 10</div><div>At t = 110, V′ = 1000 − 2200 = −1200 &lt; 0 (forest shrinking) → reject. <b>t* = 10</b>, V(10) = 8,000</div><div>Naive peak: V′ = 0 at t = 50, V(50) = 24,000</div><div>Bank 8,000 for 40 more years at 10%: 8,000 × 1.1⁴⁰ = 8,000 × 45.259256 = <b>362,074</b> ≫ 24,000</div></div>
+<p>Same lesson as Week 2: the best time to sell is when the asset's return equals the market return, not when its value peaks.</p>
+</section>
+<section id="s7"><h2>7. Compounding Frequency, APR vs EAR and Continuous Compounding (Lecture 3)</h2>
+<h3>7.1 What if interest is paid more than once a year?</h3>
+<p>If the quoted annual rate (APR) is compounded n times a year, each sub-period earns APR/n, and there are n·t sub-periods in t years:</p>
+<div class="math"><div><b>FV_t = C₀(1 + APR/n)^(n·t)</b> &nbsp;&nbsp; <b>DF_t = 1/(1 + APR/n)^(n·t)</b></div></div>
+<div class="row"><div style="background:#e3ebfb"><b>APR (annual percentage rate)</b><br>The quoted rate: sub-period rate × n. No compounding inside the quote.</div><div style="background:#d8f1ec"><b>EAR (effective annual rate)</b><br>What you really earn or pay in a year after compounding. <b>EAR = (1 + APR/n)ⁿ − 1</b></div></div>
+<h3>7.2 Same 12% APR, more and more compounding (₹1,000 for 1 year)</h3>
+<table><tr><th>Frequency</th><th>Rate per sub-period</th><th>FV after 1 year</th><th>EAR</th></tr><tr><td>Annual (n=1)</td><td>12.0000%</td><td>1,120.00</td><td>12.0000%</td></tr><tr><td>Semiannual (n=2)</td><td>6.0000%</td><td>1,123.60</td><td>12.3600%</td></tr><tr><td>Quarterly (n=4)</td><td>3.0000%</td><td>1,125.51</td><td>12.5509%</td></tr><tr><td>Monthly (n=12)</td><td>1.0000%</td><td>1,126.83</td><td>12.6825%</td></tr><tr><td>Daily (n=365)</td><td>0.0329%</td><td>1,127.47</td><td>12.7475%</td></tr><tr><td>Continuous (n→∞)</td><td>→ 0</td><td>1,127.50</td><td>12.7497%</td></tr></table>
+<p>EAR rises with n but only slightly after monthly compounding. It has a ceiling, e^APR − 1 = 12.7497%. <b>Compare loans or deposits by EAR, never by APR with different frequencies.</b></p>
+<div class="box eg"><b class="t">Which loan is cheaper: 12.3% compounded monthly or 12.5% compounded annually?</b>Compare EARs. First: (1 + 0.123/12)¹² − 1 = <b>13.02%</b>. Second: <b>12.50%</b>. The annual-compounding loan has the lower EAR, so it is cheaper even though its quoted rate is higher.</div>
+<h3>7.3 Deriving continuous compounding</h3>
+<div class="math"><div>FV_t = C₀(1 + r/n)^(nt)</div><div>Let m = n/r, so r/n = 1/m and n = m·r. As n → ∞, m → ∞.</div><div>(1 + r/n)^(nt) = [(1 + 1/m)^m]^(rt)</div><div>Euler: lim (1 + 1/m)^m = e ≈ 2.71828</div><div><b>FV_t = C₀·e^(rt)</b> &nbsp;&nbsp; ⟹ &nbsp;&nbsp; <b>PV = C_t·e^(−rt)</b> ∎</div></div>
+<table><tr><th>Conversion</th><th>Formula</th><th>Example</th></tr><tr><td>EAR → continuous rate</td><td>r = ln(1 + EAR)</td><td>EAR 5% → ln 1.05 = 4.879%</td></tr><tr><td>Continuous rate → EAR</td><td>EAR = e^r − 1</td><td>r = 12% → 12.7497%</td></tr></table>
+<h3>7.4 Cash flows at fractional times</h3>
+<p>For a payment at t = 0.5 years you need a fractional exponent:</p>
+<div class="math"><div>Given EAR: DF₀.₅ = 1/(1 + EAR)^0.5</div><div>Given APR with semiannual compounding: DF₀.₅ = 1/(1 + APR/2)</div></div>
+<div class="box eg"><b class="t">Example: EAR 5%, cash 100 in 6 months</b>PV = 100/1.05^0.5 = 100/1.024695 = <b>97.59</b>. If someone wrongly uses 5%/2 = 2.5%: 100/1.025 = 97.56 (slightly too low).</div>
+<h3>7.5 Semiannual bond (final worked example)</h3>
+<div class="box eg"><b class="t">Face 100,000; coupon 1,500 every six months for 5 years; market EAR 5%</b>
+<div class="math"><div>Half-year rate: (1 + r)² = 1.05 ⟹ r = 2.4695% (not 2.5%)</div><div>Coupons (annuity, N = 10): (1,500/0.024695)[1 − 0.783526] = 60,740.85 × 0.216474 = <b>13,148.81</b></div><div>Principal: 100,000/1.05⁵ = <b>78,352.62</b></div><div><b>Price = 91,501.42</b> &nbsp;&lt; 100,000 → trades at a <b>discount</b></div></div></div>
+<p><i>Small rounding note:</i> your lecture text shows 13,148.87 and 91,501.49 from rounded intermediate steps. The slide-level exact computation is 13,148.81 and 91,501.42. Differences of a few paise come only from rounding the half-year rate; either is accepted if you show the method.</p>
+</section>
+<section id="s8"><h2>8. Capital Budgeting Rules I: NPV, Payback and Discounted Payback (Lecture 4 + slides)</h2>
+<p><b>Capital budgeting</b> = evaluating and choosing long-term projects to maximise the firm's value. We study four rules: NPV (benchmark), Payback, IRR, Profitability Index. First the benchmark.</p>
+<h3>8.1 NPV rule (recap and two extra properties)</h3>
+<div class="math"><div><b>NPV = −I₀ + Σ C_t/(1+r)^t</b> &nbsp;&nbsp;(I₀ = upfront investment, r = opportunity cost of capital, also called the hurdle rate)</div></div>
+<table><tr><th>NPV</th><th>Action</th></tr><tr><td>&gt; 0</td><td>Accept: creates value</td></tr><tr><td>= 0</td><td>Indifferent: earns exactly r</td></tr><tr><td>&lt; 0</td><td>Reject: destroys value</td></tr></table>
+<p><b>Value additivity of NPV:</b> for independent projects, NPV(A + B) = NPV(A) + NPV(B). So each division can judge its own projects; the firm's total value is the sum. Example: NPVs of +30 and −10 give a combined +20; accepting only A gives +30, so reject B.</p>
+<h3>8.2 Payback period rule</h3>
+<div class="def box"><b class="t">Definition</b>Number of years until the <b>cumulative undiscounted</b> cash inflows equal the initial investment. Accept if payback ≤ a cutoff chosen by management.</div>
+<div class="math"><div>Payback = T such that Σ_(t=1..T) C_t ≥ I₀ (interpolate within the year when needed)</div></div>
+<div class="box eg"><b class="t">Example (r = 10%, cutoff = 2 years)</b>Project A: −100, +50, +50, 0, 0. Project B: −100, +20, +30, +80, +100.
+<div class="math"><div>Payback A: 50 + 50 = 100 by year 2 → <b>2.0 years</b> ≤ 2 → <b>accept</b></div><div>Payback B: after 2 years only 50. After year 3: 130. Interpolate: 2 + (100 − 50)/80 = <b>2.625 years</b> &gt; 2 → <b>reject</b></div><div>NPV A = −100 + 50/1.1 + 50/1.21 = −100 + 45.45 + 41.32 = <b>-13.22</b></div><div>NPV B = −100 + 18.18 + 24.79 + 60.11 + 68.30 = <b>+71.38</b></div></div>
+Payback accepts the value-destroying project and rejects the value-creating one.</div>
+<svg viewBox="0 0 400 200" width="400" role="img" aria-label="Cumulative cash flow of projects A and B"><line x1="40" y1="120" x2="380" y2="120" stroke="#888"/><line x1="40" y1="10" x2="40" y2="190" stroke="#888"/>
+<polyline fill="none" stroke="#e8574b" stroke-width="3" points="40,150 125,135 210,120 295,120 380,120"/>
+<polyline fill="none" stroke="#0f9d8a" stroke-width="3" points="40,150 125,142 210,135 295,115 380,57"/>
+<text x="300" y="112" style="fill:#e8574b">A: stops at 0</text><text x="290" y="45" style="fill:#0f9d8a">B: reaches +130</text><text x="48" y="116">break-even line (cumulative = 0)</text><text x="150" y="198">year 0 → 4</text></svg>
+<h3>8.3 Three flaws of payback</h3>
+<ol><li><b>Ignores time value of money.</b> It treats ₹1 in year 1 and year 3 as equal.</li><li><b>Ignores everything after the cutoff.</b> B's big years 3 and 4 are invisible to the rule. Long-term projects (infrastructure, R&amp;D) are punished.</li><li><b>Arbitrary cutoff.</b> Nothing in finance tells you whether it should be 2 years or 5.</li></ol>
+<h3>8.4 Discounted payback</h3>
+<p>Accumulate <b>present values</b> until they cover I₀. This fixes flaw 1 only.</p>
+<table><tr><th>Year</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+<tr><td>PV of B's flow (10%)</td><td>-100.00</td><td>18.18</td><td>24.79</td><td>60.11</td><td>68.30</td></tr><tr><td>Cumulative PV of B</td><td>-100.00</td><td>-81.82</td><td>-57.02</td><td>3.08</td><td>71.38</td></tr>
+<tr><td>Cumulative PV of A</td><td>-100.00</td><td>-54.55</td><td>-13.22</td><td>-13.22</td><td>-13.22</td></tr></table>
+<p>Discounted payback of B = 2 + (100 − 42.98)/60.11 = <b>2.95 years</b> (longer than the 2.625 simple payback, because discounting shrinks flows). Project A <b>never</b> recovers 100 in present value terms (cumulative stops at 86.78), consistent with its negative NPV. It still keeps flaws 2 and 3.</p>
+<h3>8.5 Slide example: three projects at r = 5%</h3>
+<table><tr><th>Project</th><th>Cash flows</th><th>Payback</th><th>NPV (5%)</th></tr><tr><td>1</td><td>−5, +8</td><td>1 year (best)</td><td>2.62</td></tr><tr><td>2</td><td>−5, +4, +10</td><td>2 years</td><td>7.88</td></tr><tr><td>3</td><td>−5, +4, 0, +1,000,000</td><td>3 years (worst)</td><td>863,836</td></tr></table>
+<p>Payback ranks them 1 &gt; 2 &gt; 3 and NPV ranks them exactly in the <b>opposite</b> order. Project 3 has the slowest payback but an enormous payoff in year 3.</p>
+<h3>8.6 Why firms still use payback</h3>
+<ul><li>Easy to explain: "how long to get my money back?"</li><li>Controls managers who may not be trusted with distant forecasts.</li><li>Useful for an entrepreneur with limited capital in an imperfect market, where the true cost of capital is high and quick cash return matters.</li><li>Often agrees with NPV in simple cases.</li></ul>
+<div class="key"><b>Verdict:</b> payback is supplementary information, not the main criterion.</div>
+</section>
+<section id="s9"><h2>9. Capital Budgeting Rules II: Internal Rate of Return (Lecture 5 + slides)</h2>
+<h3>9.1 Idea and definition</h3>
+<p>For a simple project (100 now → 115 next year) the rate of return is 15%, and if the market gives 10%, take it. IRR extends "rate of return" to projects with many cash flows.</p>
+<div class="def box"><b class="t">IRR</b>The discount rate that makes NPV exactly zero: <b>0 = −I₀ + Σ C_t/(1+IRR)^t</b>. With one outflow and one inflow, it equals the simple rate of return. For bonds, IRR is called <b>yield to maturity (YTM)</b>.</div>
+<div class="math"><div>Cost 100, pays 120 next year: −100 + 120/(1 + IRR) = 0 ⟹ 1 + IRR = 1.2 ⟹ <b>IRR = 20%</b></div></div>
+<h3>9.2 IRR rule</h3>
+<p><b>Accept if IRR &gt; r</b> (the hurdle rate, i.e. cost of capital). Reject if IRR &lt; r. Usually gives the same answer as NPV.</p>
+<div class="box eg"><b class="t">Slide example: cost 100,000; receipts 5,000 / 10,000 / 120,000 at years 1/2/3</b>
+<div class="math"><div>Solve −100,000 + 5,000/(1+IRR) + 10,000/(1+IRR)² + 120,000/(1+IRR)³ = 0</div><div>No neat formula, so use trial and error or Excel's IRR function: <b>IRR = 11.14%</b></div><div>Check at 11%: NPV = 364 (&gt; 0 → accept). At 11.25%: NPV = -273 (&lt; 0 → reject).</div></div>
+So with cost of capital 11% take it, with 11.25% don't, the same as NPV says.</div>
+<svg viewBox="0 0 380 190" width="380" role="img" aria-label="NPV falls as discount rate rises; IRR is where it crosses zero"><line x1="40" y1="150" x2="360" y2="150" stroke="#888"/><line x1="40" y1="10" x2="40" y2="180" stroke="#888"/>
+<polyline fill="none" stroke="#7a54c8" stroke-width="3" points="40.0,85.8 60.0,99.4 80.0,112.0 100.0,123.7 120.0,134.5 140.0,144.6 160.0,153.9 180.0,162.7 200.0,170.9 220.0,178.5 240.0,185.6 290.0,201.6 340.0,215.3"/>
+<circle cx="151.4" cy="150.0" r="5" fill="#e8574b"/><text x="159.4" y="140" style="fill:#e8574b">IRR ≈ 11.14%</text><text x="60" y="40">NPV &gt; 0 (r &lt; IRR): accept</text><text x="230" y="170">NPV &lt; 0: reject</text><text x="250" y="185">discount rate r →</text></svg>
+<h3>9.3 Pitfall 1: lending vs borrowing projects</h3>
+<div class="row"><div style="background:#d8f1ec"><b>Investment ("lending")</b><br>Outflow first, then inflows. NPV falls as r rises. <b>Accept if IRR &gt; r.</b></div><div style="background:#fdeceb"><b>Financing ("borrowing")</b><br>Inflow first, then outflows (you receive a loan). NPV <b>rises</b> as r rises. <b>Accept if IRR &lt; r.</b></div></div>
+<div class="box eg"><b class="t">Slide example</b>Receive 100,000 now, then pay 5,000, 10,000 and 120,000 in years 1–3. Same IRR, 11.14%, but now it is a <b>loan with an interest cost of 11.14%</b>. Take it only if the prevailing market rate is <b>above</b> 11.14%, since then you are borrowing cheaper than the market. NPV check (value of the loan to you = −NPV of the payments at r): at r = 15% it is <b>+9,189</b> (accept); at r = 8% it is <b>-8,463</b> (reject).</div>
+<p><b>Why:</b> a loan is a good deal when its interest cost (IRR) is lower than what you'd pay elsewhere (r). Applying "IRR &gt; r" blindly here gives the wrong decision.</p>
+<h3>9.4 Pitfall 2: multiple IRRs</h3>
+<p>If the cash-flow signs change more than once, NPV(r) can cross zero several times. By Descartes' rule of signs, the number of positive IRRs is <b>at most</b> the number of sign changes.</p>
+<div class="box eg"><b class="t">Lecture example: −100, +230, −132 (two sign changes)</b>
+<div class="math"><div>0 = −100 + 230x − 132x², x = 1/(1+IRR) ⟹ 132x² − 230x + 100 = 0</div><div>x = [230 ± √(52,900 − 52,800)]/264 = (230 ± 10)/264 ⟹ x = 10/11 or 5/6</div><div>IRR₁ = 11/10 − 1 = <b>10%</b>; &nbsp;IRR₂ = 6/5 − 1 = <b>20%</b></div></div>
+NPV is positive only between 10% and 20%. A single "IRR &gt; r" test is meaningless here.</div>
+<svg viewBox="0 0 380 170" width="380" role="img" aria-label="NPV curve with two IRRs"><line x1="40" y1="130" x2="360" y2="130" stroke="#888"/><line x1="40" y1="10" x2="40" y2="160" stroke="#888"/>
+<polyline fill="none" stroke="#7a54c8" stroke-width="3" points="40.0,156.7 90.0,139.1 120.0,132.7 140.0,130.0 160.0,128.3 190.0,127.5 220.0,128.5 240.0,130.0 260.0,132.1 290.0,136.4 340.0,145.8"/>
+<circle cx="140" cy="130" r="5" fill="#e8574b"/><circle cx="240" cy="130" r="5" fill="#e8574b"/>
+<text x="120" y="148">10%</text><text x="230" y="148">20%</text><text x="125" y="40" style="fill:#0f9d8a">NPV &gt; 0 only between the two IRRs</text><text x="250" y="165">r →</text></svg>
+<div class="box eg"><b class="t">Slide example: −100,000; +205,000; −102,000 (cleanup cost)</b>IRRs of <b>−15%</b> and <b>+20%</b>. Check at 20%: −100,000 + 170,833 − 70,833 = 0 ✓. At −15%: −100,000 + 241,176 − 141,176 = 0 ✓. Spreadsheets may report only one root, so always plot NPV against r.</div>
+<h3>9.5 Pitfall 3: no IRR at all</h3>
+<ul><li><b>Cash 100 today, 200 next period:</b> all inflows. NPV is always positive for every r, never zero → no IRR (it is free money).</li><li><b>−10,000; +27,000; −20,000:</b> the quadratic 20,000x² − 27,000x + 10,000 = 0 has discriminant 27,000² − 4·20,000·10,000 = 729M − 800M &lt; 0 → no real root. NPV is negative at every r, so the project should never be taken.</li></ul>
+<div class="key"><b>When is IRR unique?</b> If there is <b>one negative cash flow followed only by positive ones</b>, NPV falls steadily as r rises from very high (≈ −I₀) to low (large positive), so it crosses zero exactly once → one IRR. IRR is safe when there is only one positive or only one negative cash flow.</div>
+<h3>9.6 Pitfall 4: scale (mutually exclusive projects)</h3>
+<p>IRR is a <i>percentage</i> and ignores how big the project is. "Mutually exclusive" means you can only take one.</p>
+<table><tr><th>Case</th><th>Project</th><th>Cash flows</th><th>IRR</th><th>NPV</th></tr><tr><td>Slides (r = 5%)</td><td>1</td><td>−5, +10</td><td>100%</td><td>4.52</td></tr><tr><td></td><td>2</td><td>−1,000, +1,100</td><td>10%</td><td>47.62</td></tr><tr><td>Lecture (r = 10%)</td><td>Small</td><td>−10, +40</td><td>300%</td><td>26.36</td></tr><tr><td></td><td>Large</td><td>−100, +200</td><td>100%</td><td>81.82</td></tr></table>
+<p>IRR picks the small projects (100%, 300%) but NPV picks the <b>bigger</b> value creators (47.62 and 81.82). Answer to "should one always prefer 100% IRR to 10% IRR?" is <b>No</b>.</p>
+<p><i>Extra check (not in lecture):</i> the extra investment of moving from Small to Large costs 90 more now and returns 160 more next year, an IRR of 78%, far above 10%, so the added investment is worthwhile. This "incremental IRR" gives the same decision as NPV.</p>
+<h3>9.7 Pitfall 5: rates that change over time</h3>
+<p>If short-term and long-term rates differ (Section 11), there is no single hurdle rate to compare one IRR against.</p>
+<h3>9.8 What IRR is good for</h3>
+<ol><li>It depends only on the project's own cash flows: no need for market rates to compute it.</li><li>Helpful for judging profitability and managers' performance.</li><li>The gap IRR − r shows the <b>buffer</b>: how wrong your cash-flow estimates can be before the decision flips.</li></ol>
+<table><tr><th>Situation</th><th>IRR rule</th></tr><tr><td>Outflow first, then inflows, unique IRR</td><td>Accept if IRR &gt; r</td></tr><tr><td>Inflow first, then outflows</td><td>Accept if IRR &lt; r</td></tr><tr><td>Multiple or no IRR</td><td>Use NPV (or plot NPV vs r)</td></tr><tr><td>Mutually exclusive projects of different size</td><td>Use NPV</td></tr></table>
+</section>
+<section id="s10"><h2>10. Profitability Index and Capital Rationing (Lecture 5 + slides)</h2>
+<h3>10.1 Definition</h3>
+<div class="math"><div><b>PI = PV(future cash inflows) / I₀</b> = (I₀ + NPV)/I₀ = <b>1 + NPV/I₀</b></div></div>
+<p>It tells you the present value created <b>per rupee invested</b>. Standalone rule: accept if <b>PI &gt; 1</b> (identical to NPV &gt; 0). It is meaningful only when the first cash flow is an outflow.</p>
+<h3>10.2 Three slide projects at r = 20%</h3>
+<table><tr><th>Project</th><th>Cash flows</th><th>PV of inflows</th><th>NPV</th><th>PI</th></tr>
+<tr><td>1</td><td>−100, 70, 60, 50</td><td>128.94</td><td>28.94</td><td>1.29</td></tr>
+<tr><td>2</td><td>−10, 21.14, 18.12, 15.10</td><td>38.94</td><td>28.94</td><td>3.89</td></tr>
+<tr><td>3</td><td>−100, 140, 120, 100</td><td>257.87</td><td>157.87</td><td>2.58</td></tr></table>
+<p>Projects 1 and 2 have the same NPV (≈ 28.94) but Project 2 needs only 10 of capital, so its PI is much higher (3.89 vs 1.29). Project 3 has a bigger NPV than Project 2 (157.87 vs 28.94) but a lower PI (2.58 vs 3.89). <b>PI is biased toward small projects</b>, like IRR. Use PI to choose between projects only when the NPVs are equal or very similar.</p>
+<h3>10.3 Capital rationing (budget limit) example</h3>
+<p>Budget at t = 0: 100. All r = 10%. Rank by PI and fund in order until the money runs out.</p>
+<table><tr><th>Project</th><th>I₀</th><th>PV inflows</th><th>NPV</th><th>PI</th><th>Rank</th></tr><tr><td>P1</td><td>20</td><td>30</td><td>10</td><td>1.50</td><td>1</td></tr><tr><td>P2</td><td>50</td><td>70</td><td>20</td><td>1.40</td><td>2</td></tr><tr><td>P3</td><td>40</td><td>52</td><td>12</td><td>1.30</td><td>3</td></tr><tr><td>P4</td><td>30</td><td>36</td><td>6</td><td>1.20</td><td>4</td></tr></table>
+<div class="math"><div>Fund P1 (20): left 80, NPV +10 &nbsp;→&nbsp; fund P2 (50): left 30, NPV +20 &nbsp;→&nbsp; P3 costs 40, too big, skip &nbsp;→&nbsp; fund P4 (30): left 0, NPV +6</div><div><b>Total NPV = 36</b></div></div>
+<p>Check all feasible combinations (best six): </p><table><tr><th>Projects</th><th>Cost</th><th>Total NPV</th></tr><tr><td>P1+P2+P4</td><td>100</td><td>36</td></tr><tr><td>P2+P3</td><td>90</td><td>32</td></tr><tr><td>P1+P2</td><td>70</td><td>30</td></tr><tr><td>P1+P3+P4</td><td>90</td><td>28</td></tr><tr><td>P2+P4</td><td>80</td><td>26</td></tr><tr><td>P1+P3</td><td>60</td><td>22</td></tr></table>
+<p>P1 + P2 + P4 (NPV 36) is indeed the best, so PI ranking worked here.</p>
+<h3>10.4 When PI ranking fails</h3>
+<ol><li><b>Several budget constraints over time</b> (money limited at t = 0, 1, 2…): need linear programming.</li><li><b>Indivisible projects</b> (you cannot fund half a project). Extra example: budget 100; X costs 60 with NPV 20 (PI 1.33), Y and Z each cost 50 with NPV 14 (PI 1.28). PI funds X first, then neither Y nor Z fits (40 left): total NPV = 20. But Y + Z uses all 100 and gives NPV <b>28</b>.</li></ol>
+<div class="key"><b>PI summary:</b> good for ranking under a single-period budget; always check combinations. NPV remains the benchmark.</div>
+</section>
+<section id="s11"><h2>11. Time-Varying Rates of Return: Term Structure and Forward Rates (Lecture 6 + slides)</h2>
+<h3>11.1 Why this matters</h3>
+<p>So far one rate r applied to every horizon. In reality it does not. Sept 2024: Indian government 1-year bond ≈ 6.8%, 30-year ≈ 7.1%. US 1-year ≈ 4.4%, 30-year ≈ 4.0%. In 2021: US 1-year ≈ 0.4% but 30-year ≈ 1.9%. Banks also offer different deposit rates for different durations. A company must compare money that pays back in 1 year with money that pays back in 30. Inflation expectations are one reason (Sec 5): expected higher inflation pushes nominal rates up.</p>
+<h3>11.2 Notation: spot and forward rates</h3>
+<table><tr><th>Symbol</th><th>Meaning</th></tr><tr><td>r₀,₁</td><td>return from today (0) to year 1 = the 1-year <b>spot</b> rate</td></tr><tr><td>r₀,₂</td><td>total (holding) return from today to year 2</td></tr><tr><td>r₁,₂</td><td>return from year 1 to year 2 (a rate that <b>starts in the future</b>)</td></tr><tr><td>r̄_t (annualised)</td><td>constant yearly rate that gives the same t-year return; the t-year spot rate</td></tr></table>
+<div class="def box"><b class="t">Spot vs forward</b><b>Spot rates</b> are rates for loans that begin right now. <b>Forward rates</b> are rates for loans that begin in the future (agreed today).</div>
+<h3>11.3 Compounding different rates</h3>
+<div class="math"><div><b>1 + r₀,₂ = (1 + r₀,₁)(1 + r₁,₂)</b></div></div>
+<div class="box eg"><b class="t">Example 1</b>30% in year 1 and 20% in year 2: 1 + r₀,₂ = 1.30 × 1.20 = 1.56 → <b>56%</b> (not 50%).</div>
+<div class="box eg"><b class="t">Example 2: invest from year 1 to year 4</b>1-year returns of 30% (yr 1→2), 40% (yr 2→3), 50% (yr 3→4):
+<div class="math"><div>1 + r₁,₄ = 1.30 × 1.40 × 1.50 = 2.73 ⟹ r₁,₄ = <b>173%</b></div></div>100 invested one year from now becomes 273 in year 4.</div>
+<h3>11.4 Annualised rate of return</h3>
+<p>Is 10% over 3 years better than 20% over 6 years? To compare you need <b>per-year</b> figures. The annualised rate r̄_t is the single constant yearly rate that, compounded t times, gives the actual holding return:</p>
+<div class="math"><div>(1 + r̄_t)^t = 1 + r₀,t &nbsp;&nbsp;⟹ &nbsp;&nbsp;<b>1 + r̄_t = (1 + r₀,t)^(1/t)</b></div></div>
+<div class="box eg"><b class="t">Example (3-year return 173%)</b>Wrong: 173%/3 = 57.7% a year. Check: 1.577³ = 3.92 → 292% total, far more than 173%. Right: (2.73)^(1/3) = <b>39.76%</b> a year; check 1.3976³ = 2.73 ✓.</div>
+<div class="box eg"><b class="t">Example 3: 100 today → 240 in 30 years</b>Holding return = 140/100 = 140%. 1 + r̄₃₀ = 2.4^(1/30) = 1.02961 ⟹ <b>r̄₃₀ ≈ 2.96%</b> a year.</div>
+<div class="box eg"><b class="t">10% over 3 years vs 20% over 6 years?</b>1.10^(1/3) − 1 = 3.23% a year; 1.20^(1/6) − 1 = 3.09% a year. The 3-year deal is slightly better per year.</div>
+<div class="key"><b>Analogy:</b> compounding is like <b>adding</b> returns, annualising is like <b>averaging</b> them. (Two years of 1% compound to 2.01%, annualise to 1%.) But because returns multiply, the proper average is the geometric one (root), not the arithmetic one (sum ÷ n).</div>
+<h3>11.5 Why the arithmetic average misleads</h3>
+<table><tr><th>Example</th><th>Yearly returns</th><th>Arithmetic average</th><th>Actual result</th><th>Annualised (geometric)</th></tr>
+<tr><td>4: doubles, then halves</td><td>+100%, −50%</td><td>+25%</td><td>X → 2X → X: <b>0%</b></td><td>0%</td></tr>
+<tr><td>5: up and down 20%</td><td>+20%, −20%</td><td>0%</td><td>1,000 → 1,200 → 960 (<b>−4%</b>)</td><td>√0.96 − 1 = <b>-2.02%</b></td></tr></table>
+<p>The arithmetic average says you made money (or broke even); you did not. The percentage lost after a gain is larger in rupees because it applies to a bigger base.</p>
+<h3>11.6 NPV with time-varying rates</h3>
+<div class="math"><div>NPV = C₀ + C₁/(1 + r₀,₁) + C₂/(1 + r₀,₂) + … = C₀ + C₁/(1 + r̄₁) + C₂/(1 + r̄₂)² + …</div></div>
+<p>Each flow is discounted with the rate for <b>its own horizon</b> (the spot rate / annualised rate for that maturity).</p>
+<div class="box eg"><b class="t">Example 6</b>Invest 24; receive 20 in 1 year and 16 in 5 years. 1-year rate 5%; 5-year annualised rate 6%.
+<div class="math"><div>NPV = −24 + 20/1.05 + 16/1.06⁵ = −24 + 19.048 + 11.956 = <b>7.00</b></div></div>(The slide quotes ≈ 7.01; rounding.) Positive → accept. Note the 5-year flow uses 6%, not 5%.</div>
+<h3>11.7 The term structure (yield curve)</h3>
+<p>The <b>term structure of interest rates</b> is the relation between the spot rate and the time to maturity. The picture of spot rates against maturity is the <b>yield curve</b>.</p>
+<svg viewBox="0 0 400 190" width="400" role="img" aria-label="Three yield curve shapes"><line x1="40" y1="165" x2="380" y2="165" stroke="#888"/><line x1="40" y1="10" x2="40" y2="165" stroke="#888"/>
+<polyline fill="none" stroke="#0f9d8a" stroke-width="3" points="45,130 120,100 200,80 300,65 375,58"/><text x="270" y="52" style="fill:#0f9d8a">Normal (upward)</text>
+<line x1="45" y1="95" x2="375" y2="95" stroke="#f2a516" stroke-width="3"/><text x="290" y="88" style="fill:#c9890a">Flat</text>
+<polyline fill="none" stroke="#e8574b" stroke-width="3" points="45,60 120,85 200,110 300,125 375,132"/><text x="250" y="150" style="fill:#e8574b">Inverted (downward)</text><text x="150" y="185">maturity t →</text><text x="8" y="14">yield</text></svg>
+<table><tr><th>Shape</th><th>Meaning</th><th>Real example</th></tr><tr><td>Normal</td><td>r₁ &lt; r₂ &lt; r₃: long rates higher</td><td>India 2024 (6.8% vs 7.1%); US 2021</td></tr><tr><td>Flat</td><td>r₁ = r₂ = r₃</td><td>the Week 1–2 assumption</td></tr><tr><td>Inverted</td><td>short rates higher than long</td><td>US 2024 (4.4% vs 4.0%)</td></tr></table>
+<h3>11.8 Two equivalent ways to discount</h3>
+<div class="row"><div style="background:#e3ebfb"><b>Spot-rate method</b><br>PV = C₁/(1+r₁) + C₂/(1+r₂)² + … each flow with its own spot rate.</div><div style="background:#d8f1ec"><b>Forward-rate method</b><br>PV = C₁/(1+r₁) + C₂/[(1+r₁)(1+f₁,₂)] + C₃/[(1+r₁)(1+f₁,₂)(1+f₂,₃)]. Chain the one-year rates.</div></div>
+<p>They give the same answer because (1+r₂)² = (1+r₁)(1+f₁,₂) (derived next).</p>
+<h3>11.9 Forward rates (derivation by no-arbitrage)</h3>
+<div class="def box"><b class="t">Forward rate f_(t₁,t₂)</b>The break-even interest rate agreed <b>today</b> for a loan that starts at a future date t₁ and ends at t₂.</div>
+<p>You have ₹1 and a 2-year horizon. Two ways:</p>
+<div class="row"><div style="background:#d8f1ec"><b>Strategy A</b><br>Buy a 2-year zero-coupon bond. After 2 years: (1 + r₂)².</div><div style="background:#e3ebfb"><b>Strategy B</b><br>Buy a 1-year bond (1 + r₁), then at t=1 lend the proceeds for one more year at the forward rate f₁,₂ (locked in today). After 2 years: (1 + r₁)(1 + f₁,₂).</div></div>
+<svg viewBox="0 0 470 130" width="470" role="img" aria-label="Forward rate timeline"><line x1="30" y1="65" x2="440" y2="65" stroke="#888" stroke-width="2"/>
+<g text-anchor="middle"><circle cx="60" cy="65" r="5" fill="#3b6fd4"/><text x="60" y="88">t=0</text><circle cx="235" cy="65" r="5" fill="#7a54c8"/><text x="235" y="88">t=1</text><circle cx="410" cy="65" r="5" fill="#0f9d8a"/><text x="410" y="88">t=2</text>
+<path d="M62 55 Q150 20 232 55" fill="none" stroke="#3b6fd4" stroke-width="2"/><text x="148" y="26" style="fill:#3b6fd4">spot r₁</text>
+<path d="M238 55 Q320 20 408 55" fill="none" stroke="#e8574b" stroke-width="2"/><text x="325" y="26" style="fill:#e8574b">forward f₁,₂</text>
+<path d="M62 75 Q235 130 408 75" fill="none" stroke="#0f9d8a" stroke-width="2"/><text x="235" y="118" style="fill:#0f9d8a">spot r₂ (per year, two years)</text></g></svg>
+<div class="math"><div>If there is no arbitrage, A = B: (1 + r₂)² = (1 + r₁)(1 + f₁,₂)</div><div><b>f₁,₂ = (1 + r₂)²/(1 + r₁) − 1</b></div><div>General: (1 + r_t)^t = (1 + r_(t−1))^(t−1)(1 + f_(t−1,t)) ⟹ <b>f_(t−1,t) = (1 + r_t)^t/(1 + r_(t−1))^(t−1) − 1</b></div></div>
+<div class="box eg"><b class="t">Example: r₁ = 5%, r₂ = 6%</b>f₁,₂ = 1.06²/1.05 − 1 = 1.1236/1.05 − 1 = <b>7.01%</b>. With r₃ = 7%: f₂,₃ = 1.07³/1.06² − 1 = 1.225043/1.1236 − 1 = <b>9.03%</b>.</div>
+<p><b>Why must it be exactly this?</b> Suppose the market offered a forward rate of 7.5% instead of 7.01%. Borrow ₹1 for 2 years at 6% (owe 1.1236). Lend it for 1 year at 5% (get 1.05 at t=1) and lock in lending that for year 2 at 7.5%: 1.05 × 1.075 = 1.12875. Profit = 1.12875 − 1.1236 = <b>0.00515</b> per ₹1 with no risk. Everyone would do this until the forward rate falls back to 7.01%.</p>
+<h3>11.10 Yield to maturity (YTM) vs spot rates</h3>
+<div class="def box"><b class="t">YTM y</b>The single discount rate that makes PV of all of a bond's payments equal its market price: P₀ = Σ C_t/(1+y)^t. It is the bond's IRR.</div>
+<p>Spot rates are actual market prices for single-dated cash flows. YTM is a kind of <b>average</b> of spot rates, weighted by when the cash arrives.</p>
+<div class="box eg"><b class="t">Example: 2-year bond, coupon 5, face 100; spot r₁ = 5%, r₂ = 6%</b>Price = 5/1.05 + 105/1.06² = 4.762 + 93.450 = <b>98.21</b>. Solving 98.21 = 5/(1+y) + 105/(1+y)² gives y = <b>5.98%</b>, between 5% and 6% and closer to 6% because most cash (105) comes at year 2.</div>
+<h3>11.11 Why does the curve slope? Two theories</h3>
+<div class="row"><div style="background:#e3ebfb"><b>1. Pure Expectations Hypothesis (PEH)</b><br>Forward rate = expected future spot rate: f_(t−1,t) = E[1-year rate at t−1]. Investors are risk-neutral and don't care about maturity. So an <b>upward</b> curve means the market <b>expects rates to rise</b>. (In the example, f₁,₂ = 7.01% means the market expects next year's 1-year rate to be about 7.01%.)</div><div style="background:#fff0cf"><b>2. Liquidity Preference (term premium)</b><br>Long bonds are more price-volatile and less liquid, so risk-averse investors demand extra: f_(t−1,t) = E[1-year rate] + TP_t, with TP growing with maturity. The curve slopes upward even if future rates are expected to stay flat.</div></div>
+<div class="box eg"><b class="t">Numbers: expected 1-year rate flat at 5%, term premium on year 2 = 0.5%</b>PEH: f₁,₂ = 5% → r₂ = √(1.05 × 1.05) − 1 = 5%. With a premium: f₁,₂ = 5.5% → r₂ = √(1.05 × 1.055) − 1 = <b>5.250%</b>, an upward-sloping curve although no rise is expected.</div>
+<div class="key"><b>Exam point:</b> to infer expectations from the yield curve you must separate the expected change in rates from the term premium. A rising curve alone does not prove rates are expected to rise.</div>
+</section>
+<section id="s12"><h2>12. Practice Problems with Full Solutions</h2>
+<p>Attempt each first. Methods mirror the lectures and slides.</p>
+<div class="box eg"><b class="t">P1. Cash flows 1,000, 2,000, 3,000 at years 1–3; r = 7%. PV? And if received at the start of each year (t = 0, 1, 2)?</b><div class='math'><div>PV = 1000/1.07 + 2000/1.1449 + 3000/1.225043 = 934.58 + 1,746.88 + 2,448.89 = <b>5,130.35</b></div><div>Start-of-year: × 1.07 = <b>5,489.48</b></div></div></div><div class="box eg"><b class="t">P2. Annuity of 5,000 a year for 4 years at 8%: ordinary and due.</b><div class='math'><div>Ordinary: (5,000/0.08)[1 − 1.08⁻⁴] = 62,500 × 0.26497 = <b>16,560.63</b></div><div>Due: × 1.08 = <b>17,885.48</b></div></div></div><div class="box eg"><b class="t">P3. Loan of ₹20,00,000, 9% APR, monthly payments for 20 years. EMI? First-month split? EAR?</b><div class='math'><div>r = 0.75% a month, n = 240. Annuity factor = (1 − 1.0075⁻²⁴⁰)/0.0075 = 111.1450</div><div>EMI = 2,000,000/111.1450 = <b>₹17,994.52</b></div><div>Month 1: interest = 0.75% × 2,000,000 = 15,000; principal = 2,994.52; new balance 1,997,005.48</div><div>EAR = 1.0075¹² − 1 = <b>9.381%</b></div></div></div><div class="box eg"><b class="t">P4. Div₁ = 8, r = 12%, g = 4%. Price? Price if g = 5%? If forward yield is 3% and g = 6%, cost of capital?</b><div class='math'><div>8/(0.12 − 0.04) = <b>100</b>; &nbsp; with g = 5%: 8/0.07 = <b>114.29</b> (1 point more growth raises price 14%)</div><div>r = D₁/P₀ + g = 3% + 6% = <b>9%</b></div></div></div><div class="box eg"><b class="t">P5. Nominal rate 11%, inflation 4%. Real rate (exact, approximate)? Real cash flows 500 and 500 in years 1–2: PV by both methods.</b><div class='math'><div>Exact: 1.11/1.04 − 1 = <b>6.73%</b>; approximate 11 − 4 = 7%</div><div>Real method: 500/1.0673 + 500/1.0673² = 468.47 + 438.93 = <b>907.39</b></div><div>Nominal flows 520, 540.80; at 11%: 520/1.11 + 540.80/1.2321 = 468.47 + 438.93 = <b>907.39</b> ✓ same</div></div></div><div class="box eg"><b class="t">P6. 9% APR: EAR if compounded quarterly, monthly, continuously?</b><div class='math'><div>Quarterly: 1.0225⁴ − 1 = <b>9.308%</b></div><div>Monthly: 1.0075¹² − 1 = <b>9.381%</b></div><div>Continuous: e^0.09 − 1 = <b>9.417%</b></div></div></div><div class="box eg"><b class="t">P7. ₹5,000 due in 4 years; continuous rate 6%. PV? Equivalent EAR?</b><div class='math'><div>PV = 5,000 e^(−0.24) = 5,000 × 0.78663 = <b>3,933.14</b></div><div>EAR = e^0.06 − 1 = <b>6.184%</b></div></div></div><div class="box eg"><b class="t">P8. Projects X: −200, 100, 100, 0, 0 and Y: −200, 50, 100, 150, 200. Cutoff 2 years, r = 10%. Which does payback choose? Which does NPV choose?</b><div class='math'><div>Payback X = 2.0 years (accept). Payback Y: cumulative 50, 150, 300 → 2 + 50/150 = <b>2.33 years</b> (reject)</div><div>NPV X = -26.45; NPV Y = 177.40</div></div>Payback chooses X, which loses value; NPV chooses Y.</div><div class="box eg"><b class="t">P9. IRR of −1,000 → 1,210 in 2 years? IRR of −1,000, 300, 400, 600? Accept at r = 8%?</b><div class='math'><div>1,000(1+IRR)² = 1,210 ⟹ 1+IRR = 1.1 ⟹ <b>IRR = 10%</b></div><div>Second project: solve by trial: IRR = <b>12.71%</b>; NPV at 8% = 97.01</div></div>Both IRRs exceed 8%, and the NPV is positive, so accept (one outflow then inflows → unique IRR, so the rule is safe).</div><div class="box eg"><b class="t">P10. Cash flows −6, +17, −12. Find the IRRs and when NPV is positive.</b><div class='math'><div>−6 + 17x − 12x² = 0, x = 1/(1+IRR) ⟹ 12x² − 17x + 6 = 0</div><div>x = [17 ± √(289 − 288)]/24 = (17 ± 1)/24 ⟹ x = 3/4 or 2/3</div><div>IRR = 4/3 − 1 = <b>33.33%</b> or 3/2 − 1 = <b>50%</b></div></div>NPV is positive only for r between 33.33% and 50%.</div><div class="box eg"><b class="t">P11. Budget 90. Projects (cost, PV inflows): A (30, 45), B (50, 70), C (40, 52), D (20, 26). Choose using PI. Is it optimal?</b><div class='math'><div>PI: A 1.50, B 1.40, C 1.30, D 1.30. Fund A (30) → 60 left; B (50) → 10 left; C and D do not fit. NPV = 15 + 20 = <b>35</b></div><div>Best combination by checking all: A+B with NPV 35 → PI ranking was optimal here.</div></div></div><div class="box eg"><b class="t">P12. Returns +50%, −20%, +10%. Holding return, annualised return, arithmetic average?</b><div class='math'><div>Holding: 1.5 × 0.8 × 1.1 = 1.32 ⟹ <b>32%</b></div><div>Annualised: 1.32^(1/3) − 1 = <b>9.70%</b></div><div>Arithmetic average = (50 − 20 + 10)/3 = 13.33%, which overstates growth</div></div></div><div class="box eg"><b class="t">P13. Spot rates r₁ = 4%, r₂ = 5%, r₃ = 6%. Find f₁,₂ and f₂,₃.</b><div class='math'><div>f₁,₂ = 1.05²/1.04 − 1 = <b>6.01%</b></div><div>f₂,₃ = 1.06³/1.05² − 1 = <b>8.03%</b></div><div>Check: 1.04 × 1.0601 × 1.0803 = 1.19102 = 1.06³ ✓</div></div></div><div class="box eg"><b class="t">P14. Pay 500 now; receive 300 in 1 year and 400 in 2 years. Annualised spot rates: r̄₁ = 4%, r̄₂ = 5%. NPV?</b><div class='math'><div>NPV = −500 + 300/1.04 + 400/1.05² = −500 + 288.46 + 362.81 = <b>151.27</b></div></div>Positive → accept.</div><div class="box eg"><b class="t">P15. Sensitivity: PV of 1,000 in 20 years at 6% vs 7%.</b><div class='math'><div>1,000/1.06²⁰ = 311.80; &nbsp; 1,000/1.07²⁰ = 258.42</div><div>A 1-point rate error changes PV by -17.1% over 20 years.</div></div></div><div class="box eg"><b class="t">P16. Person A needs money today, person B wants to save. 120 cash; project costs 80 and pays 110 next year; r = 10%. Show both should accept.</b><div class='math'><div>Project value now = 110/1.1 = 100; NPV = +20</div><div>A: sell project for 100: cash today = 120 − 80 + 100 = <b>140</b> vs 120 without</div><div>B: keep 40 in bank: next year 110 + 40 × 1.1 = <b>154</b> vs 120 × 1.1 = 132</div></div>Both gain (20 today = 22 next year). That is separation of decisions.</div>
+<div class="key"><b>Problem-solving routine:</b> (1) draw a timeline; (2) check whether rates are nominal or real, APR or EAR, per month or per year; (3) pick the tool: single flow, stream, annuity, perpetuity, growing perpetuity; (4) compute and sanity-check the sign and size.</div>
+</section>
+<section id="s13"><h2>13. Revision Sheet</h2>
+<h3>Formula table</h3>
+<table><tr><th>Topic</th><th>Formula</th></tr>
+<tr><td>Multi-period PV</td><td>PV = Σ C_t/(1+r)^t; with varying rates denominator Π(1+r_t) or (1+r̄_t)^t</td></tr>
+<tr><td>Annuity due</td><td>PV_due = PV_ordinary × (1+r)</td></tr>
+<tr><td>Simple vs compound</td><td>C₀(1 + rt) vs C₀(1+r)^t</td></tr>
+<tr><td>EMI</td><td>C = L·r/[1 − (1+r)^−n]; balance B_t = C·[1 − (1+r)^−(n−t)]/r; P_(t+1) = P_t(1+r)</td></tr>
+<tr><td>Gordon growth</td><td>P₀ = Div₁/(r − g); r = Div₁/P₀ + g</td></tr>
+<tr><td>Fisher</td><td>(1+r_nom) = (1+r_real)(1+π); r_real ≈ r_nom − π</td></tr>
+<tr><td>Perpetuity / annuity</td><td>C/r; (C/r)[1 − (1+r)^−n]</td></tr>
+<tr><td>EAR</td><td>(1 + APR/n)ⁿ − 1; continuous e^r − 1; r = ln(1+EAR)</td></tr>
+<tr><td>Continuous FV/PV</td><td>C₀e^(rt); Ce^(−rt)</td></tr>
+<tr><td>IRR</td><td>rate with NPV = 0; unique if one outflow then inflows</td></tr>
+<tr><td>PI</td><td>PV(inflows)/I₀ = 1 + NPV/I₀</td></tr>
+<tr><td>Holding return</td><td>1 + r₀,t = Π(1 + one-period returns)</td></tr>
+<tr><td>Annualised return</td><td>1 + r̄_t = (1 + r₀,t)^(1/t)</td></tr>
+<tr><td>Forward rate</td><td>f_(t−1,t) = (1+r_t)^t/(1+r_(t−1))^(t−1) − 1</td></tr></table>
+<h3>Comparing the four project rules</h3>
+<table><tr><th>Rule</th><th>Accept if</th><th>Strength</th><th>Weakness</th></tr>
+<tr><td><b>NPV</b></td><td>NPV &gt; 0</td><td>Measures value in rupees today; additive; correct benchmark</td><td>Needs good estimates of cash flows and r</td></tr>
+<tr><td>Payback</td><td>payback ≤ cutoff</td><td>Simple, quick, handles low trust or scarce capital</td><td>Ignores time value, ignores after cutoff, arbitrary cutoff</td></tr>
+<tr><td>Discounted payback</td><td>disc. payback ≤ cutoff</td><td>Includes time value</td><td>Still ignores after cutoff, arbitrary cutoff</td></tr>
+<tr><td>IRR</td><td>IRR &gt; r (reverse for financing)</td><td>Needs no market rate; shows buffer for errors</td><td>Multiple/no IRR, scale problem, mutually exclusive projects, varying r</td></tr>
+<tr><td>PI</td><td>PI &gt; 1</td><td>Good for ranking under one budget limit</td><td>Biased to small projects; fails with multi-period limits or indivisibility</td></tr></table>
+<h3>Glossary</h3>
+<table><tr><th>Term</th><th>Plain meaning</th></tr><tr><td>EMI</td><td>Equal monthly instalment on a loan</td></tr><tr><td>Amortisation</td><td>Paying off a loan gradually, interest first, then principal</td></tr><tr><td>APR vs EAR</td><td>Quoted rate vs true annual rate after compounding</td></tr><tr><td>Hurdle rate</td><td>Minimum return a project must beat (cost of capital)</td></tr><tr><td>Mutually exclusive</td><td>You can choose only one</td></tr><tr><td>Capital rationing</td><td>A limit on how much you can invest</td></tr><tr><td>Spot / forward rate</td><td>Rate for a loan starting now / starting later</td></tr><tr><td>YTM</td><td>A bond's IRR</td></tr><tr><td>Term premium</td><td>Extra yield demanded for holding longer bonds</td></tr></table>
+<h3>Common mistakes</h3>
+<ul><li>Using the annuity formula for payments that begin today without multiplying by (1+r).</li><li>Treating the APR as the monthly-compounded effective rate (or dividing a long-run return by years).</li><li>Mixing nominal cash flows with real rates (or the reverse).</li><li>Applying "IRR &gt; r" to a borrowing project, or trusting an IRR when signs change more than once.</li><li>Ranking mutually exclusive projects by IRR or PI.</li><li>Using the arithmetic average of returns instead of the annualised (geometric) return.</li><li>Using one rate for all maturities when the yield curve is not flat.</li></ul>
+<h3>Likely exam questions and what to write</h3>
+<ul><li><b>Compute EMI and the first-month split; explain early repayment.</b> Annuity equation with monthly rate, then interest = rate × balance, balance = PV of remaining payments.</li><li><b>Derive perpetuity and annuity without series.</b> Shift argument: 1 + P = (1+r)P; add and subtract end payment for annuity.</li><li><b>Derive Fisher and show nominal and real discounting agree.</b> Substitute C_nom = C_real(1+π)^t and 1+r_nom = (1+r_real)(1+π).</li><li><b>Derive continuous compounding.</b> m = n/r substitution and Euler's limit.</li><li><b>Why is payback flawed? Give a numerical counter-example.</b> Project A vs B (payback 2.0 vs 2.625, NPV −13.22 vs +71.38).</li><li><b>Pitfalls of IRR.</b> Lending vs borrowing, multiple IRRs (10% and 20%), no IRR, scale.</li><li><b>PI and capital rationing.</b> Rank by PI, fund until budget is exhausted; limitations.</li><li><b>Derive the forward rate; PEH vs liquidity preference.</b> Two strategies, no arbitrage, f₁,₂ = 7.01% example.</li><li><b>Annualised vs average return.</b> Examples 4 and 5 (0% vs 25% average; −2.02% annualised).</li></ul>
+<p>Send me your questions at exam time and I'll walk through each one step by step.</p>
+</section>
+</main></body></html>
