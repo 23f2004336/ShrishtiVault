@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Corporate Finance – Week-4 Notes</title>
+<style>
+:root{--ink:#1d2a44;--bg:#f6f8fc;--card:#fff;--teal:#0f9d8a;--amber:#f2a516;--coral:#e8574b;--blue:#3b6fd4;--violet:#7a54c8;--line:#d9e0ee;--soft:#eaf0fb}
+@media(prefers-color-scheme:dark){:root{--ink:#e6ebf7;--bg:#0f1626;--card:#18223a;--line:#2b3858;--soft:#1f2b49}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,"Segoe UI",sans-serif}
+header{background:linear-gradient(120deg,#1d2a44,#e8574b 60%,#f2a516);color:#fff;padding:36px 20px}
+header h1{margin:0;font:700 2rem Georgia,serif}header p{margin:6px 0 0;opacity:.92}
+nav{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;padding:8px 14px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:5px 12px;border-radius:99px;background:var(--soft);font-size:.85rem}
+main{max-width:940px;margin:auto;padding:16px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:20px 0}
+h2{font:700 1.5rem Georgia,serif;margin:0 0 10px;padding-left:12px;border-left:6px solid var(--coral)}
+h3{margin:22px 0 6px;color:var(--blue)}
+.box{border-radius:10px;padding:12px 16px;margin:12px 0;border-left:5px solid;color:#1d2a44}
+.def{background:#e7f6f3;border-color:var(--teal)}.key{background:#fff5df;border-color:var(--amber)}.warn{background:#fdeceb;border-color:var(--coral)}.eg{background:#efeafa;border-color:var(--violet)}
+.box b.t{display:block;margin-bottom:2px}
+.math{background:var(--soft);border-radius:8px;padding:10px 14px;margin:10px 0;font:1rem Georgia,serif;overflow-x:auto}
+.math div{margin:4px 0}
+table{border-collapse:collapse;width:100%;margin:10px 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:6px 9px;text-align:left}th{background:var(--soft)}
+.flow{display:flex;flex-direction:column;align-items:center;margin:14px 0}
+.flow div{padding:8px 14px;border-radius:9px;color:#fff;font-size:.9rem;text-align:center;max-width:560px;width:100%}
+.flow i{font-style:normal;font-size:1.2rem;color:var(--coral);line-height:1.1}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.row>div{flex:1 1 200px;border-radius:10px;padding:10px 14px;color:#1d2a44}
+svg{max-width:100%;height:auto;background:var(--soft);border-radius:10px;margin:8px 0}
+svg text{fill:var(--ink);font:12px system-ui}
+ul{padding-left:22px}li{margin:3px 0}
+</style></head><body>
+<header><h1>Corporate Finance — Week-4 Notes</h1><p>Maturity &amp; duration · Inflation (CPI, GDP deflator, WPI, core) · Real vs nominal rates · Yield curve, forward rates, interest-rate risk and theories</p></header>
+<nav><a href="#s0">Roadmap</a><a href="#s1">1 Duration</a><a href="#s2">2 Measuring inflation</a><a href="#s3">3 Real &amp; nominal rates</a><a href="#s4">4 Inflation in NPV</a><a href="#s5">5 Yield curve</a><a href="#s6">6 Horizon</a><a href="#s7">7 Rate risk</a><a href="#s8">8 Shapes</a><a href="#s9">9 Theories</a><a href="#s10">10 Practice</a><a href="#s11">11 Revision</a></nav>
+<main>
+<section id="s0"><h2>Roadmap: the story of Week 4</h2>
+<p>Week 3 ended with the idea that interest rates differ by horizon. Week 4 digs into <b>why and what it means</b>. It has three connected parts:</p>
+<div class="flow"><div style="background:#1d2a44">Part A – How long is a project really? Maturity is too crude → <b>duration</b> (Sec 1)</div><i>↓</i>
+<div style="background:#3b6fd4">Part B – Money loses value: <b>inflation</b>, how it is measured (CPI, GDP deflator, WPI, core), real vs nominal rates, and how to value projects when prices rise (Sec 2–4)</div><i>↓</i>
+<div style="background:#e8574b">Part C – The <b>yield curve</b>: spot, annualised and forward rates; why long bonds are riskier; why the curve slopes; what its shape signals (Sec 5–9)</div></div>
+<div class="key"><b>Three ideas to hold on to:</b> (1) duration measures how <i>long</i> and how <i>risky</i> a cash flow is better than maturity; (2) always compare <b>real</b> returns (goods) not nominal returns (rupees); (3) long-term bonds can lose a lot of value when rates change, so investors want extra yield (term premium).</div>
+<div class="warn box"><b class="t">Naming alert (your slides vs your lecture summary)</b>The <b>slides</b> call the payment-weighted average "<b>Duration</b>" and the present-value-weighted average "<b>Macaulay duration</b>". The <b>lecture summary</b> calls the first "Macaulay duration" and the second "PV-weighted (modified) duration". In standard finance, Macaulay duration is the PV-weighted one, and "modified duration" means something else (Macaulay ÷ (1+y)). I follow the slides and tell you which is which in each place. In the exam, <b>define the formula you use</b>, then no naming confusion matters.</div>
+</section>
+<section id="s1"><h2>1. Maturity and Duration (Lecture 1)</h2>
+<h3>1.1 Why a better measure than maturity?</h3>
+<p>We often need one number that says "how long is this project or bond?" The simplest is <b>maturity</b>: the date of the <i>last</i> payment.</p>
+<div class="def box"><b class="t">Maturity</b>The date on which the final cash flow arrives. A bond paying 1 unit in 30 years has maturity 30 years.</div>
+<p>But maturity looks only at the last payment. Take three bonds:</p>
+<table><tr><th>Bond</th><th>Payments</th><th>Maturity</th></tr><tr><td>Bond 1 (zero-coupon)</td><td>1 unit in year 30</td><td>30 years</td></tr><tr><td>Bond 2</td><td>1 unit in year 1 and 1 unit in year 30</td><td>30 years</td></tr><tr><td>Bond 3</td><td>100 units in year 1 and 1 unit in year 30</td><td>30 years</td></tr></table>
+<p>All three have maturity 30. But Bond 3 gives you nearly everything in year 1, so it is "really" a 1-year investment with a tiny 30-year tail. Maturity cannot see that. It ignores <b>(1) when the intermediate payments occur</b> and <b>(2) how big they are</b>.</p>
+<svg viewBox="0 0 470 190" width="470" role="img" aria-label="Cash flow bars for three bonds"><g text-anchor="middle">
+<text x="40" y="22" text-anchor="start">Bond 1</text><rect x="400" y="8" width="14" height="14" fill="#3b6fd4"/>
+<text x="40" y="82" text-anchor="start">Bond 2</text><rect x="100" y="64" width="14" height="14" fill="#7a54c8"/><rect x="400" y="64" width="14" height="14" fill="#7a54c8"/>
+<text x="40" y="150" text-anchor="start">Bond 3</text><rect x="100" y="95" width="14" height="60" fill="#e8574b"/><rect x="400" y="150" width="14" height="5" fill="#e8574b"/>
+<line x1="90" y1="165" x2="430" y2="165" stroke="#888"/><text x="107" y="180">year 1</text><text x="407" y="180">year 30</text></g></svg>
+<p>Bar heights show the cash received. Bond 3's bar in year 1 is 100 times taller than its year-30 bar.</p>
+<h3>1.2 Duration: payment-weighted average of payment times</h3>
+<div class="math"><div><b>Duration = Σ t·C_t / Σ C_t</b> &nbsp;&nbsp;(each time t is weighted by C_t / total of all payments)</div></div>
+<p><b>Think of it as a centre of gravity</b>: put the cash flows as weights on a ruler marked in years. The balance point is the duration.</p>
+<div class="math"><div>Bond 1: (30 × 1)/1 = <b>30 years</b></div><div>Bond 2: (1×1 + 30×1)/(1 + 1) = 31/2 = <b>15.5 years</b></div><div>Bond 3: (1×100 + 30×1)/(100 + 1) = 130/101 ≈ <b>1.29 years</b></div></div>
+<div class="key"><b>Key facts:</b> (i) a zero-coupon bond has duration = maturity (only one payment, so all the weight sits at T); (ii) duration is never more than maturity; (iii) earlier or bigger payments pull duration down. Bond 3, a 30-year maturity bond, behaves like a ~1.3-year investment.</div>
+<h3>1.3 Macaulay duration: weight by present values</h3>
+<p>Money received late is worth less today, so it should count less. Replace payments C_t with their present values:</p>
+<div class="math"><div><b>Macaulay duration = Σ t·PV(C_t) / Σ PV(C_t)</b> &nbsp;&nbsp; with PV(C_t) = C_t/(1+r_t)^t</div></div>
+<p>Here r_t is the annualised spot rate for maturity t (Week 3). Because it uses interest rates, <b>Macaulay duration changes when interest rates change</b>, unlike the payment-weighted one.</p>
+<div class="box eg"><b class="t">Slide example: 100 units in 1 year and 1 unit in 30 years; r₁ = 2%, r₃₀ = 5%</b>
+<div class="math"><div>PV of year-1 flow: 100/1.02 = 98.04</div><div>PV of year-30 flow: 1/1.05³⁰ = 1/4.32194 = 0.231 ≈ 0.23</div><div>Total value = 98.04 + 0.23 = <b>98.27</b></div><div>Numerator = 1 × 98.04 + 30 × 0.231 = 104.98 (the slide rounds 30 × 0.23 to 6.90, giving 104.94)</div><div>Duration = 104.98/98.27 ≈ <b>1.07 years</b></div></div></div>
+<p>Result 1.07 is lower than the earlier 1.29 because discounting shrinks the far-away payment from weight 1/101 (1.0%) to 0.23/98.27 (0.24%).</p>
+<div class="flow"><div style="background:#3b6fd4">Payment-weighted: weight = C_t / ΣC (Bond 3: 99.0% at t=1, 1.0% at t=30) → 1.29 yrs</div><i>↓ discount each payment</i><div style="background:#0f9d8a">PV-weighted (Macaulay): weight = PV_t / ΣPV (99.76% at t=1, 0.24% at t=30) → 1.07 yrs</div></div>
+<div class="box eg"><b class="t">Extra: same rates, Bond 2 (1 unit in year 1, 1 in year 30)</b>PVs: 0.9804 and 0.2314. PV-weighted duration = (0.9804 + 30 × 0.2314)/(1.2118) = <b>6.54 years</b>, much lower than the payment-weighted 15.5, because the year-30 unit is worth only 0.23 today.</div>
+<div class="box eg"><b class="t">Extra: a coupon bond (not in the lecture)</b>3-year bond, face 100, 5% coupon, discount rate 5% (price = 100). Payment-weighted: (1×5 + 2×5 + 3×105)/115 = <b>2.87</b> years. PV-weighted: PVs are 4.76, 4.54, 90.70; duration = <b>2.86</b> years, below maturity 3 because the coupons arrive earlier.</div>
+<h3>1.4 Summary and links to the rest of the week</h3>
+<table><tr><th></th><th>Maturity</th><th>Duration (payment-weighted)</th><th>Macaulay (PV-weighted)</th></tr><tr><td>Looks at</td><td>last date only</td><td>all dates, weighted by amounts</td><td>all dates, weighted by PV</td></tr><tr><td>Uses interest rates?</td><td>No</td><td>No</td><td>Yes</td></tr><tr><td>Zero-coupon bond</td><td>T</td><td>T</td><td>T</td></tr><tr><td>Multi-payment bond</td><td>T</td><td>&lt; T</td><td>&lt; T, and usually the smallest</td></tr></table>
+<div class="key"><b>Why does this matter?</b> In Section 7 you will see that a bond's sensitivity to interest-rate changes is governed by exactly this "effective length". A 30-year zero-coupon bond (duration 30) loses about 2.9% for a 10-basis-point rate rise; a 1-year bond (duration 1) loses about 0.1%. A bond like Bond 3 behaves like the short one.</div>
+</section>
+<section id="s2"><h2>2. Inflation and How It Is Measured (Lectures 2 + slides)</h2>
+<div class="def box"><b class="t">Inflation</b>A sustained rise in the general level of prices. Money loses purchasing power: each rupee buys less. If inflation is 10% on all goods, a ₹100 item costs ₹110 next year.</div>
+<p>To <i>measure</i> inflation you need a price index: one number that summarises the price level.</p>
+<h3>2.1 Consumer Price Index (CPI)</h3>
+<p>CPI measures the cost of living for a "typical" household. When CPI rises, the household must spend more to keep the same standard of living.</p>
+<div class="flow"><div style="background:#3b6fd4">Step 1 – Survey households: what is in the typical monthly basket (quantities)?</div><i>↓</i><div style="background:#7a54c8">Step 2 – Collect prices of every item in the base year and in the current year</div><i>↓</i><div style="background:#0f9d8a">Step 3 – CPI = (cost of basket at current prices / cost of same basket at base-year prices) × 100</div></div>
+<div class="math"><div><b>CPI = Σ p_C^i q_B^i / Σ p_B^i q_B^i × 100</b> &nbsp;&nbsp;(p_C = current price, p_B = base price, q_B = base-year quantity, i = item)</div></div>
+<p><b>Base-year CPI is 100.</b> CPI = 112 means the basket costs 12% more than in the base year. Inflation rate between two years: π = CPI_t/CPI_(t−1) − 1.</p>
+<h3>2.2 CPI is a weighted average of price changes (derivation)</h3>
+<div class="math"><div>CPI/100 = Σ p_C^i q_B^i / Σ p_B^i q_B^i</div><div>Multiply and divide each numerator term by p_B^i: &nbsp;= Σ (p_C^i/p_B^i)(p_B^i q_B^i) / Σ p_B^i q_B^i</div><div>Define the weight w_i = p_B^i q_B^i / Σ_j p_B^j q_B^j (share of base-year spending on item i; the w's sum to 1)</div><div><b>CPI/100 = Σ w_i (p_C^i/p_B^i)</b></div></div>
+<p>So CPI is the <b>weighted average of the individual price changes</b>, where each item's weight is its importance in the basket (the slide says base-year spending). A big-weight item such as food moves CPI most.</p>
+<div class="box eg"><b class="t">Worked example (extra, to see the algebra with numbers)</b>
+<table><tr><th>Item</th><th>Base qty</th><th>Base price</th><th>Current price</th><th>Base cost</th><th>Current cost</th><th>Weight w</th><th>Price relative</th></tr><tr><td>Rice (kg)</td><td>100</td><td>40</td><td>44</td><td>4,000</td><td>4,400</td><td>22.2%</td><td>1.100</td></tr><tr><td>House rent</td><td>1</td><td>10,000</td><td>10,500</td><td>10,000</td><td>10,500</td><td>55.6%</td><td>1.050</td></tr><tr><td>Fuel (litres)</td><td>50</td><td>80</td><td>100</td><td>4,000</td><td>5,000</td><td>22.2%</td><td>1.250</td></tr><tr><th colspan="4">Total</th><th>18,000</th><th>19,900</th><th>100%</th><th></th></tr></table>
+<div class="math"><div>CPI = 19,900/18,000 × 100 = <b>110.56</b> → the basket costs 10.56% more</div><div>Weighted-average check: 0.2222×1.10 + 0.5556×1.05 + 0.2222×1.25 = <b>1.1056</b> ✓ (same 1.1056)</div></div>Rent (the heaviest weight, 55.6%) rose only 5%, fuel rose 25% but weighs only 22%, so overall inflation is 10.56%.</div>
+<h3>2.3 The Indian CPI basket (2012 weights): rural vs urban</h3>
+<table><tr><th>Category</th><th>Urban weight (%)</th><th>Rural weight (%)</th></tr><tr><td>Food and beverages</td><td>36.29</td><td>54.18</td></tr><tr><td>Clothing and footwear</td><td>5.57</td><td>7.36</td></tr><tr><td>Housing</td><td>21.67</td><td>(not included for rural)</td></tr><tr><td>Fuel and light</td><td>5.58</td><td>7.94</td></tr><tr><td>Pan, tobacco, intoxicants</td><td>1.36</td><td>3.26</td></tr><tr><td>Miscellaneous</td><td>29.53</td><td>27.26</td></tr><tr><td><b>Total</b></td><td>100.00</td><td>100.00</td></tr></table>
+<svg viewBox="0 0 440 130" width="440" role="img" aria-label="Food share of rural and urban CPI baskets"><text x="10" y="35">Urban food</text><rect x="95" y="20" width="116" height="22" fill="#3b6fd4"/><text x="217" y="36">36.3%</text>
+<text x="10" y="85">Rural food</text><rect x="95" y="70" width="173" height="22" fill="#e8574b"/><text x="274" y="86">54.2%</text><text x="95" y="118" style="font-size:11px">Rural households spend a larger share on food, so food inflation hurts them more.</text></svg>
+<div class="key"><b>Why the weights differ matters:</b> the same food-price shock raises rural CPI more than urban CPI. Inflation is not experienced equally; the "typical household" differs across groups.</div>
+<h3>2.4 Limitations of CPI</h3>
+<p>CPI accurately measures the cost of a <i>fixed list</i> of goods, but not necessarily the cost of keeping the <i>same standard of living</i>.</p>
+<div class="row"><div style="background:#fdeceb"><b>1. Substitution bias</b><br>If one good's price shoots up, people buy less of it and more of cheaper substitutes. A fixed basket keeps the old quantities, so it overstates the rise in living costs.</div><div style="background:#fff0cf"><b>2. New goods</b><br>New products (a new phone type) enter the basket late, so the benefit and early price falls are missed.</div><div style="background:#e3ebfb"><b>3. Unmeasured quality change</b><br>If a laptop costs 10% more but is 40% faster, part of the price rise is really better quality, not inflation.</div></div>
+<h3>2.5 Nominal GDP, real GDP and the GDP deflator</h3>
+<div class="def box"><b class="t">GDP</b>The market value of all <b>final</b> goods and services produced in the economy in a period. Market value = price × quantity.</div>
+<ul><li><b>Nominal GDP</b> uses current-year prices, so it can change because of <i>prices or quantities</i>.</li><li><b>Real GDP</b> uses fixed base-year prices, so it changes <i>only</i> when quantities change.</li></ul>
+<div class="box eg"><b class="t">Slide economy: 50 chocolates and 20 shoes</b>
+<table><tr><th></th><th>Year 1 (base)</th><th>Year 2 (prices double, output same)</th><th>Year 2 alternative (prices double, output doubles: 100 choc, 40 shoes)</th></tr>
+<tr><td>Prices</td><td>choc 100, shoe 250</td><td>choc 200, shoe 500</td><td>choc 200, shoe 500</td></tr>
+<tr><td>Nominal GDP</td><td>50×100 + 20×250 = 10,000</td><td>50×200 + 20×500 = <b>20,000</b></td><td>100×200 + 40×500 = <b>40,000</b></td></tr>
+<tr><td>Real GDP (year-1 prices)</td><td>10,000</td><td>50×100 + 20×250 = <b>10,000</b></td><td>100×100 + 40×250 = <b>20,000</b></td></tr>
+<tr><td>Deflator = Nominal/Real</td><td>1.0 (100)</td><td><b>2.0 (200)</b></td><td><b>2.0 (200)</b></td></tr></table></div>
+<p>In column 2 nominal GDP doubled while output did not change: all price. In column 3 nominal GDP quadrupled: half from output (real GDP doubled), half from prices (deflator doubled). The deflator isolates the <b>price</b> part.</p>
+<div class="math"><div><b>GDP deflator P_t = Nominal GDP_t / Real GDP_t</b></div><div>Inflation rate = P_t/P_(t−1) − 1 = 2.0/1.0 − 1 = <b>100%</b></div></div>
+<h3>2.6 CPI vs GDP deflator</h3>
+<table><tr><th>Feature</th><th>CPI</th><th>GDP deflator</th></tr><tr><td>Covers</td><td>Goods bought by typical households</td><td>Everything produced domestically</td></tr><tr><td>Imported consumer goods</td><td>Included</td><td>Excluded (not produced here)</td></tr><tr><td>Goods not sold to consumers (machines, exports, government)</td><td>Excluded</td><td>Included</td></tr><tr><td>Basket</td><td>Fixed base-year basket</td><td>Changes every year with current output</td></tr></table>
+<p>The slide's reasons they differ: (1) some GDP goods are not sold to consumers, (2) consumers buy foreign goods. Consumers care about the CPI; economy-wide output prices are in the deflator.</p>
+<h3>2.7 WPI and core inflation</h3>
+<div class="row"><div style="background:#e3ebfb"><b>Wholesale Price Index (WPI)</b><br>Prices paid to wholesalers by other producers (before retail). Weights: <b>manufactured products 64.23%</b>, <b>primary articles 22.62%</b>, <b>fuel and power 13.15%</b> (sum 100). Tracks producer cost pressures.</div><div style="background:#d8f1ec"><b>Core inflation</b><br>Measures the <b>long-run trend</b> in prices by removing volatile categories (usually food and fuel). In India this removes a big part of the basket (food alone is about 36–54% of CPI), so core is a much narrower measure.</div></div>
+<div class="key"><b>Which to use?</b> Household purchasing power → CPI. Overall output price level → GDP deflator. Producer cost pipeline → WPI. Underlying trend that monetary policy should respond to → core.</div>
+</section>
+<section id="s3"><h2>3. Real vs Nominal Interest Rates and the Fisher Equation (Lecture 3)</h2>
+<h3>3.1 What is an interest rate, really?</h3>
+<p>An interest rate is the <b>price of moving consumption across time</b>: how much you must give up later to get one more unit now. With ₹100,000 at the start of the year you can spend it now, or save it and spend 100,000(1 + i) next year (or mix).</p>
+<div class="row"><div style="background:#e3ebfb"><b>Nominal rate i</b><br>In units of currency. Borrow ₹1, repay ₹(1 + i). Rates in newspapers are nominal.</div><div style="background:#d8f1ec"><b>Real rate r</b><br>In units of goods. Borrow one basket of goods, repay (1 + r) baskets. Saving and investment decisions depend on this.</div></div>
+<p>People consume <b>goods</b>, not paper notes. So what matters is how many goods you give up, and inflation changes that.</p>
+<h3>3.2 Deriving the Fisher equation (slides' one-good economy)</h3>
+<div class="flow"><div style="background:#1d2a44">1. Price of the good today: P_t. To buy 1 unit you borrow P_t rupees.</div><i>↓</i><div style="background:#3b6fd4">2. Next year you repay P_t(1 + i) rupees.</div><i>↓</i><div style="background:#7a54c8">3. Expected price next year: P^e_(t+1) = P_t(1 + π^e) (π^e = expected inflation)</div><i>↓</i><div style="background:#0f9d8a">4. Goods you must give up = repayment ÷ price = P_t(1+i)/[P_t(1+π^e)] = (1+i)/(1+π^e)</div><i>↓</i><div style="background:#e8574b">5. By definition this equals 1 + r</div></div>
+<div class="math"><div><b>1 + r = (1 + i)/(1 + π^e)</b> &nbsp;(exact Fisher)</div><div>Rearranged: (1 + r)(1 + π^e) = 1 + i ⟹ 1 + r + π^e + rπ^e = 1 + i ⟹ r = i − π^e − rπ^e</div><div>If i and π^e are small (below about 5%), the product rπ^e is tiny: <b>r ≈ i − π^e</b> (approximate Fisher)</div></div>
+<div class="warn box"><b class="t">Constraint</b>The approximation breaks down when rates or inflation are high (Section 4).</div>
+<h3>3.3 Case study: was borrowing cheaper in 1980 or 2007?</h3>
+<table><tr><th></th><th>Nominal i</th><th>Expected inflation π^e</th><th>Real rate (approx)</th><th>Real rate (exact)</th></tr><tr><td>Q1 1980</td><td>15.11%</td><td>14.20%</td><td>0.91%</td><td>0.80%</td></tr><tr><td>Q1 2007</td><td>5.30%</td><td>2.40%</td><td>2.90%</td><td>2.83%</td></tr></table>
+<p>The slides' question: was it cheaper to borrow in 2007 (5.3%) than in 1980 (15.1%)? <b>No: it was cheaper in 1980.</b> A 1980 borrower paid back dollars that had lost about 14% of their buying power during the year, so the real cost was under 1%. A 2007 borrower faced a real cost above 2.8%. Looking only at nominal rates would give the opposite answer.</p>
+<div class="box eg"><b class="t">Plain example</b>Borrow ₹100 for a year at 8% when inflation is 5%. Repay ₹108, which has the buying power of 108/1.05 = ₹102.86 of today's money. So the real cost is only <b>2.86%</b> (approximation says 3%).</div>
+<div class="box eg"><b class="t">Negative real rates</b>Deposit rate 6%, inflation 8%: real rate = 1.06/1.08 − 1 = <b>−1.85%</b>. Your money grows in rupees but shrinks in what it can buy.</div>
+<h3>3.4 How do we know expected inflation π^e?</h3>
+<p>The nominal rate is known today, but the real rate depends on <i>expected</i> inflation, which is not observed. Five common ways to form it:</p>
+<table><tr><th>Method</th><th>Idea</th><th>Example</th></tr>
+<tr><td><b>Static</b></td><td>Inflation is expected not to change</td><td>Last year was 4% → expect 4%</td></tr>
+<tr><td><b>Adaptive</b></td><td>Expectations adjust gradually to recent experience</td><td>Expected 3%, actual 5% → revise to e.g. 4% (halfway)</td></tr>
+<tr><td><b>Rational</b></td><td>Expectations consistent with the true model of how the economy works</td><td>Forecast uses all structural information</td></tr>
+<tr><td><b>Survey data</b></td><td>Ask forecasters or households</td><td>Survey of Professional Forecasters</td></tr>
+<tr><td><b>Market data (TIPS spread)</b></td><td>Compare nominal bond yield with inflation-protected (TIPS) yield of the same maturity</td><td>π^e ≈ y_nominal − y_TIPS</td></tr></table>
+<div class="box eg"><b class="t">TIPS example with the Dec 2021 US data in your slides (10-year)</b>Nominal 10-year yield 1.52%; TIPS 10-year yield −1.04%. Approx expected inflation = 1.52 − (−1.04) = <b>2.56%</b>. Exactly: 1.0152/0.9896 − 1 = <b>2.59%</b> (this is the Fisher equation turned around).</div>
+</section>
+<section id="s4"><h2>4. Inflation in Capital Budgeting: High Inflation and the Two Rules (Lecture 4)</h2>
+<h3>4.1 Why the approximation is dangerous when inflation is high</h3>
+<div class="box eg"><b class="t">Example 1A (slides): inflation 100% a year, a bond promising 700%</b>
+<div class="math"><div>Approximate: r ≈ 700% − 100% = 600% &nbsp;<b>(wrong)</b></div><div>Exact: 1 + r = (1 + 7)/(1 + 1) = 8/2 = 4 ⟹ <b>r = 300%</b></div></div>
+In words: ₹1 buys 1 basket today. Prices double, so a basket costs ₹2 next year. ₹1 invested returns ₹8 = 4 baskets. Giving up 1 basket today gives 4 baskets next year, a real return of (4 − 1)/1 = 300%. The shortcut overstated by 300 points (a factor of 2).</div>
+<table><tr><th>Nominal i</th><th>Inflation π</th><th>Exact real</th><th>Approx i − π</th><th>Error</th></tr>
+<tr><td>8%</td><td>5%</td><td>2.86%</td><td>3.00%</td><td>0.14</td></tr><tr><td>15.11%</td><td>14.2%</td><td>0.80%</td><td>0.91%</td><td>0.11</td></tr><tr><td>50%</td><td>40%</td><td>7.14%</td><td>10.00%</td><td>2.86</td></tr><tr><td>700%</td><td>100%</td><td>300.00%</td><td>600.00%</td><td>300.00</td></tr></table>
+<p>The error is about r·π: negligible at 8% and 5%, huge at 700% and 100%.</p>
+<h3>4.2 The two cardinal rules of NPV under inflation</h3>
+<div class="row"><div style="background:#e3ebfb"><b>Rule 1</b><br>Discount <b>nominal</b> cash flows with <b>nominal</b> rates.</div><div style="background:#d8f1ec"><b>Rule 2</b><br>Discount <b>real</b> cash flows with <b>real</b> rates.</div></div>
+<div class="warn box"><b class="t">Never mix</b>Nominal flows with real rates, or real flows with nominal rates. The units must match: rupees with rupee rates, baskets with basket rates.</div>
+<div class="box eg"><b class="t">Example 1B (slides): a project that gives 12 baskets next year (inflation 100%, nominal rate 700%, real rate 300%)</b>
+<div class="math"><div>Real framework: PV = 12/(1 + 3) = <b>3 baskets</b> (= ₹3 today since 1 basket costs ₹1)</div><div>Nominal framework: nominal cash flow = 12 baskets × ₹2 = ₹24; PV = 24/(1 + 7) = <b>₹3 today</b></div></div>
+Both give 3. (The slide's text says "discount nominal cash flows with real interest rates", but its arithmetic 24/8 uses the nominal rate 700%, i.e. Rule 1.)</div>
+<div class="box warn"><b class="t">What mixing would give</b>24/(1 + 3) = ₹6 (twice too high) or 12/(1 + 7) = 1.5 baskets (half too low).</div>
+<h3>4.3 General proof that both methods agree</h3>
+<div class="math"><div>Let C_nom = C_real × (1+π)^t and (1 + i) = (1 + r)(1 + π)</div><div>PV = C_nom/(1+i)^t = C_real(1+π)^t / [(1+r)^t(1+π)^t] = <b>C_real/(1+r)^t</b> ∎</div></div>
+<div class="box eg"><b class="t">Multi-year check: 12 real baskets in each of years 1 and 2 (π = 100%, r = 300%, i = 700%)</b>
+<div class="math"><div>Real: 12/4 + 12/16 = 3 + 0.75 = <b>3.75</b></div><div>Nominal flows: 12 × 2 = 24 in year 1; 12 × 4 = 48 in year 2. Nominal PV: 24/8 + 48/64 = 3 + 0.75 = <b>3.75</b> ✓</div></div></div>
+<div class="key"><b>Practical rule:</b> pick one framework and stay in it. Inflate the cash flows and use the nominal rate, or keep cash flows in today's prices and use the real rate. Convert the rate with the <i>exact</i> Fisher equation when inflation is high.</div>
+</section>
+<section id="s5"><h2>5. The Yield Curve: Spot, Annualised and Forward Rates (Lectures 5 + slides)</h2>
+<h3>5.1 What is the yield curve?</h3>
+<div class="def box"><b class="t">Yield curve (term structure of interest rates)</b>The annualised yield on zero-coupon, default-free bonds plotted against time to maturity (x-axis: maturity; y-axis: annualised rate). It lets you compare returns over different horizons.</div>
+<p><b>US government yields, 31 Dec 2021 (from the slides):</b></p>
+<table><tr><th>Maturity</th><th>1 m</th><th>2 m</th><th>3 m</th><th>6 m</th></tr><tr><td>YTM %</td><td>0.06</td><td>0.05</td><td>0.06</td><td>0.19</td></tr></table>
+<table><tr><th>Maturity (years)</th><th>1</th><th>2</th><th>3</th><th>5</th><th>7</th><th>10</th><th>20</th><th>30</th></tr><tr><td>YTM %</td><td>0.39</td><td>0.73</td><td>0.97</td><td>1.26</td><td>1.44</td><td>1.52</td><td>1.94</td><td>1.90</td></tr></table>
+<svg viewBox="0 0 430 200" width="430" role="img" aria-label="US yield curve at end of 2021"><line x1="50" y1="170" x2="400" y2="170" stroke="#888"/><line x1="50" y1="10" x2="50" y2="170" stroke="#888"/>
+<polyline fill="none" stroke="#e8574b" stroke-width="3" points="61.3,145.2 72.7,123.5 84.0,108.3 106.7,89.8 129.3,78.4 163.3,73.3 276.7,46.5 390.0,49.1"/>
+<circle cx="61.3" cy="145.2" r="3.5" fill="#e8574b"/><circle cx="72.7" cy="123.5" r="3.5" fill="#e8574b"/><circle cx="84.0" cy="108.3" r="3.5" fill="#e8574b"/><circle cx="106.7" cy="89.8" r="3.5" fill="#e8574b"/><circle cx="129.3" cy="78.4" r="3.5" fill="#e8574b"/><circle cx="163.3" cy="73.3" r="3.5" fill="#e8574b"/><circle cx="276.7" cy="46.5" r="3.5" fill="#e8574b"/><circle cx="390.0" cy="49.1" r="3.5" fill="#e8574b"/>
+<text x="56" y="30" style="font-size:11px">1.94% at 20y</text><text x="70" y="150" style="font-size:11px">0.39% at 1y</text><text x="190" y="190">maturity (years) →</text><text x="4" y="14">yield</text></svg>
+<p>The curve slopes up: longer bonds pay more per year (normal shape). Between 20 and 30 years it flattens slightly.</p>
+<h3>5.2 Three kinds of rates to keep apart</h3>
+<table><tr><th>Name</th><th>Symbol</th><th>Meaning</th><th>Example</th></tr>
+<tr><td><b>Holding (total) return</b></td><td>r₀,t</td><td>total return from today to t</td><td>2-year: 1.465%</td></tr>
+<tr><td><b>Annualised rate</b></td><td>r̄_t</td><td>constant yearly rate giving the same total; this is what the yield curve shows</td><td>2-year: 0.73%</td></tr>
+<tr><td><b>Individual annual (forward) rate</b></td><td>r_(t−1,t)</td><td>one-year rate from year t−1 to year t</td><td>r₁,₂ = 1.07%</td></tr></table>
+<div class="math"><div><b>1 + r₀,T = (1 + r̄_T)^T</b> &nbsp;⟺&nbsp; <b>1 + r̄_T = (1 + r₀,T)^(1/T)</b></div></div>
+<h3>5.3 What does ₹100 turn into? (slide questions)</h3>
+<div class="box eg"><b class="t">3-month bond (annualised 0.06%)</b>T = 0.25 year: 100 × (1.0006)^0.25 = <b>100.015</b>. Only 1.5 paise of interest in three months.</div>
+<div class="box eg"><b class="t">30-year bond (1.90%)</b>100 × 1.019³⁰ = 100 × 1.75884 = <b>175.884</b> (holding return 75.9%).</div>
+<div class="box eg"><b class="t">₹100,000 in a 2-year bond (0.73%)</b>Holding return r₀,₂ = 1.0073 × 1.0073 − 1 = 1.465% ⟹ 100,000 becomes <b>101,465</b> on 31 Dec 2023. Compare with the 30-year: 100,000 → 175,884.</div>
+<div class="box eg"><b class="t">Yield for a 4-year bond (not on the table)</b>Interpolate between 3 years (0.97%) and 5 years (1.26%): (0.97 + 1.26)/2 = <b>1.115% ≈ 1.12%</b>. This is only approximate because the curve is not a straight line.</div>
+<h3>5.4 Forward rates: derivation and examples</h3>
+<div class="def box"><b class="t">Forward rate</b>The interest rate agreed today for a risk-free loan that starts at a future date t₁ and ends at t₂. Example: the 1-year rate from Dec 2022 to Dec 2023 is r₁,₂.</div>
+<p>No-arbitrage requires that investing for 2 years in a 2-year bond equals investing for 1 year and then locking the next year's rate:</p>
+<div class="math"><div>(1 + r̄₂)² = (1 + r̄₁)(1 + r₁,₂) &nbsp;(i.e. 1 + r₀,₂ = (1 + r₀,₁)(1 + r₁,₂))</div><div><b>1 + r₁,₂ = (1 + r̄₂)²/(1 + r̄₁)</b></div><div>(1.0073)² = 1.014653; ÷ 1.0039 = 1.010712 ⟹ <b>r₁,₂ ≈ 1.07%</b></div></div>
+<p>Notice the 2-year annualised rate is 0.73%, the 1-year is 0.39%, but the forward rate for year 2 is <b>1.07%</b>, roughly the 2-year yield plus the climb. A rising yield curve implies even higher forward rates.</p>
+<table><tr><th>Forward rate</th><th>Formula</th><th>Value (US, 31 Dec 2021)</th></tr>
+<tr><td>r₁,₂ (year 2)</td><td>1.0073²/1.0039 − 1</td><td>1.07%</td></tr>
+<tr><td>r₂,₃ (year 3)</td><td>1.0097³/1.0073² − 1</td><td>1.45%</td></tr>
+<tr><td>average annual rate over years 3→5</td><td>[1.0126⁵/1.0097³]^(1/2) − 1</td><td>1.70%</td></tr>
+<tr><td>average annual rate over years 10→20</td><td>[1.0194²⁰/1.0152¹⁰]^(1/10) − 1</td><td>2.36%</td></tr></table>
+<p>The forward rates are higher than the spot rates when the curve slopes upward, because each additional year must lift the average.</p>
+<div class="flow"><div style="background:#3b6fd4">Today: spot rates for 1, 2, 3 … years (observed from bond prices)</div><i>↓ divide the (1+spot)^t chain</i><div style="background:#7a54c8">Implied forward rates r₁,₂, r₂,₃ … (the "no-arbitrage" rates for future years)</div></div>
+</section>
+<section id="s6"><h2>6. Investment Horizon and Bond Payoffs (Lecture 6)</h2>
+<div class="box eg"><b class="t">Question</b>You can buy (1) a 3-year zero-coupon bond at 0.97% a year or (2) a 1-year zero at 0.39%. You need your money back after <b>1 year</b>. Can you buy the 3-year bond?</div>
+<p><b>Yes</b>: just sell it after 1 year, when it will be a 2-year bond. In a perfect, certain market you earn <b>exactly 0.39%</b>, the same as the 1-year bond. So there is no free gain from stretching maturity.</p>
+<h3>6.1 Proof</h3>
+<div class="math"><div>Face value F. Price today: P₀ = F/(1 + r̄₃)³ = F/(1.0097)³</div><div>Next year the bond has 2 years left and trades at the forward-based price: P₁ = F/[(1 + r₁,₂)(1 + r₂,₃)] = F/(1 + R₁,₃)²</div><div>No arbitrage: (1 + r̄₃)³ = (1 + r̄₁)(1 + R₁,₃)² ⟹ (1 + R₁,₃)² = (1 + r̄₃)³/(1 + r̄₁)</div><div>P₁ = F(1 + r̄₁)/(1 + r̄₃)³ = <b>P₀(1 + r̄₁)</b></div><div>Return = (P₁ − P₀)/P₀ = <b>r̄₁ = 0.39%</b> ∎</div></div>
+<div class="box eg"><b class="t">Numbers (face 100)</b>
+<div class="math"><div>P₀ = 100/1.0097³ = <b>97.15</b></div><div>Forward rates: r₁,₂ = 1.07%, r₂,₃ = 1.45% (derived from (1.0097)³ = 1.0039 × 1.0107 × (1 + r₂,₃))</div><div>P₁ = 100/(1.0107 × 1.0146) = <b>97.52</b> &nbsp;(the slide's 97.52)</div><div>Return = (97.52 − 97.15)/97.15 = 0.39% ≈ 0.39% (the small difference is rounding of the rates to 4 digits)</div></div></div>
+<div class="key"><b>Intuition:</b> the bond price "rolls up" at the one-year rate. The price today already includes the expected rate changes (forward rates), so if rates then evolve exactly as the forwards say, you earn the short rate, whatever bond you hold. The extra risk comes only from <b>unexpected</b> interest-rate changes: that is Section 7.</div>
+</section>
+<section id="s7"><h2>7. Interest-Rate Risk: Why Long Bonds Are Riskier (Lecture 6)</h2>
+<p>Government bonds have no default risk, but there is another risk: <b>the market interest rate changes before the bond matures</b>, and the bond's price moves. Equal-sized rate changes hit <b>long-term</b> bonds much harder.</p>
+<h3>7.1 The 30-year bond</h3>
+<div class="math"><div>Face 1,000, yield 1.90%: P = 1000/1.019³⁰ = <b>568.56</b></div><div>Yield rises 10 bp to 2.00%: P = 1000/1.02³⁰ = 1000/1.81136 = <b>552.07</b> ⟹ change = -2.90% ≈ <b>−2.9%</b></div><div>Yield falls 10 bp to 1.80%: P = 1000/1.018³⁰ = <b>585.55</b> ⟹ change = +2.99% ≈ <b>+3.0%</b></div></div>
+<p>(Your lecture summary writes 552.80 and −2.77% for the up move; that is a typo. The slides' 552.08 (my calculator shows 552.07, a rounding difference) gives −2.9%.)</p>
+<h3>7.2 The 1-year bond</h3>
+<div class="math"><div>At 1.90%: 1000/1.019 = <b>981.35</b>; at 2.00%: <b>980.39</b> (−0.098% ≈ −0.1%); at 1.80%: <b>982.32</b> (+0.1%)</div></div>
+<table><tr><th>Yield change</th><th>30-year price</th><th>30-year change</th><th>1-year price</th><th>1-year change</th></tr><tr><td>-100 bp</td><td>764.30</td><td>+34.43%</td><td>991.08</td><td>+0.991%</td></tr><tr><td>-50 bp</td><td>658.96</td><td>+15.90%</td><td>986.19</td><td>+0.493%</td></tr><tr><td>-10 bp</td><td>585.55</td><td>+2.99%</td><td>982.32</td><td>+0.098%</td></tr><tr><td>+10 bp</td><td>552.07</td><td>-2.90%</td><td>980.39</td><td>-0.098%</td></tr><tr><td>+50 bp</td><td>490.91</td><td>-13.66%</td><td>976.56</td><td>-0.488%</td></tr><tr><td>+100 bp</td><td>424.17</td><td>-25.40%</td><td>971.82</td><td>-0.972%</td></tr></table>
+<div class="row"><div style="background:#fdeceb"><b>₹10 lakh in 30-year bonds</b><br>10 bp rise → loss ≈ <b>₹29,000–30,000</b> (about 2.9%).</div><div style="background:#d8f1ec"><b>₹10 lakh in 1-year bonds</b><br>10 bp rise → loss ≈ <b>₹1,000</b> (about 0.1%).</div></div>
+<p>The 30-year bond is about <b>30 times</b> as sensitive, because a rate change affects each of 30 years of discounting, versus one year.</p>
+<svg viewBox="0 0 400 190" width="400" role="img" aria-label="Price versus yield for 30-year and 1-year bonds"><line x1="40" y1="165" x2="380" y2="165" stroke="#888"/><line x1="40" y1="10" x2="40" y2="165" stroke="#888"/>
+<polyline fill="none" stroke="#e8574b" stroke-width="3" points="40.0,15.0 74.0,41.1 108.0,63.4 142.0,82.5 176.0,99.0 210.0,113.1 244.0,125.3 312.0,144.7 380.0,159.1"/>
+<polyline fill="none" stroke="#0f9d8a" stroke-width="3" points="40.0,15.0 74.0,15.9 108.0,16.9 142.0,17.8 176.0,18.7 210.0,19.6 244.0,20.5 312.0,22.2 380.0,23.9"/>
+<text x="250" y="130" style="fill:#e8574b">30-year: steep fall</text><text x="200" y="38" style="fill:#0f9d8a">1-year: almost flat</text><text x="150" y="185">yield 0% → 5%</text></svg>
+<h3>7.3 Why? A derivation (links to Section 1)</h3>
+<div class="math"><div>Zero-coupon bond: P = F(1 + y)^(−T)</div><div>dP/dy = −T·F(1 + y)^(−T−1) &nbsp;⟹ &nbsp;<b>(dP/P)/dy = −T/(1 + y)</b></div><div>So % price change ≈ −[T/(1+y)] × (change in yield). For a zero-coupon bond T = duration, so <b>% change ≈ −Duration/(1+y) × Δy</b></div><div>30-year, Δy = +0.10%: −30/1.019 × 0.001 = <b>−2.94%</b> ✓ (exact −2.90%)</div><div>1-year: −1/1.019 × 0.001 = <b>−0.098%</b> ✓</div></div>
+<p>For coupon bonds the same formula holds with Macaulay duration in place of T. That is why duration, not maturity, is the measure of rate risk. (The exact result is slightly asymmetric: −2.90% for +10 bp but +3.00% for −10 bp, because the price-yield curve bends. This bend is called convexity.)</p>
+<div class="key"><b>Conclusions from the slides:</b> (1) if the bond is due soon you get your money back and can reinvest at the new rate, so rate changes matter little; (2) a long bond can gain or lose a lot; (3) <b>only the shortest-term bond is effectively risk-free</b>.</div>
+<h3>7.4 Term-varying cost of capital</h3>
+<p>The appropriate cost of capital should depend on how <b>long-term</b> the project is. Because the term structure usually slopes up, short projects have lower costs of capital, and long projects, even with no extra default risk, must deliver higher returns. The gap between long and short rates is the <b>term premium (time premium)</b>.</p>
+</section>
+<section id="s8"><h2>8. Yield Curve Shapes and What They Signal (Lecture 7 + slides)</h2>
+<svg viewBox="0 0 470 180" width="470" role="img" aria-label="Four yield curve shapes"><g>
+<rect x="5" y="5" width="225" height="80" fill="none" stroke="#9aa8c7"/><polyline fill="none" stroke="#0f9d8a" stroke-width="3" points="15,70 80,55 150,40 220,28"/><text x="12" y="20">Upward (normal)</text>
+<rect x="240" y="5" width="225" height="80" fill="none" stroke="#9aa8c7"/><line x1="250" y1="45" x2="455" y2="45" stroke="#f2a516" stroke-width="3"/><text x="247" y="20">Flat</text>
+<rect x="5" y="95" width="225" height="80" fill="none" stroke="#9aa8c7"/><polyline fill="none" stroke="#e8574b" stroke-width="3" points="15,108 80,125 150,145 220,160"/><text x="12" y="110" style="fill:#e8574b">Downward (inverted)</text>
+<rect x="240" y="95" width="225" height="80" fill="none" stroke="#9aa8c7"/><polyline fill="none" stroke="#7a54c8" stroke-width="3" points="250,155 300,125 350,110 400,125 455,150"/><text x="247" y="110" style="fill:#7a54c8">Humped (peak in middle)</text></g></svg>
+<table><tr><th>Shape</th><th>Meaning</th><th>Typical reading</th></tr><tr><td><b>Upward-sloping (normal)</b></td><td>short rates &lt; long rates</td><td>The most common; expansion; term premium</td></tr><tr><td><b>Flat</b></td><td>little difference between short and long</td><td>Transition or uncertainty</td></tr><tr><td><b>Downward-sloping (inverted)</b></td><td>short rates &gt; long rates</td><td>Sometimes signals a coming recession (markets expect rate cuts)</td></tr><tr><td><b>Humped</b></td><td>medium-term rates differ from both ends</td><td>Mixed expectations</td></tr></table>
+<div class="warn box"><b class="t">Definition mismatch for "humped"</b>Your lecture summary says humped = medium-term rates <b>higher</b> than both short and long (a hill). The slides say short and long rates <b>exceed</b> medium (a valley). The usual textbook meaning is the hill; if the question wording follows the slides, follow the slide's wording. Draw the shape you define.</div>
+<h3>8.1 What the curve tells us (and does not)</h3>
+<ul><li>A <b>steep</b> curve often follows the end of a recession (rates low in the short run, expected to rise).</li><li>An <b>inverted</b> curve sometimes signals an upcoming recession. The slide calls the yield curve "a useful, though unreliable and noisy signal".</li><li>The curve is determined by <b>supply and demand for savings and credit</b>. Central banks <b>influence but do not control</b> it (they mainly set the short rate).</li></ul>
+<div class="key"><b>Exam wording:</b> "Inverted curves have historically preceded recessions, but the signal is noisy; it is not a guaranteed forecast."</div>
+</section>
+<section id="s9"><h2>9. Why Does the Yield Curve Slope? Theories and Evidence (Lecture 7 + slides)</h2>
+<div class="box eg"><b class="t">Running example</b>One-year annualised rate r̄₁ = 5%, two-year r̄₂ = 10% (upward-sloping). Implied forward rate: r₁,₂ = 1.10²/1.05 − 1 = <b>15.24%</b>. Why would the market price year 2 at 15.24%?</div>
+<p>Two main explanations (and they can both be true):</p>
+<h3>9.1 Explanation 1: Expectations hypothesis (higher future short rates)</h3>
+<p>Long-term yields are an average of today's short rate and <b>expected</b> future short rates. The forward rate is the market's prediction of next year's one-year rate:</p>
+<div class="math"><div>(1 + r̄₂)² = (1 + r̄₁)(1 + E[r₁,₂])</div><div>Using the small-rate approximation (1 + r)² ≈ 1 + 2r: &nbsp;<b>r̄₂ ≈ [r̄₁ + E[r₁,₂]]/2</b></div></div>
+<p>Under this view E[r₁,₂] = 15.24%: the market expects the one-year rate to jump from 5% to 15.24%. <b>Inverted curve</b> ⟹ the market expects short rates to <i>fall</i> (often central-bank cuts during a recession). The slide expresses the same check one year ahead: is (1 + r₁,₂)(1 + E[r₂,₃]) = (1 + r₁,₃)?</p>
+<h3>9.2 Explanation 2: Liquidity preference / term premium (compensation for risk)</h3>
+<p>Investors dislike the interest-rate risk of Section 7. To hold the long bond they must be paid more: a <b>term premium</b> TP:</p>
+<div class="math"><div><b>r̄₂ ≈ [r̄₁ + E[r₁,₂]]/2 + TP₂</b> &nbsp;&nbsp; (TP₂ &gt; 0 and grows with maturity)</div></div>
+<div class="box eg"><b class="t">Slide arithmetic: same shape next year, 100 units</b>Rolling two one-year bonds at 5% each: 100 × 1.05² = 110.25 → <b>interest 10.25</b>. Buying the 2-year bond at 10%: 100 × 1.10² = 121 → <b>interest 21</b>. The long bond earns ≈ <b>10.75 more</b>. If future short rates are just 5% again, that extra is pure compensation for risk. In symbols: (1 + r₁,₂)(1 + E[r₂,₃]) &lt; (1 + r₁,₃).</div>
+<div class="box eg"><b class="t">Splitting the 10% two-year yield (extra illustration)</b>
+<div class="math"><div>If the market expects next year's rate to stay at 5%: r̄₂ = (5 + 5)/2 + TP = 5 + TP ⟹ TP = <b>5 points</b> (all risk premium)</div><div>If it expects 8%: expectations part ≈ √(1.05 × 1.08) − 1 = 6.49%, so TP ≈ 10 − 6.49 = <b>3.51 points</b></div><div>If it expects 15.24%: TP = <b>0</b> (pure expectations)</div></div>Different beliefs about future rates give different premiums: you cannot read a premium off the curve without a view on expectations.</div>
+<h3>9.3 Explanation 3: inflation expectations and TIPS</h3>
+<p>Investors demand higher nominal rates when inflation is high; if they expect <b>higher future inflation</b>, the nominal curve slopes up. This applies only to <b>nominal</b> bonds. <b>TIPS</b> (Treasury Inflation-Protected Securities) pay the promised rate plus CPI inflation, so inflation should not make the TIPS curve slope up.</p>
+<div class="math"><div><b>Nominal yield ≈ real (TIPS) yield + expected inflation + inflation-risk premium</b></div></div>
+<table><tr><th>Maturity (yrs)</th><th>Nominal</th><th>TIPS (real)</th><th>Implied expected inflation (1+nom)/(1+TIPS) − 1</th></tr><tr><td>5</td><td>1.26%</td><td>-1.61%</td><td>2.92%</td></tr><tr><td>7</td><td>1.44%</td><td>-1.31%</td><td>2.79%</td></tr><tr><td>10</td><td>1.52%</td><td>-1.04%</td><td>2.59%</td></tr><tr><td>20</td><td>1.94%</td><td>-0.63%</td><td>2.59%</td></tr><tr><td>30</td><td>1.90%</td><td>-0.44%</td><td>2.35%</td></tr></table>
+<p>From 5 to 30 years the nominal yield rises 0.64 points (1.26 → 1.90) while the TIPS yield rises 1.17 points (−1.61 → −0.44): the <b>real curve is steeper</b>. So inflation expectations cannot explain the nominal slope; implied inflation actually <i>falls</i> with maturity here. Slide verdict: "in most of history they couldn't, but sometimes they can".</p>
+<h3>9.4 What does the evidence say?</h3>
+<ul><li><b>Forward rates are poor predictors.</b> A high forward rate does <i>not</i> predict a high future interest rate, so Explanation 1 alone is not enough.</li><li><b>Historically, buying 30-year bonds beat rolling one-month bonds for 30 years</b>: investors were rewarded for holding long bonds.</li><li>Candidate reasons: (a) <b>segmented markets / investor habitat</b> (different investors prefer different maturities), but it is not clear why long-bond investors would be scarce, or why borrowers would not simply issue short bonds; (b) irrational short-term investors; (c) imperfections such as taxes and liquidity. The slides call (b) and (c) unlikely.</li><li><b>Most likely: long-term rates are higher as compensation for risk</b> (the term premium).</li></ul>
+<div class="flow"><div style="background:#1d2a44">Observed upward yield curve</div><i>↓ three possible drivers</i><div style="background:#3b6fd4">Expected future short rates ↑ (expectations)</div><div style="background:#e8574b;margin-top:6px">Term premium for rate risk (liquidity preference) — best supported</div><div style="background:#f2a516;color:#1d2a44;margin-top:6px">Expected inflation ↑ (nominal curve only; TIPS test)</div></div>
+<h3>9.5 Why rolling short bonds is "safe" (risk argument)</h3>
+<p>If you hold a one-month bond and rates double next month, you simply reinvest at the higher rate. A long-term bond locks you in and loses value. Thus rolling over short-term bonds insulates you from rate changes, and the long bond must pay more on average. This is the term premium in one sentence.</p>
+</section>
+<section id="s10"><h2>10. Practice Problems with Full Solutions</h2>
+<p>Try each first, then compare with the working. Methods follow the lectures and slides.</p>
+<div class="box eg"><b class="t">P1. A bond pays 50, 50 and 1,000 in years 1, 2, 3. Find its payment-weighted duration and (at a flat 6%) its Macaulay duration.</b><div class='math'><div>Payment-weighted: (1×50 + 2×50 + 3×1000)/1100 = 3150/1100 = <b>2.864 years</b></div><div>PVs at 6%: 47.17, 44.50, 839.62; total 931.29</div><div>Macaulay = (47.17 + 2×44.50 + 3×839.62)/931.29 = <b>2.851 years</b></div></div>Both are below the maturity 3 and very close to it, because 1,000 of the 1,100 arrives at year 3.</div><div class="box eg"><b class="t">P2. Payments of 100 in year 1 and 100 in year 10. r₁ = 3%, r₁₀ = 6% (annualised). Macaulay duration?</b><div class='math'><div>PV₁ = 100/1.03 = 97.09; PV₁₀ = 100/1.06¹⁰ = 55.84; total 152.93</div><div>D = (1×97.09 + 10×55.84)/152.93 = <b>4.29 years</b></div><div>(Payment-weighted would be (1 + 10)/2 = 5.5.)</div></div></div><div class="box eg"><b class="t">P3. Base basket: 20 units of A (price 10 → 12) and 10 units of B (price 50 → 55). CPI? Check as a weighted average.</b><div class='math'><div>Base cost = 200 + 500 = 700; current cost = 240 + 550 = 790; CPI = 790/700 × 100 = <b>112.86</b></div><div>Weights 0.286 and 0.714; relatives 1.20 and 1.10: 0.286×1.20 + 0.714×1.10 = 1.1286 ✓</div></div>Inflation ≈ 12.86% on this basket.</div><div class="box eg"><b class="t">P4. Year 1: 10 laptops at ₹50,000, 100 books at ₹500. Year 2: 12 laptops at ₹55,000, 100 books at ₹600. Nominal GDP, real GDP, deflator, inflation, real growth?</b><div class='math'><div>Nominal GDP₁ = 550,000; Nominal GDP₂ = 12×55,000 + 100×600 = 720,000</div><div>Real GDP₂ (year-1 prices) = 12×50,000 + 100×500 = 650,000</div><div>Deflator₂ = 720,000/650,000 = <b>1.1077</b> ⟹ inflation <b>10.77%</b></div><div>Real growth = 650,000/550,000 − 1 = <b>18.18%</b>; nominal growth = 30.91%</div><div>Check: 1.1818 × 1.1077 = 1.3091 = 1 + nominal growth ✓</div></div></div><div class="box eg"><b class="t">P5. Nominal rate 9%, expected inflation 6%. Real rate (exact, approximate)? Next, deposit rate 7% with 9% inflation.</b><div class='math'><div>Exact: 1.09/1.06 − 1 = <b>2.83%</b>; approx 3%</div><div>Deposit: 1.07/1.09 − 1 = <b>-1.83%</b> (a loss in purchasing power)</div></div></div><div class="box eg"><b class="t">P6. Nominal rate 300%, inflation 150%. Exact and approximate real rate?</b><div class='math'><div>Exact: 4/2.5 − 1 = <b>60%</b>. Approximate: 300 − 150 = 150%, wrong by 90 points. Use exact Fisher when rates are this high.</div></div></div><div class="box eg"><b class="t">P7. A project gives 500 baskets next year. Inflation 10%, nominal rate 21%, today's price ₹1 per basket. PV both ways? What if mixed?</b><div class='math'><div>Real rate = 1.21/1.10 − 1 = 10%. Real PV = 500/1.10 = <b>454.55 baskets</b></div><div>Nominal flow = 500 × 1.10 = 550; PV = 550/1.21 = <b>454.55</b> ✓</div><div>Mix (550 at the real 10%): 550/1.10 = <b>500</b> (overstated by 45.45, which is about 10%)</div></div></div><div class="box eg"><b class="t">P8. 5-year annualised yield 1.26%. What does ₹50,000 become? What is the holding return?</b><div class='math'><div>1.0126⁵ = 1.06461 ⟹ ₹50,000 → <b>₹53,230</b></div><div>Holding return r₀,₅ = <b>6.46%</b>, annualised 1.26%</div></div></div><div class="box eg"><b class="t">P9. Annualised spot yields 2%, 3%, 3.5% for 1, 2, 3 years. Forward rates r₁,₂ and r₂,₃?</b><div class='math'><div>r₁,₂ = 1.03²/1.02 − 1 = 1.0609/1.02 − 1 = <b>4.01%</b></div><div>r₂,₃ = 1.035³/1.03² − 1 = 1.108718/1.0609 − 1 = <b>4.51%</b></div><div>Check: 1.02 × 1.04010 × 1.04507 = 1.10872 = 1.035³ = 1.10872 ✓</div></div></div><div class="box eg"><b class="t">P10. 10-year zero (face 1,000) and 2-year zero, both at 4%. Yield rises 50 bp. Percentage price changes? Compare with −D/(1+y)·Δy.</b><div class='math'><div>10-year: 675.56 → 643.93 = <b>-4.68%</b>; formula −10/1.04 × 0.005 = -4.81%</div><div>2-year: 924.56 → 915.73 = <b>-0.95%</b>; formula −2/1.04 × 0.005 = -0.96%</div></div>The 10-year bond is about 5 times as sensitive (duration 10 vs 2).</div><div class="box eg"><b class="t">P11. You need cash in 1 year. 1-year zero yields 2%; 2-year zero yields 3%. If you buy the 2-year zero and sell after a year (rates move as forward rates imply), what do you earn?</b><div class='math'><div>P₀ = 100/1.03² = 94.26</div><div>Forward r₁,₂ = 4.01%, so P₁ = 100/1.0401 = 96.14</div><div>Return = 96.14/94.26 − 1 = <b>2.00%</b> = the 1-year rate</div></div></div><div class="box eg"><b class="t">P12. 5-year nominal yield 3.0%, 5-year TIPS yield 0.8%. Expected inflation (approximate and exact)?</b><div class='math'><div>Approx: 3.0 − 0.8 = <b>2.2%</b>; exact: 1.03/1.008 − 1 = <b>2.18%</b></div></div>This is the market's break-even inflation; it also contains any inflation-risk premium.</div><div class="box eg"><b class="t">P13. r̄₁ = 3%, r̄₂ = 4.5%. The market expects next year's one-year rate to be 5%. Term premium?</b><div class='math'><div>Expectations part: [3 + 5]/2 = 4.00% (exact √(1.03×1.05) − 1 = 4.00%)</div><div>TP₂ ≈ 4.5 − 4.0 = <b>0.5 points</b> (exact 0.50 points)</div></div></div><div class="box eg"><b class="t">P14. Oil (imported) becomes much more expensive. Which index rises more: CPI or GDP deflator? Why?</b>CPI rises more. Households consume imported oil products, which are in the CPI basket. The GDP deflator covers only domestically produced goods, so imported oil does not enter it directly.</div><div class="box eg"><b class="t">P15. Can a 10-year bond have a duration of 1.2 years? Can duration exceed maturity?</b>Yes to the first: if most of its value arrives early (for example a huge year-1 payment, like Bond 3). No to the second: duration is a weighted average of payment times, so it can never exceed the last payment date. For a zero-coupon bond it equals maturity.</div><div class="box eg"><b class="t">P16. Why is CPI not a perfect measure of the cost of maintaining a standard of living? Name three problems and one example each.</b>(1) Substitution bias: apples become expensive, people buy pears, but the fixed basket still has apples, so CPI overstates. (2) New goods: smartphones entered the basket late. (3) Quality change: a laptop costs 10% more but is much faster; the price rise is not pure inflation.</div>
+<div class="key"><b>Routine for numerical questions:</b> (1) decide the object: duration, index, real rate, forward rate or bond price; (2) check units: nominal or real, annualised or holding; (3) write the formula, then substitute; (4) sanity check: duration below maturity, real rate below nominal when inflation is positive, forward rate above spot when the curve slopes up.</div>
+</section>
+<section id="s11"><h2>11. Revision Sheet</h2>
+<h3>Formula table</h3>
+<table><tr><th>Topic</th><th>Formula</th></tr>
+<tr><td>Duration (payment-weighted)</td><td>Σ t·C_t / Σ C_t (zero-coupon: = T)</td></tr>
+<tr><td>Macaulay duration (PV-weighted)</td><td>Σ t·PV(C_t) / Σ PV(C_t), PV(C_t) = C_t/(1+r_t)^t</td></tr>
+<tr><td>CPI</td><td>Σp_C q_B / Σp_B q_B × 100 = Σ w_i (p_C^i/p_B^i) × 100</td></tr>
+<tr><td>GDP deflator</td><td>Nominal GDP / Real GDP; inflation = P_t/P_(t−1) − 1</td></tr>
+<tr><td>Fisher (exact)</td><td>1 + r = (1 + i)/(1 + π^e); approx r ≈ i − π^e</td></tr>
+<tr><td>Expected inflation from TIPS</td><td>π^e ≈ y_nom − y_TIPS; exact (1+y_nom)/(1+y_TIPS) − 1</td></tr>
+<tr><td>Holding vs annualised</td><td>1 + r₀,T = (1 + r̄_T)^T</td></tr>
+<tr><td>Forward rate</td><td>(1 + r̄₂)² = (1 + r̄₁)(1 + r₁,₂); general (1+r̄_T)^T/(1+r̄_(T−1))^(T−1) − 1</td></tr>
+<tr><td>Zero-coupon price</td><td>P = F/(1+y)^T; % change ≈ −[Duration/(1+y)] Δy</td></tr>
+<tr><td>Expectations hypothesis</td><td>r̄₂ ≈ [r̄₁ + E(r₁,₂)]/2</td></tr>
+<tr><td>Liquidity preference</td><td>r̄₂ ≈ [r̄₁ + E(r₁,₂)]/2 + TP₂, TP₂ &gt; 0</td></tr>
+<tr><td>Nominal yield decomposition</td><td>real (TIPS) yield + expected inflation + inflation-risk premium</td></tr></table>
+<h3>Inflation measures at a glance</h3>
+<table><tr><th>Measure</th><th>What it covers</th><th>Notes</th></tr><tr><td>CPI</td><td>Fixed basket of household goods (incl. imports)</td><td>Urban food 36%, rural food 54%; biases: substitution, new goods, quality</td></tr><tr><td>GDP deflator</td><td>All domestic output</td><td>Excludes imports; includes capital goods; weights update</td></tr><tr><td>WPI</td><td>Wholesale prices</td><td>Manufactured 64.23%, primary 22.62%, fuel 13.15%</td></tr><tr><td>Core inflation</td><td>CPI without food and fuel</td><td>Shows underlying trend; narrower in India</td></tr></table>
+<h3>Glossary</h3>
+<table><tr><th>Term</th><th>Plain meaning</th></tr><tr><td>Duration</td><td>Weighted-average time to receive cash flows</td></tr><tr><td>Basket</td><td>The fixed list of goods used to compute CPI</td></tr><tr><td>Base year</td><td>The reference year (index = 100)</td></tr><tr><td>Real GDP</td><td>Output valued at fixed prices</td></tr><tr><td>Yield curve</td><td>Plot of annualised yields against maturity</td></tr><tr><td>Zero-coupon bond</td><td>Bond with a single payment at maturity</td></tr><tr><td>Basis point</td><td>0.01% of interest</td></tr><tr><td>TIPS</td><td>Government bonds whose payments rise with CPI</td></tr><tr><td>Term premium</td><td>Extra yield for holding longer bonds</td></tr><tr><td>Inversion</td><td>Short rates above long rates</td></tr></table>
+<h3>Common mistakes</h3>
+<ul><li>Saying maturity measures how long money is tied up. It ignores earlier payments; use duration.</li><li>Using the approximate Fisher equation at high inflation.</li><li>Discounting nominal flows with real rates (or the reverse).</li><li>Confusing holding return, annualised yield and the individual annual (forward) rate.</li><li>Dividing a multi-year holding return by the number of years to annualise it.</li><li>Believing a high nominal rate means expensive borrowing: look at the real rate.</li><li>Reading an inverted curve as a certain recession forecast.</li><li>Quoting a term premium without saying what the market expects for future rates.</li></ul>
+<h3>Where your sources disagree (check before the exam)</h3>
+<ul><li><b>Duration names:</b> slides: "duration" = payment-weighted, "Macaulay" = PV-weighted; lecture summary uses the opposite labels. State the formula you use.</li><li><b>Humped curve:</b> slides describe a valley, summary a hill; standard definition is the hill.</li><li><b>30-year bond at 2.00%:</b> slide 552.08 / −2.9% is right; summary's 552.80 / −2.77% is a typo.</li><li><b>Slide 1B:</b> text says nominal flows with "real" rate, arithmetic uses the nominal 700%; follow Rule 1.</li></ul>
+<h3>Likely exam questions and what to write</h3>
+<ul><li><b>Why is maturity not enough? Define and compute duration for the three bonds.</b> 30, 15.5, 1.29; then PV version 1.07.</li><li><b>Derive CPI as a weighted average; list limitations.</b> Multiply and divide by p_B; define w_i; three biases.</li><li><b>CPI vs GDP deflator; compute deflator from nominal and real GDP.</b> 50 chocolates and 20 shoes example.</li><li><b>Derive the Fisher equation; explain 1980 vs 2007.</b> Borrow P_t, repay P_t(1+i), goods repaid (1+i)/(1+π^e); 0.8% vs 2.8%.</li><li><b>High-inflation example.</b> 700% and 100%: exact 300% not 600%; 12 baskets → PV 3 both ways.</li><li><b>Forward rate from the curve.</b> (1.0073)²/1.0039 − 1 = 1.07%.</li><li><b>Show that a 3-year bond sold after a year earns the 1-year rate.</b> P₁ = P₀(1 + r̄₁).</li><li><b>Interest-rate risk.</b> 30-year −2.9% vs 1-year −0.1% for +10 bp; ₹30,000 vs ₹1,000 per ₹10 lakh.</li><li><b>Why does the yield curve slope up?</b> Expectations, term premium, inflation (TIPS test), evidence that forward rates do not predict and long bonds paid more.</li></ul>
+<p>Send me your questions at exam time and I'll walk through each one step by step.</p>
+</section>
+</main></body></html>
