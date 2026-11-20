@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game Theory and Strategy: Week 5 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#0d9488,#4f46e5 55%,#d97706);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.94}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--ex);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card);display:block;width:max-content;max-width:100%;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 13px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}
+td.bad{background:#ffd9df;color:#5a0b19}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit;font-size:13px}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+.e{stroke:var(--def);stroke-width:2.2;fill:none}.hi{stroke:#0d9488;stroke-width:4;fill:none}
+.ax{stroke:var(--ink);stroke-width:1.5;fill:none}
+ul,ol{padding-left:22px}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+.cap{font-size:.88rem;opacity:.8;text-align:center;margin:-4px 0 10px}
+</style></head><body>
+<header><h1>Game Theory and Strategy: Week 5</h1><p>Repeated games (finite and infinite), discounting, trigger strategies, the folk theorem, and evolutionary game theory (ESS, Hawk-Dove)</p></header>
+<nav><a href="#s1">1 Repeated games</a><a href="#s2">2 Finite PD</a><a href="#s3">3 Multiple NE</a><a href="#s4">4 Discounting</a><a href="#s5">5 Trigger strategies</a><a href="#s6">6 Folk theorem</a><a href="#s7">7 Evolution</a><a href="#s8">8 ESS</a><a href="#s9">9 Hawk-Dove</a><a href="#s10">10 Recap</a><a href="#s11">11 Practice</a></nav>
+<main>
+<div class="box def"><b>Colour key:</b> blue = definition, green = derivation (every step shown), orange = worked example, red = trap. Part A (sections 1 to 6) is <b>Repeated Games</b>. Part B (sections 7 to 9) is <b>Evolutionary Game Theory</b>.</div>
+<div class="box ex"><b>Maths you need this week.</b> (1) Adding payoffs over several rounds. (2) The <b>geometric series</b>: for a number x between 0 and 1, <span class="m">1 + x + x² + x³ + … = 1/(1 − x)</span>. We derive it in Section 4, so you do not have to memorise it. (3) Solving a linear equation for p, as in Week 3's mixed equilibrium. (4) Weighted averages: "with probability 1 − x I get 6, with probability x I get 1, so on average 6(1 − x) + 1x".<br>
+<b>Ideas from earlier weeks that we reuse:</b> Nash equilibrium (nobody gains by switching alone), dominant strategy, backward induction, subgame, and subgame perfect equilibrium (SPE: a plan that is an equilibrium in <i>every</i> subgame, Week 4).</div>
+
+<h2 style="margin-top:28px">Part A: Repeated Games</h2>
+
+<section id="s1"><h2>1. What is a repeated game?</h2>
+<p>So far a game was played <b>once</b>. In real life people meet again and again: the same two shops compete every day, the same two countries negotiate every year. When you know you will meet someone again, your behaviour today can change. You can <b>reward</b> or <b>punish</b> them tomorrow. This is what the lecture asks:</p>
+<ul><li>What happens when players interact again and again?</li><li>Can <b>cooperation</b> survive in a Prisoner's-Dilemma-like situation?</li><li>What is the role of <b>reputation</b> and <b>punishment</b>?</li><li>We sometimes answer "tit for tat". Is that a good strategy?</li></ul>
+<div class="box def"><b>Stage game (G):</b> the one-shot game that is played over and over. <b>Round / iteration:</b> one play of G. <b>Repeated game:</b> G played several times, with the players watching and remembering what happened.</div>
+<table><tr><th></th><th>Finitely repeated</th><th>Infinitely repeated</th></tr>
+<tr><th>Number of rounds</th><td>A fixed number T, known to everyone</td><td>Goes on forever, <b>or</b> stops at a random, unknown time</td></tr>
+<tr><th>Is there a "last round"?</th><td>Yes (and everybody knows it)</td><td>No (nobody knows which round is last)</td></tr>
+<tr><th>Main result</th><td>If the stage game has one NE, play is just that NE every round</td><td>Cooperation can often be an equilibrium</td></tr></table>
+<div class="box def"><b>Three assumptions (from the slides):</b>
+<ol><li>Players <b>observe and remember</b> the outcome of every earlier round.</li><li>A player may respond <b>differently to each possible history</b>. (This is what makes a repeated game an extensive-form game, as the lecturer wrote on the slide.)</li><li>A player's total payoff is the <b>sum</b> of what she earns over the rounds (for infinite games: the discounted sum, Section 4).</li></ol></div>
+<svg viewBox="0 0 640 120" width="640" role="img" aria-label="Repeated game timeline"><g class="e"><path d="M100 60 L150 60"/><path d="M250 60 L300 60"/><path d="M400 60 L450 60"/><path d="M550 60 L600 60"/></g>
+<rect class="n" x="10" y="30" width="90" height="60" rx="8"/><text x="55" y="55" text-anchor="middle">Round 1</text><text x="55" y="73" text-anchor="middle">play G</text>
+<rect class="n" x="150" y="30" width="100" height="60" rx="8"/><text x="200" y="55" text-anchor="middle">Everyone sees</text><text x="200" y="73" text-anchor="middle">the outcome</text>
+<rect class="n" x="300" y="30" width="100" height="60" rx="8"/><text x="350" y="55" text-anchor="middle">Round 2</text><text x="350" y="73" text-anchor="middle">uses the history</text>
+<rect class="n" x="450" y="30" width="100" height="60" rx="8"/><text x="500" y="55" text-anchor="middle">Everyone sees</text><text x="500" y="73" text-anchor="middle">the outcome</text>
+<text x="615" y="65" text-anchor="middle">…</text></svg>
+<p class="cap">The loop that defines a repeated game. A strategy says what to do after <b>every</b> possible history.</p>
+<h3>The stage game we will use all week: the Prisoner's Dilemma</h3>
+<p>Cooperate (C) = remain silent. Defect (D) = confess. Payoffs are (Player 1, Player 2).</p>
+<table><tr><th>P1 \ P2</th><th>Cooperate</th><th>Defect</th></tr><tr><th>Cooperate</th><td>2, 2</td><td>0, 3</td></tr><tr><th>Defect</th><td>3, 0</td><td class="nash">1, 1</td></tr></table>
+<div class="box der"><b>Why (D, D) is the only pure NE (check every cell).</b><br>
+If P2 plays C: P1 gets 2 from C and 3 from D, so D is better. If P2 plays D: P1 gets 0 from C and 1 from D, so D is better. So D is a <b>strictly dominant</b> strategy for P1, and by symmetry for P2. The only profile where both play D is (D, D), with payoff (1, 1). Everyone would prefer (C, C) = (2, 2), but it is not an equilibrium: at (C, C) each player would gain by switching to D (3 &gt; 2).</div>
+<p>The question for this whole part: <b>can repetition rescue (C, C)?</b></p></section>
+
+<section id="s2"><h2>2. Finitely repeated Prisoner's Dilemma</h2>
+<h3>2.1 Twice-repeated PD (T = 2): the setup</h3>
+<p>Two players play the PD in round 1. Both see the outcome. Then they play it again in round 2. <b>Total payoff = round-1 payoff + round-2 payoff.</b> Because round 2 comes after seeing round 1, we must use the <b>extensive form</b> (a game tree).</p>
+<svg viewBox="0 0 700 330" width="700" role="img" aria-label="Twice repeated PD tree">
+<g class="e"><path d="M350 28 L210 80"/><path d="M350 28 L490 80"/>
+<path d="M210 80 L110 150"/><path d="M210 80 L230 150"/><path d="M490 80 L470 150"/><path d="M490 80 L590 150"/></g>
+<path d="M210 80 L490 80" stroke="#e11d48" stroke-width="2.2" stroke-dasharray="5 4" fill="none"/>
+<circle class="n" cx="350" cy="28" r="15"/><text x="345" y="33">1</text><circle class="n" cx="210" cy="80" r="15"/><text x="205" y="85">2</text><circle class="n" cx="490" cy="80" r="15"/><text x="485" y="85">2</text>
+<text x="262" y="42">C</text><text x="432" y="42">D</text><text x="350" y="76" text-anchor="middle" style="fill:#e11d48">P2 cannot tell these apart</text>
+<text x="135" y="110">C</text><text x="232" y="112">D</text><text x="466" y="112">C</text><text x="570" y="110">D</text>
+<rect x="55" y="158" width="110" height="64" rx="8" fill="none" stroke="#0d9488" stroke-width="2"/><text x="110" y="178" text-anchor="middle">Round 1: (C,C)</text><text x="110" y="196" text-anchor="middle">Round 2:</text><text x="110" y="212" text-anchor="middle">a full PD again</text>
+<rect x="180" y="158" width="110" height="64" rx="8" fill="none" stroke="#0d9488" stroke-width="2"/><text x="235" y="178" text-anchor="middle">Round 1: (C,D)</text><text x="235" y="196" text-anchor="middle">Round 2:</text><text x="235" y="212" text-anchor="middle">a full PD again</text>
+<rect x="410" y="158" width="110" height="64" rx="8" fill="none" stroke="#0d9488" stroke-width="2"/><text x="465" y="178" text-anchor="middle">Round 1: (D,C)</text><text x="465" y="196" text-anchor="middle">Round 2:</text><text x="465" y="212" text-anchor="middle">a full PD again</text>
+<rect x="535" y="158" width="110" height="64" rx="8" fill="none" stroke="#0d9488" stroke-width="2"/><text x="590" y="178" text-anchor="middle">Round 1: (D,D)</text><text x="590" y="196" text-anchor="middle">Round 2:</text><text x="590" y="212" text-anchor="middle">a full PD again</text>
+<text x="350" y="260" text-anchor="middle">Each green box is a <tspan font-weight="700">subgame</tspan>: the round-2 game that starts after one round-1 outcome.</text>
+<text x="350" y="282" text-anchor="middle">Inside each box both players know the history, so there is no dashed line there.</text>
+<text x="350" y="304" text-anchor="middle">Subgames = 1 (whole game) + 4 (one per round-1 outcome) = 5</text></svg>
+<p class="cap">Round 1 is simultaneous, so Player 2's two nodes are joined by a dashed information set. Round 2 is drawn as a box to save space.</p>
+<div class="box der"><b>Counting subgames.</b> The whole game is one subgame. Round 2 can start after (C,C), (C,D), (D,C) or (D,D), which gives 4 more. Total <b>5</b>.<br>
+<b>General count for T rounds</b> (this is the "1, 4, 4², 4³, … 4⁹⁹⁹" the lecturer wrote for T = 1000): round t starts after 4<sup>t−1</sup> different histories, because each past round has 4 possible outcomes. So
+<span class="eq">number of subgames = 1 + 4 + 4² + … + 4<sup>T−1</sup> = (4<sup>T</sup> − 1) / 3</span>
+(The sum comes from the geometric series in Section 4.) Check: T = 2 gives (16 − 1)/3 = 5 ✔. T = 3 gives 21. T = 1000 gives a number with about 600 digits.</div>
+
+<h3>2.2 How many strategies? (the 32 × 32 table)</h3>
+<div class="box def"><b>A strategy must say what to do after every history</b>, including histories that will never happen. Here Player 1 decides at: the start of round 1 (1 place) and after each of the 4 round-1 outcomes (4 places). That is <b>5 decision places</b>, each with 2 actions (C or D).</div>
+<div class="box der">Number of strategies = 2 × 2 × 2 × 2 × 2 = 2⁵ = <b>32</b>. So the normal form is a <b>32 × 32</b> table (1024 cells). For T rounds the exponent is the number of subgames, so P1 has <span class="m">2<sup>(4<sup>T</sup>−1)/3</sup></span> strategies. That is why we never write the table for larger T and use backward induction instead.</div>
+<p><b>How to write a strategy as five letters.</b> Write it as <span class="m">[round 1 ; after CC ; after CD ; after DC ; after DD]</span>, where in "after XY" X is Player 1's round-1 action and Y is Player 2's. The lecture's examples:</p>
+<table><tr><th>Strategy</th><th>Meaning</th><th>Written</th></tr>
+<tr><td>Always cooperate</td><td>C everywhere</td><td>C C C C C</td></tr>
+<tr><td>Always defect</td><td>D everywhere</td><td>D D D D D</td></tr>
+<tr><td>Cooperate first, defect in round 2</td><td>C at start, then D whatever happened</td><td>C D D D D</td></tr>
+<tr><td>Defect first, then copy P2's round-1 action</td><td>D at start; in round 2 cooperate if P2 cooperated in round 1, else defect</td><td>D C D C D</td></tr></table>
+<p class="cap">Check the last one: after CC, P2 cooperated, so C. After CD, P2 defected, so D. After DC, P2 cooperated, so C. After DD, P2 defected, so D. Result D, C, D, C, D ✔.</p>
+
+<h3>2.3 Solving T = 2 by backward induction (derivation)</h3>
+<div class="box der"><b>Step 1: round 2 (the last round), inside each of the 4 subgames.</b><br>
+In round 2 there is no future, so nothing can be promised or threatened. Whatever happened in round 1 is already banked. The round-1 payoff is a <b>constant</b> added to every cell, and adding the same number to every cell of a table does not change who wants to switch. So every round-2 subgame is just the ordinary PD again, and D is dominant. All four subgames end in <b>(D, D)</b>, adding (1, 1).<br><br>
+<b>Step 2: replace each subgame by its payoff.</b> Round-1 payoff + (1, 1):</div>
+<table><tr><th>Round 1 (P1\P2)</th><th>C</th><th>D</th></tr>
+<tr><th>C</th><td>2,2 + 1,1 = <b>3, 3</b></td><td>0,3 + 1,1 = <b>1, 4</b></td></tr>
+<tr><th>D</th><td>3,0 + 1,1 = <b>4, 1</b></td><td class="nash">1,1 + 1,1 = <b>2, 2</b></td></tr></table>
+<div class="box der"><b>Step 3: round 1.</b> In this new table D is still dominant: against C, 4 &gt; 3; against D, 2 &gt; 1 (for P1, and the same for P2 by symmetry). So round 1 is (D, D) too.<br>
+<b>Result:</b> the only subgame perfect equilibrium is <b>"defect in both rounds, after every history"</b>. Total payoff (2, 2). Cooperation cannot be sustained.</div>
+<svg viewBox="0 0 620 110" width="620" role="img" aria-label="Unravelling flow"><g class="e"><path d="M150 55 L190 55"/><path d="M330 55 L370 55"/><path d="M500 55 L540 55"/></g>
+<rect class="n" x="10" y="20" width="140" height="70" rx="8"/><text x="80" y="48" text-anchor="middle">Last round</text><text x="80" y="66" text-anchor="middle">no future, so</text><text x="80" y="82" text-anchor="middle">play stage NE</text>
+<rect class="n" x="190" y="20" width="140" height="70" rx="8"/><text x="260" y="48" text-anchor="middle">Round T−1:</text><text x="260" y="66" text-anchor="middle">future is fixed,</text><text x="260" y="82" text-anchor="middle">so stage NE too</text>
+<rect class="n" x="370" y="20" width="130" height="70" rx="8"/><text x="435" y="48" text-anchor="middle">Round T−2:</text><text x="435" y="66" text-anchor="middle">same argument</text><text x="435" y="82" text-anchor="middle">again</text>
+<rect class="n" x="540" y="20" width="75" height="70" rx="8"/><text x="577" y="48" text-anchor="middle">Round 1:</text><text x="577" y="66" text-anchor="middle">stage NE</text></svg>
+<p class="cap">The "unravelling" of cooperation, one round at a time, from the end.</p>
+
+<h3>2.4 T = 1000, and the general theorem</h3>
+<div class="box def"><b>Unravelling theorem.</b> If the stage game has a <b>unique</b> Nash equilibrium a*, then for any finite T the repeated game has a <b>unique</b> SPE: play a* in every round, after every history.</div>
+<div class="box der"><b>Proof by induction (the same three steps, for any T).</b><br>
+<b>Round T:</b> no future, so every player must play a best response to the others inside the stage game. The only profile where everyone does is a*.<br>
+<b>Round T−1:</b> the round-T outcome will be a* whatever happens now, so it is a fixed number added to every cell. It does not change anyone's incentive. So round T−1 also has a* as its only equilibrium.<br>
+<b>Round T−2, …, round 1:</b> repeat the same argument one step at a time. Each round "inherits" a fixed future and therefore behaves like a one-shot game.<br>
+So a* is played in every round. ∎</div>
+<div class="box ex"><b>Example: 1000 rounds of the PD.</b> People often feel that with 1000 chances the players "must" learn to cooperate. The theorem says no: in round 1000 both defect, so in round 999 both defect, … so in round 1 both defect. The lecturer's answer: <i>"players will always defect in this Prisoner's Dilemma kind of setting."</i></div>
+<div class="box warn"><b>Trap.</b> A long finite game is <b>not</b> the same as an infinite one. The only thing that kills cooperation is that there is a known last round. In an infinite game that last round does not exist, and cooperation can survive (Sections 4 to 5).</div>
+<div class="box def"><b>Slide summary (two cases).</b>
+<ul><li>Simultaneous game with a <b>unique</b> NE (or sequential game with a unique SPE) ⟹ the repeated game has a <b>unique</b> SPE (the stage solution every round).</li><li>Simultaneous game with <b>multiple</b> NE ⟹ the repeated game can have <b>multiple</b> SPE, and some of them are not just "repeat the stage solution". See next section.</li></ul></div></section>
+
+<section id="s3"><h2>3. Finite repetition when the stage game has several equilibria</h2>
+<p>The unravelling theorem needs a <b>unique</b> stage NE. If there are <b>two</b> stage equilibria, one good for Player 1 and one good for Player 2, the last round can be used as a <b>carrot and a stick</b>: "play nicely in round 1 and I will play the equilibrium you like in round 2; cheat and I will play the one you hate." Because both round-2 outcomes are still stage equilibria, nobody ever wants to break the round-2 plan, so the threat is <b>credible</b>.</p>
+<h3>3.1 The stage game (from the slides)</h3>
+<table><tr><th>P1 \ P2</th><th>L</th><th>R</th><th>C</th></tr>
+<tr><th>U</th><td>4, 3</td><td>0, 0</td><td class="nash">1, 4</td></tr>
+<tr><th>D</th><td>0, 0</td><td class="nash">2, 1</td><td>0, 0</td></tr></table>
+<div class="box der"><b>Finding the pure NE (best-response marking).</b><br>
+<b>P1's best reply</b> to each column: vs L, U (4 &gt; 0). vs R, D (2 &gt; 0). vs C, U (1 &gt; 0).<br>
+<b>P2's best reply</b> to each row: vs U, C (4 &gt; 3 &gt; 0). vs D, R (1 &gt; 0).<br>
+A cell is an NE when both payoffs are best replies: <b>(U, C) with payoffs (1, 4)</b> and <b>(D, R) with payoffs (2, 1)</b>. No other cell works. For instance (U, L): P2's best reply to U is C, not L.</div>
+<p>(U, C) is good for P2 (4) and poor for P1 (1). (D, R) is the reverse: good for P1 (2), poor for P2 (1). The best joint outcome is <b>(U, L) = (4, 3)</b> (total 7), but it is <b>not</b> an NE: against U, Player 2 would switch from L to C and get 4 instead of 3. In a one-shot game this outcome is out of reach.</p>
+<h3>3.2 The tree has 7 subgames</h3>
+<svg viewBox="0 0 640 170" width="640" role="img" aria-label="Subgames of twice repeated 2x3 game">
+<rect class="n" x="10" y="55" width="110" height="60" rx="8"/><text x="65" y="80" text-anchor="middle">Round 1</text><text x="65" y="98" text-anchor="middle">(6 outcomes)</text>
+<g class="e"><path d="M120 85 L170 25"/><path d="M120 85 L170 55"/><path d="M120 85 L170 85"/><path d="M120 85 L170 115"/><path d="M120 85 L170 145"/></g>
+<text x="190" y="30">after (U,L): a round-2 game</text><text x="190" y="60">after (U,R): a round-2 game</text><text x="190" y="90">after (U,C): a round-2 game</text><text x="190" y="120">after (D,L): a round-2 game</text><text x="190" y="150">after (D,R) and (D,C): also two more</text>
+<text x="440" y="60" font-weight="700">1 + 6 = 7 subgames</text><text x="440" y="82">(whole game + one for</text><text x="440" y="100">each of the 6 outcomes)</text></svg>
+<p>In every round-2 subgame the players must play a stage NE: <b>(U, C)</b> or <b>(D, R)</b>. Which one can depend on the history (the lecturer: "a combination of (U,C) or (D,R) could be played"). So the repeated game has <b>many SPE</b>:</p>
+<table><tr><th>Round 1</th><th>Round 2</th><th>Total payoff</th></tr>
+<tr><td>(U, C)</td><td>(U, C)</td><td>(1+1, 4+4) = (2, 8)</td></tr>
+<tr><td>(D, R)</td><td>(D, R)</td><td>(2+2, 1+1) = (4, 2)</td></tr>
+<tr><td>(U, C)</td><td>(D, R)</td><td>(1+2, 4+1) = (3, 5)</td></tr>
+<tr><td>(D, R)</td><td>(U, C)</td><td>(2+1, 1+4) = (3, 5)</td></tr>
+<tr><td class="nash"><b>(U, L)</b>: not a stage NE!</td><td class="nash">(U, C) if P2 was good, else (D, R)</td><td class="nash">(4+1, 3+4) = <b>(5, 7)</b></td></tr></table>
+<p class="cap">The first four just repeat stage equilibria. The last one is the interesting new one (next).</p>
+
+<h3>3.3 Building the cooperative SPE (the lecture's strategy)</h3>
+<div class="box def"><b>Strategy for Player 1:</b> Round 1: play U. Round 2: play U if Player 2 played L in round 1, otherwise play D.<br>
+<b>Strategy for Player 2:</b> Round 1: play L. Round 2: play C if she played L in round 1, otherwise play R.<br>
+<b>So the round-2 outcome is:</b> (U, C) if Player 2 played L in round 1 (the carrot, 4 for P2), and (D, R) if she played anything else (the stick, only 1 for P2).</div>
+<p class="cap">The lecture's version punishes based on what Player 2 did. The summary's version punishes unless the whole outcome was exactly (U, L). Both work; the check below is the same.</p>
+<div class="box der"><b>Step 1: round-2 subgames.</b> Each one ends in (U, C) or (D, R). Both are stage NE, so nobody can gain by switching alone in round 2. ✔ (This is why the threat is credible.)<br><br>
+<b>Step 2: turn round 1 into a table.</b> Add the round-2 payoff to each round-1 cell. The round-2 payoff is (1, 4) if P2 played L, and (2, 1) if P2 played R or C.</div>
+<table><tr><th>P1 \ P2</th><th>L</th><th>R</th><th>C</th></tr>
+<tr><th>U</th><td class="nash">4,3 + 1,4 = <b>5, 7</b></td><td>0,0 + 2,1 = 2, 1</td><td>1,4 + 2,1 = 3, 5</td></tr>
+<tr><th>D</th><td>0,0 + 1,4 = 1, 4</td><td>2,1 + 2,1 = 4, 2</td><td>0,0 + 2,1 = 2, 1</td></tr></table>
+<p class="cap">This is exactly the table drawn on the lecturer's slide.</p>
+<div class="box der"><b>Step 3: is (U, L) an NE of this new table?</b><br>
+<b>P1</b> (column L fixed): U gives 5, D gives 1. 5 &gt; 1. ✔ stays at U.<br>
+<b>P2</b> (row U fixed): L gives 7, R gives 1, C gives 5. 7 is the biggest. ✔ stays at L.<br>
+Deviation check in words for P2 (the only tempted one): switching to C earns 4 instead of 3 in round 1 (<b>+1</b>), but moves round 2 from (U, C) paying 4 to (D, R) paying 1 (<b>−3</b>). Net <b>−2</b>, so 7 vs 5. Cooperation wins.<br>
+<b>Conclusion:</b> this strategy pair is an SPE. Total payoff <b>(5, 7)</b>. That is better for <b>both</b> players than playing (D, R) twice, which gives (4, 2), and better for both than the mixed pairs, which give (3, 5). Only playing (U, C) twice, which gives (2, 8), pays Player 2 more, but then Player 1 gets just 2.</div>
+<div class="box ex"><b>The role of pre-game talk (slide question).</b> Before the game the players can <i>agree</i> on this plan. Normally "cheap talk" is just words. Here the plan is a subgame perfect equilibrium, so no one has a reason to break it. The agreement is <b>self-enforcing</b>, so the pre-game talk is believable.</div>
+<div class="box warn"><b>Conditions for cooperation in a finitely repeated game (remember these):</b> (1) the stage game must have <b>at least two</b> NE with different payoffs, so there is something to threaten with; (2) the <b>last round must always be a stage NE</b>; (3) the cooperative outcome is only used in earlier rounds, and the end-game "reward or punishment" is what holds it up. With a single NE there is no stick, so no cooperation (Section 2).</div></section>
+
+<h2 style="margin-top:34px">Infinitely repeated games</h2>
+
+<section id="s4"><h2>4. Infinite games, discounting and present value</h2>
+<h3>4.1 Why study them?</h3>
+<p>Unravelling started from the last round. If there is <b>no last round</b>, it never starts. Two ways to model this:</p>
+<ul><li>The game really goes on forever.</li><li>The game <b>may end after each round with some probability</b> (you never know if today is the last meeting). Mathematically this looks the same as discounting (see 4.3).</li></ul>
+<h3>4.2 The payoff problem: infinity versus infinity</h3>
+<p>If we just add payoffs, "2 every round forever" is 2 + 2 + 2 + … = ∞ and "3 now then 1 forever" is also ∞. We cannot compare two infinities. The standard fix: <b>discount the future</b>. A rupee tomorrow is worth less than a rupee today.</p>
+<div class="box der"><b>Deriving the discount factor from an interest rate r.</b><br>
+Suppose the interest rate per round is r (for example r = 0.10 means 10%). If I put <span class="m">x</span> in the bank today, next round I have <span class="m">x(1 + r)</span>. So how much must I put in today to have <b>2</b> next round?
+<span class="eq">x(1 + r) = 2 &nbsp;⟹&nbsp; x = 2/(1 + r)</span>
+This x is the <b>present value</b> of receiving 2 next round. Two rounds from now (money grows twice):
+<span class="eq">y(1 + r)² = 2 &nbsp;⟹&nbsp; y = 2/(1 + r)²</span>
+and so on. Therefore the present value of the stream "2 now, 2 next, 2 after that, …" is
+<span class="eq">2 + 2/(1 + r) + 2/(1 + r)² + …</span>
+Give <span class="m">1/(1 + r)</span> a short name: the <b>discount factor δ</b>. A payoff received t rounds from now is multiplied by <span class="m">δ<sup>t</sup></span>.
+<span class="eq">δ = 1/(1 + r), &nbsp; r = (1 − δ)/δ</span></div>
+<table><tr><th>Interest rate r</th><th>0%</th><th>25%</th><th>100%</th><th>300%</th></tr><tr><th>δ = 1/(1+r)</th><td>1</td><td>0.8</td><td>0.5</td><td>0.25</td></tr><tr><th>Player is</th><td>perfectly patient</td><td>patient</td><td>fairly impatient</td><td>very impatient</td></tr></table>
+<svg viewBox="0 0 420 190" width="420" role="img" aria-label="Value of 1 over time at delta 0.5">
+<path class="ax" d="M50 20 L50 150 L400 150"/>
+<rect x="70" y="20" width="40" height="130" fill="#4f46e5"/><rect x="130" y="85" width="40" height="65" fill="#4f46e5"/><rect x="190" y="117.5" width="40" height="32.5" fill="#4f46e5"/><rect x="250" y="133.75" width="40" height="16.25" fill="#4f46e5"/><rect x="310" y="141.9" width="40" height="8.1" fill="#4f46e5"/>
+<text x="90" y="168" text-anchor="middle">t = 0</text><text x="150" y="168" text-anchor="middle">t = 1</text><text x="210" y="168" text-anchor="middle">t = 2</text><text x="270" y="168" text-anchor="middle">t = 3</text><text x="330" y="168" text-anchor="middle">t = 4</text>
+<text x="90" y="14" text-anchor="middle">1</text><text x="150" y="79" text-anchor="middle">0.5</text><text x="210" y="111" text-anchor="middle">0.25</text><text x="270" y="128" text-anchor="middle">0.125</text><text x="330" y="136" text-anchor="middle">…</text></svg>
+<p class="cap">Today's value of 1 unit received at time t when δ = 0.5 (r = 100%). It shrinks geometrically.</p>
+
+<h3>4.3 Adding up the infinite stream: the geometric series (derivation)</h3>
+<div class="box der">We want <span class="m">S = 1 + x + x² + x³ + …</span> for a number 0 &lt; x &lt; 1.<br>
+<b>Step 1.</b> Multiply both sides by x: <span class="m">xS = x + x² + x³ + …</span><br>
+<b>Step 2.</b> Subtract: <span class="m">S − xS = 1</span> (every term except the first cancels).<br>
+<b>Step 3.</b> <span class="m">(1 − x)S = 1</span>, so
+<span class="eq">S = 1/(1 − x)</span>
+<b>Now put x = 1/(1 + r).</b> Then 1 − x = r/(1 + r), so
+<span class="eq">S = (1 + r)/r = 1 + 1/r</span>
+<b>Two streams the lecture needs:</b><br>
+<b>Always 2:</b> 2 + 2/(1+r) + 2/(1+r)² + … = 2[1 + x + x² + …] = 2(1 + 1/r) = <b>2 + 2/r</b>.<br>
+<b>3 now, then 1 forever:</b> 3 + [1/(1+r)][1 + x + x² + …] = 3 + [1/(1+r)] · [(1+r)/r] = <b>3 + 1/r</b>.</div>
+<div class="box der"><b>The same thing in δ.</b> With x = δ: <span class="m">1 + δ + δ² + … = 1/(1 − δ)</span> and <span class="m">δ + δ² + … = δ/(1 − δ)</span>. Therefore
+<span class="eq">always 2: &nbsp; 2/(1 − δ) &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp; 3 now then 1 forever: &nbsp; 3 + δ/(1 − δ)</span>
+<b>They agree with the r-version.</b> With δ = 1/(1+r) we have 1 − δ = r/(1+r), so 2/(1−δ) = 2(1+r)/r = 2 + 2/r ✔ and δ/(1−δ) = 1/r so 3 + δ/(1−δ) = 3 + 1/r ✔.</div>
+<div class="box def"><b>Random ending is the same as discounting.</b> If after each round the game continues with probability δ, then round t is actually played with probability δ<sup>t</sup>, so the <i>expected</i> payoff is Σ δ<sup>t</sup> × (payoff in round t). A patient player (high δ) is one who expects the game to continue.</div>
+<div class="box warn"><b>Traps.</b> (1) High δ (close to 1) = <b>patient</b> = low interest rate. Cooperation needs <b>patience</b>. (2) "r &lt; 1" and "δ &gt; ½" are the <b>same</b> condition written two ways. (3) The geometric formula needs <b>x &lt; 1</b>; at δ = 1 sums are infinite again.</div></section>
+
+<section id="s5"><h2>5. Trigger strategies: Grim and Tit-for-Tat</h2>
+<p>In the infinite game, "always defect" is still an equilibrium (a stage NE repeated). The interesting question is whether <b>other</b> equilibria exist. They do, because a strategy can depend on history: <i>"If you misbehave this round, I will respond next round."</i> That threat only exists if there is a next round, which is the point of the infinite horizon.</p>
+<div class="box def"><b>Trigger strategy:</b> (1) begin by cooperating; (2) keep cooperating as long as the rival does; (3) on seeing a defection, <b>immediately</b> switch to a period of punishment (where everyone plays non-cooperatively). If the threat is strong enough to change behaviour, we have found a <b>trigger strategy equilibrium</b>.</div>
+<h3>5.1 The two extremes</h3>
+<svg viewBox="0 0 640 190" width="640" role="img" aria-label="Grim trigger and tit for tat as state machines"><defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker></defs>
+<text x="150" y="18" text-anchor="middle" font-weight="700">Grim trigger</text>
+<circle class="n" cx="70" cy="80" r="38"/><text x="70" y="76" text-anchor="middle">Play C</text><text x="70" y="94" text-anchor="middle">(start)</text>
+<circle class="n" cx="240" cy="80" r="38" style="stroke:#e11d48"/><text x="240" y="76" text-anchor="middle">Play D</text><text x="240" y="94" text-anchor="middle">forever</text>
+<path class="e" d="M108 70 L200 70" marker-end="url(#ah)"/><text x="155" y="62" text-anchor="middle">anyone defects</text>
+<path d="M52 110 C40 165 100 165 88 110" stroke="#0d9488" stroke-width="2" fill="none"/><text x="70" y="182" text-anchor="middle">both played C</text>
+<path d="M222 110 C210 165 270 165 258 110" stroke="#e11d48" stroke-width="2" fill="none"/><text x="240" y="182" text-anchor="middle">no way back</text>
+<text x="500" y="18" text-anchor="middle" font-weight="700">Tit for tat</text>
+<circle class="n" cx="420" cy="80" r="38"/><text x="420" y="76" text-anchor="middle">Play C</text><text x="420" y="94" text-anchor="middle">(start)</text>
+<circle class="n" cx="590" cy="80" r="38" style="stroke:#e11d48"/><text x="590" y="76" text-anchor="middle">Play D</text><text x="590" y="94" text-anchor="middle">once</text>
+<path class="e" d="M458 62 L550 62" marker-end="url(#ah)"/><text x="505" y="54" text-anchor="middle">rival played D</text>
+<path class="e" d="M552 98 L460 98" marker-end="url(#ah)"/><text x="505" y="116" text-anchor="middle">rival played C</text></svg>
+<table><tr><th></th><th>Tit for tat (TFT)</th><th>Grim trigger (GTS)</th></tr>
+<tr><th>Rule</th><td>Play C in round 1. After that, do whatever the other player did <b>last round</b>.</td><td>Play C. If anyone has <b>ever</b> defected, play D <b>forever</b>.</td></tr>
+<tr><th>Memory</th><td>Shortest (one round)</td><td>Longest (forever)</td></tr>
+<tr><th>Forgiveness</th><td>Most forgiving</td><td>Least forgiving</td></tr>
+<tr><th>Slide's verdict</th><td>Proportional, credible, but <b>lacks deterrence</b></td><td>Adequate <b>deterrence</b>, but may <b>lack credibility</b></td></tr></table>
+<p><b>Two goals pull in opposite directions:</b> <b>deterrence</b> (the punishment is big enough that cheating does not pay) and <b>credibility</b> (the punishment is something the punisher will really carry out). GTS is big but hurts the punisher too; TFT is mild and cheap.</p>
+
+<h3>5.2 When does cooperation beat defection against Grim Trigger? (the main derivation)</h3>
+<p>Take the PD with (C,C) = (2,2), (C,D) = (0,3), (D,C) = (3,0), (D,D) = (1,1). Both players use grim trigger. Look at Player 1 at round 0 (the argument is the same every round, see below).</p>
+<svg viewBox="0 0 520 180" width="520" role="img" aria-label="Payoff streams: cooperate vs defect against grim">
+<path class="ax" d="M40 20 L40 150 L500 150"/>
+<g fill="#0d9488"><rect x="60" y="60" width="22" height="90"/><rect x="130" y="60" width="22" height="90"/><rect x="200" y="60" width="22" height="90"/><rect x="270" y="60" width="22" height="90"/><rect x="340" y="60" width="22" height="90"/></g>
+<g fill="#e11d48"><rect x="84" y="15" width="22" height="135"/><rect x="154" y="105" width="22" height="45"/><rect x="224" y="105" width="22" height="45"/><rect x="294" y="105" width="22" height="45"/><rect x="364" y="105" width="22" height="45"/></g>
+<text x="95" y="168" text-anchor="middle">t=0</text><text x="165" y="168" text-anchor="middle">t=1</text><text x="235" y="168" text-anchor="middle">t=2</text><text x="305" y="168" text-anchor="middle">t=3</text><text x="375" y="168" text-anchor="middle">t=4</text>
+<rect x="250" y="12" width="14" height="14" fill="#0d9488"/><text x="270" y="24">cooperate: 2, 2, 2, …</text><rect x="250" y="32" width="14" height="14" fill="#e11d48"/><text x="270" y="44">defect: 3, 1, 1, …</text></svg>
+<p class="cap">Defecting wins big at t = 0 (3 vs 2) but loses 1 every round afterwards (1 vs 2).</p>
+<div class="box der"><b>Option A: cooperate forever.</b> Both play C every round, so payoffs 2, 2, 2, … with present value
+<span class="eq">V<sub>coop</sub> = 2 + 2δ + 2δ² + … = 2/(1 − δ) &nbsp;&nbsp;(in r: 2 + 2/r)</span>
+<b>Option B: defect now.</b> Player 1 plays D while Player 2 plays C: she gets 3. From then on Player 2 plays D forever, and Player 1's best reply to D is D, which gives 1 each round:
+<span class="eq">V<sub>dev</sub> = 3 + δ + δ² + … = 3 + δ/(1 − δ) &nbsp;&nbsp;(in r: 3 + 1/r)</span>
+<b>Cooperate if V<sub>coop</sub> ≥ V<sub>dev</sub>:</b>
+<span class="eq">2/(1 − δ) ≥ 3 + δ/(1 − δ)</span>
+Multiply both sides by (1 − δ), which is positive:
+<span class="eq">2 ≥ 3(1 − δ) + δ = 3 − 2δ &nbsp;⟹&nbsp; 2δ ≥ 1 &nbsp;⟹&nbsp; <b>δ ≥ ½</b></span>
+<b>The lecture's version with r:</b> 2 + 2/r &gt; 3 + 1/r ⟹ 1/r &gt; 1 ⟹ <b>r &lt; 1</b>. Same thing: δ = 1/(1+r) &gt; ½ ⟺ r &lt; 1.<br>
+<b>Meaning:</b> the one-time gain is 3 − 2 = 1; the loss is 2 − 1 = 1 <i>every</i> round after. The loss lasts forever, so unless the player is extremely impatient (interest rate above 100%), she cooperates. For δ &lt; ½ she defects.</div>
+<div class="box der"><b>Why checking only "defect at round 0, then D forever" is enough.</b><br>
+(1) <b>Timing doesn't matter.</b> If she defects at round t instead, every payoff is multiplied by δ<sup>t</sup> on both sides, so the inequality is unchanged.<br>
+(2) <b>After the first defection, D forever is her best reply</b>, because the other player now plays D forever and D is the best reply to D. So a longer plan such as "defect, then cooperate again" can only do worse. Hence the one test above covers all deviations.<br>
+(3) <b>Is the punishment itself believable?</b> After a defection both play (D, D) forever. (D, D) is a Nash equilibrium of the stage game, so neither player wants to deviate from it in any later round. So grim trigger is an equilibrium in <b>every subgame</b>: it is a <b>subgame perfect equilibrium</b> for δ ≥ ½.</div>
+<div class="box ex"><b>Numbers.</b> δ = 0.6: V<sub>coop</sub> = 2/0.4 = 5. V<sub>dev</sub> = 3 + 0.6/0.4 = 4.5. Cooperate (5 &gt; 4.5). δ = 1/3: V<sub>coop</sub> = 3, V<sub>dev</sub> = 3 + 0.5 = 3.5. Defect (3.5 &gt; 3). δ = ½: both are 4, indifferent. Confirms the threshold.</div>
+<div class="box warn"><b>About "lacks credibility" on the slide.</b> <i>(My reading of the slide.)</i> Forever-punishment can be costly to the punisher. In this PD it is free to the punisher, because D is the best reply to D anyway, so the threat is credible. In other games, if the punishment action is <b>not</b> a best reply to what the rival then plays, the punisher would rather drop the threat, and then grim trigger would fail subgame perfection.</div>
+
+<h3>5.3 Tit-for-Tat: the slide's calculation, and a careful check</h3>
+<p><b>The slide's stream.</b> Cooperate: 2, 2, 2, …. Defect: <i>"3 today, 1 tomorrow, 2 from the day after tomorrow."</i> Comparing present values (the terms from the third onwards are equal and cancel):</p>
+<div class="box der"><span class="eq">2 + 2/(1 + r) &gt; 3 + 1/(1 + r) &nbsp;⟹&nbsp; 1/(1 + r) &gt; 1 &nbsp;⟹&nbsp; 1 &gt; 1 + r &nbsp;⟹&nbsp; r &lt; 0</span>
+Since an interest rate cannot be negative, the slide concludes that this deviation always pays, so cooperation is not supported <i>by this calculation</i>.</div>
+<div class="box warn"><b>Careful: this stream cannot actually happen against Tit-for-Tat.</b> <i>(This is my own check, not on the slide.)</i> TFT copies <b>your</b> last move. If you defect at t = 0 (you get 3) and defect again at t = 1 (you get 1), TFT plays D at t = 2, so at t = 2 you cannot get 2: you get 1 (if you play D) or 0 (if you play C). The stream 3, 1, 2, 2, … would need TFT to "forgive" for free.<br><br>
+<b>Correct check: defect once, then go back to cooperating.</b> Against TFT you get 3 at t = 0 (you play D, they play C). At t = 1 you play C but TFT punishes: you get 0. From t = 2, TFT copies your C, so you get 2 again.
+<span class="eq">3 + 0·δ + 2δ² + 2δ³ + … = 3 + 2δ²/(1 − δ)</span>
+Compare with cooperating, 2/(1 − δ). Cooperating is at least as good when
+<span class="eq">2 ≥ 3(1 − δ) + 2δ² &nbsp;⟺&nbsp; 0 ≥ 1 − 3δ + 2δ² = (1 − δ)(1 − 2δ) &nbsp;⟺&nbsp; δ ≥ ½</span>
+Defecting forever against TFT gives 3 + δ/(1 − δ), the same as against grim trigger, which again needs δ ≥ ½. I also tested every other deviation pattern by computer: for δ ≥ ½ none beats cooperating. So <b>TFT is a Nash equilibrium for δ ≥ ½</b>.<br>
+<b>For the exam:</b> know the slide's comparison method (write the two streams, compare, solve). If a question hands you a specific stream, just compare it the same way. For grim trigger the clean threshold is δ ≥ ½ (r ≤ 1).</div>
+
+<h3>5.4 Tit-for-Tat is not subgame perfect (slide 26)</h3>
+<div class="box der"><b>Setup.</b> At t = 0 Player 1 cooperates and Player 2 defects: outcome (C, D). Now both follow TFT.<br>
+t = 1: P1 copies P2's D, so plays D. P2 copies P1's C, so plays C. Outcome (D, C): P1 gets 3, P2 gets 0.<br>
+t = 2: P1 copies P2's C → C. P2 copies P1's D → D. Outcome (C, D): P1 gets 0, P2 gets 3.<br>
+They <b>alternate forever</b>: P1 gets 3, 0, 3, 0, … from t = 1.
+<span class="eq">P1's value from t = 1 under TFT: 3 + 3δ² + 3δ⁴ + … = 3/(1 − δ²) = 3/[(1 − δ)(1 + δ)]</span>
+<b>A better plan for P1 in this subgame:</b> play C at t = 1 even though TFT says D. P2 plays C, so (C, C) = 2. P2 then copies P1's C, and cooperation resumes forever: value 2/(1 − δ). Compare:
+<span class="eq">2/(1 − δ) &gt; 3/[(1 − δ)(1 + δ)] &nbsp;⟺&nbsp; 2(1 + δ) &gt; 3 &nbsp;⟺&nbsp; δ &gt; ½</span>
+So for δ &gt; ½ Player 1 gains by <b>not</b> following TFT in this subgame. TFT is not a best reply in every subgame, so it is <b>not subgame perfect</b>. Grim trigger has no such problem: after a defection both just play D, which is a stage NE.</div>
+<table><tr><th>Property</th><th>Tit for tat</th><th>Grim trigger</th></tr><tr><th>Deterrence</th><td>Weak</td><td>Strong</td></tr><tr><th>Cheap to carry out?</th><td>Yes</td><td>Costly in general (free in the PD)</td></tr><tr><th>Subgame perfect (δ ≥ ½)?</th><td>No (echoes after a lapse)</td><td>Yes (in the PD)</td></tr><tr><th>Threshold in the PD</th><td>δ ≥ ½</td><td>δ ≥ ½</td></tr></table></section>
+
+<section id="s6"><h2>6. The folk theorem: which outcomes can be equilibria?</h2>
+<p>Grim trigger shows that (C, C) can be an equilibrium. Can we <b>describe all</b> equilibrium outcomes of an infinitely repeated game? The folk theorem does that. Questions the lecture raises: is it subgame perfect or not? <b>Averaged</b> or <b>discounted</b> utilities? The easiest case first: <b>averaged utilities, no subgame perfection</b>.</p>
+<div class="box def"><b>Average utility:</b> if a player's payoffs over time are u<sub>0</sub>, u<sub>1</sub>, …, her average utility is the long-run average of these. Patience is perfect, so only the long-run mix of outcomes matters.<br>
+<b>Feasible:</b> a payoff vector (u<sub>1</sub>, …, u<sub>n</sub>) is feasible if some mix of stage outcomes gives each player that <i>average</i>. Geometrically: any point in the <b>convex hull</b> (the filled polygon) of the stage-game payoff vectors.<br>
+<b>Enforceable:</b> a payoff for a player is enforceable if the others can <b>prevent her from getting more than she asked</b> by deviating, i.e. she gets at least what she can guarantee herself, her <b>minmax (reservation) payoff</b>. Otherwise she would deviate and secure her guarantee.</div>
+<div class="box def"><b>Folk theorem (slide version).</b> A payoff vector can be realised by some Nash equilibrium of the infinitely repeated game (with average utilities) <b>if and only if it is feasible and enforceable</b>.</div>
+<h3>Applying it to the PD</h3>
+<div class="box der"><b>Minmax in the PD.</b> The worst the other can do to you is play D. Your best reply to D is D, so you still get 1. So each player's guarantee is <b>1</b>, and <b>enforceable means u<sub>i</sub> ≥ 1</b>.<br>
+<b>Slide examples.</b> u₁ = 0.5 is <b>not</b> enforceable: Player 1 can guarantee herself 1 by playing D, so she would never accept 0.5. u₁ = 1.2 <b>is</b> enforceable: Player 2 can hold her down to at most 1 by playing D, so a promise of 1.2 is one she cannot get more than by cheating, and the threat of punishment (back to 1) deters cheating.<br>
+<b>Feasible region.</b> The convex hull of (2,2), (0,3), (3,0), (1,1): the quadrilateral in the picture. <b>Folk region</b> = feasible and u₁ ≥ 1 and u₂ ≥ 1.</div>
+<svg viewBox="0 0 440 350" width="440" role="img" aria-label="Folk theorem region for the PD">
+<path class="ax" d="M60 310 L60 20"/><path class="ax" d="M60 310 L420 310"/>
+<polygon points="60,40 240,130 330,310 150,220" fill="#4f46e5" fill-opacity=".14" stroke="#4f46e5" stroke-width="2"/>
+<polygon points="150,220 150,85 240,130 285,220" fill="#0d9488" fill-opacity=".55" stroke="#0d9488" stroke-width="2"/>
+<path d="M150 310 L150 20" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5 4"/><path d="M60 220 L420 220" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="5 4"/>
+<circle cx="60" cy="40" r="5" fill="#4f46e5"/><circle cx="240" cy="130" r="5" fill="#4f46e5"/><circle cx="330" cy="310" r="5" fill="#4f46e5"/><circle cx="150" cy="220" r="6" fill="#e11d48"/>
+<text x="68" y="36">(0,3) C,D</text><text x="248" y="126">(2,2) C,C</text><text x="270" y="300">(3,0) D,C</text><text x="158" y="238">(1,1) D,D</text>
+<text x="420" y="326" text-anchor="end">u₁ (Player 1)</text><text x="12" y="16">u₂</text>
+<text x="150" y="332" text-anchor="middle">1</text><text x="46" y="224">1</text><text x="60" y="332" text-anchor="middle">0</text>
+<text x="190" y="190" font-weight="700">folk region</text></svg>
+<p class="cap">Blue = feasible payoffs. Green = feasible <b>and</b> enforceable (u₁ ≥ 1 and u₂ ≥ 1). Its corners are (1,1), (1,2.5), (2,2) and (2.5,1).</p>
+<div class="box der"><b>Where do the corners come from?</b> The top edge of the blue shape joins (0,3) and (2,2): the line u₂ = 3 − u₁/2, which at u₁ = 1 gives u₂ = 2.5. The right edge joins (2,2) and (3,0): u₂ = 6 − 2u₁, which at u₂ = 1 gives u₁ = 2.5.<br>
+<b>Example of realising a point.</b> (1.5, 2.25) is on the top edge: it is the average of (2,2) (weight ¾) and (0,3) (weight ¼): 0.75·2 + 0.25·0 = 1.5 and 0.75·2 + 0.25·3 = 2.25. Play (C,C) three rounds, then (C,D) one round, repeating. If anyone deviates, everyone plays D forever, dropping the deviator to 1, which is less than what she gets (≥ 1.5 for P1, 2.25 for P2). So no one deviates.</div>
+<div class="box def"><b>Why "if and only if"? (sketch.)</b> <b>Only if:</b> a payoff has to be an average of stage outcomes (feasible), and a player getting less than her guarantee would deviate (so it must be enforceable). <b>If:</b> let the players cycle through outcomes that average to the target vector. If anyone deviates, the others punish her forever by holding her to her minmax; since the target is at least her minmax, the deviation does not pay.</div>
+<div class="box def"><b>Stronger version (lecture summary).</b> With <b>discounting</b> and requiring <b>subgame perfection</b>: any feasible payoff vector in which every player gets <b>strictly more</b> than her reservation payoff (for example the stage-NE payoff) can be sustained as an SPE if δ is close enough to 1. In the PD this means almost anything in the green region, including cooperation (2,2).</div>
+<div class="box warn"><b>Message.</b> The folk theorem shows that repeated games have <b>very many</b> equilibria. It does not predict which one will be played. It only says cooperation <b>can</b> be sustained, not that it <b>will</b> be.</div></section>
+
+<h2 style="margin-top:34px">Part B: Evolutionary Game Theory</h2>
+
+<section id="s7"><h2>7. From rational players to evolving populations</h2>
+<table><tr><th></th><th>Regular game theory</th><th>Evolutionary game theory</th></tr>
+<tr><th>Who decides?</th><td>Rational players choose consciously and strategically</td><td>Nobody needs to think. Behaviour is inherited (in the genes)</td></tr>
+<tr><th>Key question</th><td>How does strategic interaction decide the outcome?</td><td>Which behaviour will <b>persist</b> in a population?</td></tr>
+<tr><th>What does the work?</th><td>Reasoning</td><td>Natural selection ("survival of the fittest")</td></tr></table>
+<p>The surprising point: <b>game-theory ideas still apply even when no one is reasoning</b>, because what matters is how well a behaviour does <i>against the other behaviours around it</i>.</p>
+<h3>7.1 The biology in four lines</h3>
+<ol><li><b>Genes</b> are the main determinants of observable characteristics. In a given environment, these characteristics decide an organism's <b>fitness</b>.</li><li>More fit organisms (on average) produce <b>more offspring</b>.</li><li>So the genes giving greater fitness have a <b>larger share</b> of the next generation.</li><li>This is <b>natural selection</b> as the mode of evolution.</li></ol>
+<h3>7.2 Why it becomes a game</h3>
+<p>An organism's success depends on <b>how it interacts with others</b>. You cannot measure the fitness of one organism alone; you must look at the <b>whole population</b> it lives in. That is exactly a game.</p>
+<table><tr><th>Game theory</th><th>Evolutionary game theory</th></tr><tr><td>Player</td><td>An organism</td></tr><tr><td>Strategy</td><td>Its genetically determined trait or behaviour</td></tr><tr><td>Payoff</td><td>Fitness (reproductive success)</td></tr><tr><td>Payoff matrix</td><td>How a trait fares against each other trait it may meet</td></tr><tr><td>Equilibrium: Nash</td><td>Equilibrium: <b>Evolutionarily Stable Strategy (ESS)</b></td></tr></table>
+<svg viewBox="0 0 640 110" width="640" role="img" aria-label="Evolutionary loop">
+<g class="e"><path d="M120 55 L155 55"/><path d="M275 55 L310 55"/><path d="M430 55 L465 55"/></g>
+<rect class="n" x="10" y="25" width="110" height="60" rx="8"/><text x="65" y="50" text-anchor="middle">Population:</text><text x="65" y="68" text-anchor="middle">mix of traits</text>
+<rect class="n" x="155" y="25" width="120" height="60" rx="8"/><text x="215" y="50" text-anchor="middle">Random pairs</text><text x="215" y="68" text-anchor="middle">meet and compete</text>
+<rect class="n" x="310" y="25" width="120" height="60" rx="8"/><text x="370" y="50" text-anchor="middle">Payoff =</text><text x="370" y="68" text-anchor="middle">fitness</text>
+<rect class="n" x="465" y="25" width="125" height="60" rx="8"/><text x="527" y="50" text-anchor="middle">Fitter traits</text><text x="527" y="68" text-anchor="middle">get more offspring</text>
+<text x="330" y="104" text-anchor="middle">New shares of each trait ⟶ repeat over generations</text></svg>
+
+<h3>7.3 The beetle example (Easley and Kleinberg, as in the lecture)</h3>
+<p><b>Puzzle.</b> A beetle's fitness depends on finding and processing food. Suppose a mutation makes some beetles <b>larger</b>. Large beetles need <b>more food</b> to keep going, which seems to make them <i>less</i> fit. So you would expect the mutation to die out. Is that what happens? Let us see.</p>
+<div class="box def"><b>Assumptions (slides).</b> Beetles compete in <b>random pairs</b> for food (never the same pair twice). (1) Two beetles of the <b>same size</b> share equally. (2) If sizes differ, the <b>large</b> one gets the majority share. (3) For the <b>same quantity of food</b>, a large beetle is <b>less fit</b> than a small one (higher upkeep). Beetles do not decide their size: it is <b>hard-wired in their genes</b>, and natural selection acts over a longer time scale (generations).</div>
+<table><tr><th>Beetle 1 \ Beetle 2</th><th>Small</th><th>Large</th></tr><tr><th>Small</th><td>6, 6</td><td>1, 10</td></tr><tr><th>Large</th><td>10, 1</td><td>4, 4</td></tr></table>
+<div class="box der"><b>Reading the numbers.</b> (Small, Small): share equally, fitness 6 each. (Large, Large): share equally, but both pay high upkeep, so only 4 each. (Large vs Small): the large one takes most of the food: 10 for Large, 1 for Small.<br>
+<b>Notice:</b> this is the <b>Prisoner's Dilemma</b>. Small = Cooperate, Large = Defect. Large is a dominant strategy (10 &gt; 6 and 4 &gt; 1), yet (Small, Small) = (6, 6) beats (Large, Large) = (4, 4).</div></section>
+
+<section id="s8"><h2>8. Evolutionarily Stable Strategies (ESS)</h2>
+<p>A Nash equilibrium assumes players <i>choose</i> best replies. Beetles do not choose. What we want instead is a trait that, once it is common, <b>cannot be taken over</b> by a rare mutant.</p>
+<div class="box def"><b>Incumbents and mutants.</b> Suppose almost everyone plays strategy S (the <b>incumbents</b>). A small fraction <b>x</b> of the population switches (mutates) to strategy T. So a fraction <b>1 − x</b> plays S and a fraction <b>x</b> plays T. A beetle's <b>fitness</b> = its <b>average payoff</b> against a randomly met opponent.<br>
+<b>Definition (slide).</b> Strategy S is an <b>evolutionarily stable strategy</b> if for <b>every</b> other strategy T there is some number y &gt; 0 such that, whenever the mutant share is x &lt; y,
+<span class="eq">fitness of an S-player &nbsp;&gt;&nbsp; fitness of a T-player</span>
+"Evolutionarily stable" = mutants have <b>strictly lower</b> reproductive success, so they die out.</div>
+<div class="box der"><b>Where the expected-fitness formula comes from.</b> An S-player meets another S-player with probability 1 − x and a T-player with probability x. Averaging her two payoffs with these probabilities: fitness(S) = (1 − x)·u(S,S) + x·u(S,T). Likewise fitness(T) = (1 − x)·u(T,S) + x·u(T,T).</div>
+
+<h3>8.1 Beetles: is Small an ESS?</h3>
+<div class="box der">Incumbents Small (1 − x), mutants Large (x).<br>
+<b>Small beetle:</b> meets Small with probability 1 − x (payoff 6), meets Large with probability x (payoff 1): <b>6(1 − x) + 1·x = 6 − 5x</b>.<br>
+<b>Large beetle:</b> meets Small with probability 1 − x (payoff 10), meets Large with probability x (payoff 4): <b>10(1 − x) + 4x = 10 − 6x</b>.<br>
+<b>Compare:</b> (10 − 6x) − (6 − 5x) = 4 − x. This is positive for every x between 0 and 1. So the Large mutant does <b>better</b> than the Small incumbent, however few mutants there are.<br>
+<b>Conclusion:</b> a few large beetles do really well because they rarely meet each other and win most of the food. Small beetles cannot drive them out. <b>Small is NOT an ESS.</b></div>
+<h3>8.2 Beetles: is Large an ESS?</h3>
+<div class="box der">Incumbents Large (1 − x), mutants Small (x).<br>
+<b>Large beetle:</b> meets Large with probability 1 − x (payoff 4), meets Small with probability x (payoff 10): <b>4(1 − x) + 10x = 4 + 6x</b>.<br>
+<b>Small beetle:</b> meets Large with probability 1 − x (payoff 1), meets Small with probability x (payoff 6): <b>1(1 − x) + 6x = 1 + 5x</b>.<br>
+<b>Compare:</b> (4 + 6x) − (1 + 5x) = 3 + x &gt; 0 for every x. So the incumbent Large beats the Small mutant for <b>all</b> x (so any y works).<br>
+<b>Conclusion:</b> small mutants lose almost every competition for food. A population of large beetles resists invasion. <b>Large IS an ESS.</b></div>
+<svg viewBox="0 0 440 300" width="440" role="img" aria-label="Fitness of Large and Small beetles versus fraction of Large">
+<path class="ax" d="M60 250 L60 20"/><path class="ax" d="M60 250 L400 250"/>
+<path d="M60 30 L360 162" stroke="#e11d48" stroke-width="3" fill="none"/><path d="M60 118 L360 228" stroke="#4f46e5" stroke-width="3" fill="none"/>
+<text x="46" y="34" text-anchor="end">10</text><text x="46" y="122" text-anchor="end">6</text><text x="46" y="166" text-anchor="end">4</text><text x="46" y="232" text-anchor="end">1</text>
+<text x="60" y="270" text-anchor="middle">0</text><text x="360" y="270" text-anchor="middle">1</text><text x="210" y="290" text-anchor="middle">p = fraction of Large beetles in the population</text>
+<text x="220" y="78" fill="#e11d48" style="fill:#e11d48">Large: 10 − 6p</text><text x="110" y="215" style="fill:#4f46e5">Small: 6 − 5p</text>
+<text x="365" y="166">4</text><text x="365" y="232">1</text></svg>
+<p class="cap">The Large line is above the Small line everywhere (gap 4 − p), so the share of Large only grows, up to p = 1. This is the lecturer's drawing "small can be successfully attacked by large". (Section 8.2's x is 1 − p.)</p>
+<div class="box warn"><b>The sad result (slides).</b> Evolution makes everyone's fitness <b>fall</b>: from 6 each (all Small) to 4 each (all Large). Darwin's idea is that natural selection raises fitness in a <b>fixed environment</b>. But for a beetle the environment <b>includes all the other beetles</b>. As Large spreads the environment becomes more hostile for everyone. Selection is blind to the population's total; it only rewards doing better than the others you meet. That is the Prisoner's Dilemma again, with genes doing the choosing.</div>
+
+<h3>8.3 ESS and Nash equilibrium</h3>
+<p>Take any <b>symmetric</b> 2×2 game (payoffs depend only on the strategies used, not on who plays them; swap the players and nothing changes):</p>
+<table><tr><th></th><th>S</th><th>T</th></tr><tr><th>S</th><td>a, a</td><td>b, c</td></tr><tr><th>T</th><td>c, b</td><td>d, d</td></tr></table>
+<p>The payoff to the row player is a (S vs S), b (S vs T), c (T vs S), d (T vs T).</p>
+<div class="box der"><b>When is (S, S) a Nash equilibrium?</b> S must be a best reply to S: <b>a ≥ c</b>.<br>
+<b>When is S an ESS?</b> We need fitness(S) &gt; fitness(T) for small x:
+<span class="eq">(1 − x)a + xb &nbsp;&gt;&nbsp; (1 − x)c + xd</span>
+Collect terms: (a − c)(1 − x) + (b − d)x &gt; 0, or equivalently
+<span class="eq">f(x) = (a − c) + x[(b − d) − (a − c)] &nbsp;&gt;&nbsp; 0</span>
+Look at x very close to 0:<br>
+• If <b>a &gt; c</b>: f(0) = a − c &gt; 0, and f changes smoothly, so f(x) &gt; 0 for all small enough x. ✔ ESS.<br>
+• If <b>a &lt; c</b>: f(0) &lt; 0, so f(x) &lt; 0 for small x. ✘ not ESS.<br>
+• If <b>a = c</b>: then f(x) = x(b − d), which is positive (for x &gt; 0) <b>exactly when b &gt; d</b>. So ESS if b &gt; d, not ESS if b ≤ d.<br>
+<b>So: S is an ESS ⟺ a &gt; c, or (a = c and b &gt; d).</b> The first-order test is the same as the Nash test, but strict.</div>
+<svg viewBox="0 0 560 210" width="560" role="img" aria-label="ESS test flowchart">
+<g class="e"><path d="M130 50 L130 90"/><path d="M130 130 L130 170"/><path d="M200 110 L270 110"/><path d="M390 110 L440 110"/></g>
+<rect class="n" x="5" y="10" width="250" height="40" rx="8"/><text x="130" y="35" text-anchor="middle">Compare a = u(S,S) with c = u(T,S)</text>
+<rect class="n" x="40" y="90" width="160" height="40" rx="8"/><text x="120" y="115" text-anchor="middle">a &gt; c ?</text>
+<rect x="40" y="170" width="160" height="34" rx="8" fill="#c8f2e6" stroke="#0d9488" stroke-width="2"/><text x="120" y="192" text-anchor="middle" style="fill:#073b33">Yes: S is an ESS</text>
+<rect class="n" x="270" y="90" width="120" height="40" rx="8"/><text x="330" y="115" text-anchor="middle">a = c ?</text>
+<rect class="n" x="440" y="90" width="110" height="40" rx="8"/><text x="495" y="115" text-anchor="middle">b &gt; d ?</text>
+<text x="215" y="102">No</text><text x="136" y="154">Yes</text><text x="400" y="102">Yes</text><text x="332" y="150" text-anchor="middle">No (a &lt; c): not ESS</text>
+<text x="495" y="150" text-anchor="middle">Yes: ESS</text><text x="495" y="168" text-anchor="middle">No: not ESS</text></svg>
+<div class="box def"><b>Relationship (slide and summary):</b>
+<ol><li>If S is an ESS, then (S, S) is a symmetric Nash equilibrium (because a &gt; c, or a = c, both give a ≥ c).</li><li>If (S, S) is a <b>strict</b> Nash equilibrium (a &gt; c), then S is an ESS.</li><li><b>The converse is false:</b> not every symmetric NE is an ESS.</li></ol></div>
+<div class="box ex"><b>The slide's question: what if a = c and b &lt; d?</b> Then (S, S) is a (weak) NE because a ≥ c, but S is <b>not</b> an ESS. Example: a = 1, b = 0, c = 1, d = 2. Mutant T against S earns c = 1, the same as S against S, so T is not at a disadvantage at first. But when mutants meet each other they earn d = 2, more than S earns against a mutant (b = 0). Check: fitness(S) = (1 − x)·1 + x·0 = 1 − x; fitness(T) = (1 − x)·1 + x·2 = 1 + x. T wins for every x &gt; 0. So the mutant takes over.</div>
+<div class="box warn"><b>Trap.</b> "ESS" is <b>stronger</b> than "symmetric NE". NE only asks for "no <i>strictly</i> better alternative". ESS asks that every mutant does <b>strictly worse</b> when it is rare, and if it ties against the incumbents, it must still do worse against itself.</div>
+
+<h3>8.4 Application: why is the sex ratio 1 : 1? (Fisher)</h3>
+<svg viewBox="0 0 640 150" width="640" role="img" aria-label="Sex ratio argument">
+<defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4f46e5"/></marker></defs>
+<g class="e"><path d="M110 40 L133 40" marker-end="url(#ah2)"/><path d="M265 40 L288 40" marker-end="url(#ah2)"/><path d="M450 40 L473 40" marker-end="url(#ah2)"/></g>
+<rect class="n" x="10" y="10" width="100" height="60" rx="8"/><text x="60" y="36" text-anchor="middle">Females</text><text x="60" y="54" text-anchor="middle">are scarcer</text>
+<rect class="n" x="135" y="10" width="130" height="60" rx="8"/><text x="200" y="32" text-anchor="middle">A newborn female</text><text x="200" y="50" text-anchor="middle">has better mating</text><text x="200" y="66" text-anchor="middle">prospects</text>
+<rect class="n" x="290" y="10" width="160" height="60" rx="8"/><text x="370" y="32" text-anchor="middle">Parents who tend to</text><text x="370" y="50" text-anchor="middle">have daughters get</text><text x="370" y="66" text-anchor="middle">more grandchildren</text>
+<rect class="n" x="475" y="10" width="150" height="60" rx="8"/><text x="550" y="32" text-anchor="middle">Female-producing</text><text x="550" y="50" text-anchor="middle">genes spread, so</text><text x="550" y="66" text-anchor="middle">more females</text>
+<text x="320" y="110" text-anchor="middle">As the ratio nears 1 : 1 the advantage fades. Same argument with males, so 1 : 1 is the equilibrium.</text>
+<text x="320" y="132" text-anchor="middle" style="fill:#0d9488" font-weight="700">1 : 1 is an ESS: any departure is corrected by selection.</text></svg>
+<div class="box der"><b>A small calculation behind the story</b> <i>(my explanation; the slide gives words only)</i>. Each child has exactly <b>one mother and one father</b>. So if a generation has N children, the total number of "child slots" belonging to all mothers is N, and the same N for all fathers. With F females and M males, an average female has N/F children and an average male has N/M. If females are scarce (F &lt; M), then N/F &gt; N/M: a daughter is worth more grandchildren than a son. Genes for producing daughters win until F = M. Then N/F = N/M and the advantage vanishes.</div></section>
+
+<section id="s9"><h2>9. The Hawk-Dove game: why aggression exists, but is not always seen</h2>
+<div class="box def"><b>Setup.</b> Two indistinguishable individuals contest a resource of value <b>V</b> &gt; 0. Each chooses <b>Hawk (H)</b>: demand it and fight, or <b>Dove (D)</b>: share peacefully (retreat if the other is a Hawk).<br>
+• Hawk vs Dove: the Hawk gets all of V; the Dove gets 0.<br>
+• Dove vs Dove: they share, V/2 each.<br>
+• Hawk vs Hawk: they fight. Each wins with probability ½ (and gets V). The loser pays an injury cost <b>C</b>. We assume <b>C &gt; V</b> (fighting is costly).</div>
+<div class="box der"><b>Payoff of Hawk against Hawk.</b> With probability ½ I win and get V. With probability ½ I lose and pay C (a payoff of −C). Average: ½V + ½(−C) = <b>(V − C)/2</b>. Since C &gt; V this is <b>negative</b>.</div>
+<table><tr><th>Row \ Column</th><th>Hawk</th><th>Dove</th></tr><tr><th>Hawk</th><td>(V−C)/2, (V−C)/2</td><td>V, 0</td></tr><tr><th>Dove</th><td>0, V</td><td>V/2, V/2</td></tr></table>
+<h3>9.1 Neither pure strategy is an ESS</h3>
+<div class="box der"><b>All Hawks?</b> A Dove mutant against a Hawk gets 0. A Hawk against a Hawk gets (V − C)/2 &lt; 0. Since 0 &gt; (V−C)/2, Doves do better. <b>Doves invade.</b> Hawk is not an ESS. (In the language of 8.3: a = (V − C)/2 &lt; c = 0.)<br>
+<b>All Doves?</b> A Hawk mutant against a Dove gets V. A Dove against a Dove gets V/2. V &gt; V/2, so Hawks do better. <b>Hawks invade.</b> Dove is not an ESS. (Here a = V/2 &lt; c = V.)<br>
+So the population settles at a <b>mix</b>.</div>
+<h3>9.2 The mix: derive the equilibrium fraction</h3>
+<div class="box der">Let a fraction <b>p</b> of the population be Hawks and <b>1 − p</b> Doves. Random pairing.<br>
+<b>Hawk's fitness.</b> Meets a Hawk with probability p (payoff (V−C)/2), meets a Dove with probability 1 − p (payoff V):
+<span class="eq">H(p) = p(V − C)/2 + (1 − p)V = V − pV/2 − pC/2 = (1 − p/2)V − (p/2)C</span>
+<b>Dove's fitness.</b> Meets a Hawk (probability p) and gets 0; meets a Dove (probability 1 − p) and gets V/2:
+<span class="eq">D(p) = p·0 + (1 − p)V/2 = (1 − p)V/2</span>
+<b>Equilibrium: both types do equally well</b> (if one did better, its share would grow). Set H(p) = D(p):
+<span class="eq">V − pV/2 − pC/2 = V/2 − pV/2</span>
+The terms −pV/2 cancel on both sides:
+<span class="eq">V − pC/2 = V/2 &nbsp;⟹&nbsp; V/2 = pC/2 &nbsp;⟹&nbsp; <b>p* = V/C</b></span>
+Since C &gt; V, p* is between 0 and 1. <b>Higher injury costs ⟹ fewer Hawks.</b> The common fitness at p* is (V/2)(1 − V/C), smaller than V/2, which is what an all-Dove population would earn. Like the beetles, the equilibrium population does worse than a peaceful one.</div>
+<div class="box ex"><b>Slide example: V = 6, C = 10.</b><br>
+Hawk: (1 − p/2)·6 − (p/2)·10 = 6 − 3p − 5p = <b>6 − 8p</b>.<br>
+Dove: (1 − p)·6/2 = <b>3 − 3p</b>.<br>
+Equal: 6 − 8p = 3 − 3p ⟹ 3 = 5p ⟹ <b>p* = 3/5</b>. (Check: V/C = 6/10 ✔.) Common fitness = 3 − 3(0.6) = 1.2.<br>
+<b>In words:</b> 60% Hawks and 40% Doves.</div>
+<svg viewBox="0 0 460 290" width="460" role="img" aria-label="Hawk and Dove fitness versus fraction of hawks">
+<path class="ax" d="M60 30 L60 250"/><path d="M60 180 L420 180" stroke="var(--ink)" stroke-width="1.5" fill="none"/>
+<path d="M60 30 L380 230" stroke="#e11d48" stroke-width="3" fill="none"/><path d="M60 105 L380 180" stroke="#4f46e5" stroke-width="3" fill="none"/>
+<path d="M252 150 L252 180" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="252" cy="150" r="5" fill="#0d9488"/>
+<text x="46" y="34" text-anchor="end">6</text><text x="46" y="109" text-anchor="end">3</text><text x="46" y="184" text-anchor="end">0</text><text x="46" y="234" text-anchor="end">−2</text>
+<text x="60" y="198" text-anchor="middle">0</text><text x="380" y="198" text-anchor="middle">1</text><text x="252" y="198" text-anchor="middle">0.6</text>
+<text x="170" y="60" style="fill:#e11d48">Hawk: 6 − 8p</text><text x="290" y="128" style="fill:#4f46e5">Dove: 3 − 3p</text>
+<text x="252" y="219" text-anchor="middle" style="fill:#0d9488">p* = 0.6 (common fitness 1.2)</text>
+<g stroke="#0d9488" stroke-width="2.5" fill="none"><path d="M90 236 L150 236"/><path d="M150 236 L141 231 M150 236 L141 241"/><path d="M170 236 L230 236"/><path d="M230 236 L221 231 M230 236 L221 241"/><path d="M370 236 L310 236"/><path d="M310 236 L319 231 M310 236 L319 241"/></g>
+<text x="230" y="260" text-anchor="middle" style="font-size:12px">arrows: which way the Hawk fraction drifts</text>
+<text x="230" y="282" text-anchor="middle">p = fraction of Hawks</text></svg>
+<p class="cap">Left of p* the Hawk line is higher, so Hawks multiply and p moves right. Right of p* the Dove line is higher, so Hawks shrink and p moves left. The arrows point to p*, so p* is stable.</p>
+<div class="box ex"><b>The lecturer's second example (numeric table).</b> Matrix: (H,H) = (−2, −2), (H,D) = (10, 0), (D,H) = (0, 10), (D,D) = (5, 5). That is V = 10 and C = 14, because (V − C)/2 = −2 ✔ and V/2 = 5 ✔. <b>Here the lecturer lets p be the fraction of Doves</b> (the label 1 − p sits over Hawk).<br>
+Hawk's fitness: −2(1 − p) + 10p = <b>12p − 2</b>. Dove's fitness: 0(1 − p) + 5p = <b>5p</b>.<br>
+Equal: 12p − 2 = 5p ⟹ 7p = 2 ⟹ <b>p = 2/7 Doves</b>, so <b>5/7 Hawks</b>. Check with the formula: V/C = 10/14 = 5/7 ✔.<br>
+<b>Watch the labelling:</b> in the first example p = fraction of Hawks, in this one p = fraction of Doves. Always state what your p means.</div>
+<h3>9.3 Proof that p* = V/C is really an ESS</h3>
+<div class="box der"><i>(Extra: not on the slides, but it shows why the mixed point is stable and not just "equal fitness".)</i><br>
+Let a mutant play Hawk with probability q (or be a fraction q of Hawk-types). Write E(p, q) for the fitness of playing Hawk with probability p against a population playing Hawk with probability q: E(p, q) = p·H(q) + (1 − p)·D(q).<br>
+<b>Step 1: at p*, Hawk and Dove tie.</b> H(p*) = D(p*). So against p*, <b>every</b> strategy q earns the same as p*: E(q, p*) = E(p*, p*). That is the "a = c" case from 8.3, so we need the second test: p* must do better against the mutant than the mutant does against itself.<br>
+<b>Step 2: compute the gap H(q) − D(q).</b>
+<span class="eq">H(q) − D(q) = [V − qV/2 − qC/2] − [V/2 − qV/2] = V/2 − qC/2 = (C/2)(V/C − q) = (C/2)(p* − q)</span>
+<b>Step 3: the second test.</b>
+<span class="eq">E(p*, q) − E(q, q) = p*H(q) + (1 − p*)D(q) − qH(q) − (1 − q)D(q) = (p* − q)[H(q) − D(q)] = (C/2)(p* − q)²</span>
+This is <b>positive for every q ≠ p*</b>. So p* beats every mutant: it is an <b>ESS</b>. (I also checked this identity numerically.)</div>
+<div class="box def"><b>Two ways to read the mixed ESS.</b> (1) <b>Population polymorphism:</b> a fraction p* of the animals are born Hawks and 1 − p* are born Doves, and the proportions stay stable. (2) <b>Mixed strategy:</b> every individual plays Hawk with probability p*. Both give the same stability. <b>Message of the model:</b> aggression is present in a population but is not always seen, and its level falls as injuries become more costly (p* = V/C).</div></section>
+
+<section id="s10"><h2>10. Recap, formula sheet and traps</h2>
+<h3>How to attack a repeated-game question</h3>
+<svg viewBox="0 0 640 260" width="640" role="img" aria-label="Repeated game decision flow">
+<g class="e"><path d="M320 40 L320 62"/><path d="M230 92 L120 120"/><path d="M410 92 L520 120"/><path d="M120 160 L120 182"/><path d="M520 160 L520 182"/></g>
+<rect class="n" x="220" y="8" width="200" height="32" rx="8"/><text x="320" y="29" text-anchor="middle">Repeated game question</text>
+<rect class="n" x="230" y="62" width="180" height="30" rx="8"/><text x="320" y="82" text-anchor="middle">Finite or infinite?</text>
+<rect class="n" x="20" y="120" width="200" height="40" rx="8"/><text x="120" y="145" text-anchor="middle">Finite: how many stage NE?</text>
+<rect class="n" x="420" y="120" width="200" height="40" rx="8"/><text x="520" y="145" text-anchor="middle">Infinite: pick a strategy</text>
+<rect x="5" y="182" width="230" height="68" rx="8" fill="none" stroke="#0d9488" stroke-width="2"/><text x="120" y="202" text-anchor="middle">One stage NE: play it every round</text><text x="120" y="220" text-anchor="middle">Two or more: use them as carrot</text><text x="120" y="236" text-anchor="middle">and stick; test round 1 in a table</text>
+<rect x="405" y="182" width="230" height="68" rx="8" fill="none" stroke="#0d9488" stroke-width="2"/><text x="520" y="202" text-anchor="middle">Write V_coop and V_dev with δ</text><text x="520" y="220" text-anchor="middle">Solve V_coop ≥ V_dev for δ</text><text x="520" y="236" text-anchor="middle">Check punishment is a stage NE</text></svg>
+<h3>Formula sheet</h3>
+<table><tr><th>Topic</th><th>Formula</th></tr>
+<tr><td>Subgames in T-round PD</td><td>(4<sup>T</sup> − 1)/3 &nbsp; (T = 2 gives 5)</td></tr>
+<tr><td>Strategies of one player in T-round PD</td><td>2<sup>(4<sup>T</sup> − 1)/3</sup> &nbsp; (T = 2 gives 32)</td></tr>
+<tr><td>Discount factor</td><td>δ = 1/(1 + r)</td></tr>
+<tr><td>Geometric series</td><td>1 + x + x² + … = 1/(1 − x) for 0 ≤ x &lt; 1</td></tr>
+<tr><td>Constant stream u forever</td><td>u/(1 − δ) &nbsp; (= u + u/r)</td></tr>
+<tr><td>Grim trigger, PD (2,2),(0,3),(3,0),(1,1)</td><td>2/(1−δ) ≥ 3 + δ/(1−δ) ⟹ δ ≥ ½ (r ≤ 1)</td></tr>
+<tr><td>General PD: reward R, temptation T, punishment P</td><td>R/(1−δ) ≥ T + δP/(1−δ) ⟹ δ ≥ (T − R)/(T − P)</td></tr>
+<tr><td>ESS (symmetric 2×2)</td><td>a &gt; c, or (a = c and b &gt; d)</td></tr>
+<tr><td>Hawk-Dove (C &gt; V)</td><td>p* = V/C; H(p) = (1 − p/2)V − (p/2)C; D(p) = (1 − p)V/2</td></tr></table>
+<div class="box der"><b>Check the general PD formula.</b> Cooperate: R/(1 − δ). Deviate: T now, then P forever: T + δP/(1 − δ). R ≥ T(1 − δ) + δP ⟹ R ≥ T − δ(T − P) ⟹ δ(T − P) ≥ T − R ⟹ δ ≥ (T − R)/(T − P). With R = 2, T = 3, P = 1: (3 − 2)/(3 − 1) = ½ ✔.</div>
+<h3>Common mistakes</h3>
+<div class="box warn"><ul>
+<li><b>Writing a strategy as one action.</b> In a repeated game it is a plan for every history (32 strategies for T = 2, not 2).</li>
+<li><b>Expecting cooperation in a long but finite PD.</b> Unique stage NE + finite T ⟹ defect every round.</li>
+<li><b>Mixing up δ and r.</b> Patient = large δ = small r. δ ≥ ½ ⟺ r ≤ 1.</li>
+<li><b>Forgetting to check the punishment.</b> The punishment phase must be a best reply (a stage NE) to be believable.</li>
+<li><b>Calling every symmetric NE an ESS.</b> ESS is stricter.</li>
+<li><b>Forgetting what p means</b> in Hawk-Dove (fraction of Hawks or of Doves).</li>
+<li><b>Using the folk theorem as a prediction.</b> It says what is possible, not what will happen.</li></ul></div></section>
+
+<section id="s11"><h2>11. Practice questions (try first, then open the answer)</h2>
+<details><summary>Q1. Grim trigger with other payoffs</summary>
+<p>PD stage game: (C,C) = (4,4), (C,D) = (0,6), (D,C) = (6,0), (D,D) = (1,1), repeated infinitely, both players use grim trigger. Find the smallest δ and the largest interest rate r for which cooperation is an equilibrium.</p>
+<div class="box der"><b>Solution.</b> V<sub>coop</sub> = 4/(1 − δ). V<sub>dev</sub> = 6 + δ·1/(1 − δ). Need 4/(1−δ) ≥ 6 + δ/(1−δ). Multiply by (1 − δ): 4 ≥ 6(1 − δ) + δ = 6 − 5δ ⟹ 5δ ≥ 2 ⟹ <b>δ ≥ 2/5</b>. Since δ = 1/(1 + r): 1 + r ≤ 5/2 ⟹ <b>r ≤ 3/2 = 150%</b>. (Check with the formula (T − R)/(T − P) = (6 − 4)/(6 − 1) = 2/5 ✔.)</div></details>
+<details><summary>Q2. Counting</summary>
+<p>The PD is played 3 times. How many subgames are there? How many strategies does Player 1 have?</p>
+<div class="box der"><b>Solution.</b> Subgames: 1 + 4 + 16 = 21 = (4³ − 1)/3 ✔. Player 1 has 21 decision places (1 in round 1, 4 in round 2, 16 in round 3), each with 2 actions, so 2²¹ = <b>2,097,152</b> strategies.</div></details>
+<details><summary>Q3. Finite repetition</summary>
+<p>A stage game with exactly one Nash equilibrium is repeated 50 times. Can an outcome that is not that equilibrium be played in round 1 of a subgame perfect equilibrium? What if the stage game had two equilibria?</p>
+<div class="box der"><b>Solution.</b> With a unique stage NE, no: the unravelling theorem says every round plays that NE. With two (or more) stage equilibria with different payoffs, yes, in earlier rounds: use one as a reward and the other as a punishment in the final rounds, as in Section 3 (outcome (U, L) in round 1).</div></details>
+<details><summary>Q4. ESS tests</summary>
+<p>For each symmetric game find which strategies are ESS. (a) u(S,S) = 2, u(S,T) = 0, u(T,S) = 1, u(T,T) = 3. (b) u(S,S) = 1, u(S,T) = 0, u(T,S) = 1, u(T,T) = 2.</p>
+<div class="box der"><b>(a)</b> For S: a = 2 &gt; c = u(T,S) = 1 ⟹ ESS. For T: its own "a" = u(T,T) = 3 &gt; u(S,T) = 0 ⟹ ESS. <b>Both are ESS</b> (a coordination game: whichever is common stays common).<br>
+<b>(b)</b> For S: a = 1 = c = 1, so compare b = u(S,T) = 0 with d = u(T,T) = 2. b &lt; d ⟹ S is a NE but <b>not an ESS</b> (T invades: fitness(S) = 1 − x, fitness(T) = 1 + x). For T: u(T,T) = 2 &gt; u(S,T) = 0 ⟹ <b>T is an ESS</b>.</div></details>
+<details><summary>Q5. Hawk-Dove</summary>
+<p>V = 8, C = 12. Find the stable fraction of Hawks and the fitness at that point. What happens to the fraction if C doubles?</p>
+<div class="box der"><b>Solution.</b> p* = V/C = 8/12 = <b>2/3</b>. Hawk: (1 − p/2)V − (p/2)C = (2/3)(8) − (1/3)(12) = 16/3 − 4 = <b>4/3</b>. Dove: (1 − p)V/2 = (1/3)(4) = <b>4/3</b> ✔ equal. If C = 24: p* = 8/24 = <b>1/3</b>, so fewer Hawks. (An all-Dove population would earn V/2 = 4, more than 4/3: the mix is worse for everyone.)</div></details>
+<details><summary>Q6. Folk theorem</summary>
+<p>In the PD with (C,C) = (2,2), (C,D) = (0,3), (D,C) = (3,0), (D,D) = (1,1) (average utilities), say whether each vector is feasible and enforceable: (a) (0.8, 2), (b) (2.5, 2.5), (c) (1.5, 2).</p>
+<div class="box der"><b>Solution.</b> Enforceable means each coordinate ≥ 1. Feasible means inside the quadrilateral with corners (0,3), (2,2), (3,0), (1,1).<br>
+<b>(a)</b> 0.8 &lt; 1, <b>not enforceable</b> (Player 1 can secure 1 by defecting). <b>(b)</b> At u₁ = 2.5 the upper boundary of the shape is the edge from (2,2) to (3,0), u₂ = 6 − 2u₁ = 1. So u₂ can be at most 1 there, and 2.5 is far above: <b>not feasible</b>. <b>(c)</b> At u₁ = 1.5 the feasible u₂ runs from 0.75 to 2.25, so 2 is inside: <b>feasible</b>, and 1.5 ≥ 1, 2 ≥ 1: <b>enforceable</b>. So (c) can be a Nash equilibrium outcome.</div></details>
+</section>
+</main></body></html>
