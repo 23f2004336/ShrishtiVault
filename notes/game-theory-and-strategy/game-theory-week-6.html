@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game Theory and Strategy: Week 6 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#0d9488,#4f46e5 55%,#d97706);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.94}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--ex);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card);display:block;width:max-content;max-width:100%;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 13px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}
+td.bad{background:#ffd9df;color:#5a0b19}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit;font-size:13px}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+.e{stroke:var(--def);stroke-width:2.2;fill:none}.hi{stroke:#0d9488;stroke-width:4;fill:none}
+.ax{stroke:var(--ink);stroke-width:1.5;fill:none}
+ul,ol{padding-left:22px}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+.cap{font-size:.88rem;opacity:.8;text-align:center;margin:-4px 0 10px}
+</style></head><body>
+<header><h1>Game Theory and Strategy: Week 6</h1><p>Bayesian games (incomplete information), auctions, cooperative games and the core, and coopetition: playing the right game</p></header>
+<nav><a href="#s1">1 Incomplete info</a><a href="#s2">2 Harsanyi</a><a href="#s3">3 Bayes rule</a><a href="#s4">4 Bayesian BoS</a><a href="#s5">5 Mixed BNE</a><a href="#s6">6 Auctions</a><a href="#s7">7 Cooperative games</a><a href="#s8">8 The core</a><a href="#s9">9 Right game</a><a href="#s10">10 Value Net</a><a href="#s11">11 PARTS</a><a href="#s12">12 Practice</a></nav>
+<main>
+<div class="box def"><b>Colour key:</b> blue = definition, green = derivation (every step shown), orange = worked example, red = trap or "check this". Week 6 has three parts: <b>Part A</b> Bayesian games and auctions (sections 1 to 6), <b>Part B</b> cooperative games (7 to 8), <b>Part C</b> coopetition, i.e. changing the game itself (9 to 11).</div>
+<div class="box ex"><b>Ideas from earlier weeks we reuse:</b> payoff matrix, best response, Nash equilibrium (nobody gains by switching alone), mixed strategy (randomising, with the <i>indifference</i> trick: a player mixes only if the options she mixes between give the same expected payoff), backward induction, and expected value. <b>Maths needed:</b> probability of "A and B", conditional probability, and the derivative test (set the slope to 0 to maximise).</div>
+<div class="box warn"><b>Honest note about the sources.</b> I read the slides (including the handwriting) and the lecture summary. Where they disagree or the handwriting is unreadable, I say so in a red box. Short version: (1) two cells of the 3-entry Bayesian matrix in the summary are wrong; (2) the summary says the mixed equilibrium is unique, but there is a second one (section 5); (3) the card-burning slide uses INR, the summary says $; (4) a few scribbles (like "40,500" and "1 lakh") are unclear, and I flag them where they appear.</div>
+
+<h2 style="margin-top:28px">Part A: Bayesian games (games with incomplete information)</h2>
+
+<section id="s1"><h2>1. Complete vs incomplete information</h2>
+<p>All games before this week were <b>complete information</b>: everyone knows the players, the actions, and <i>everybody's payoffs</i>. Real life is not like that. A seller does not know how much a buyer is really willing to pay. A firm does not know a rival's costs. A boy does not know whether the girl he likes wants to meet him or avoid him.</p>
+<div class="box def"><b>Complete information:</b> all payoffs are common knowledge.<br><b>Incomplete information:</b> at least one player does not know something about another player's payoffs (or about the game itself).<br><b>Asymmetric information:</b> one side knows more. The <b>better-informed</b> (BI) player knows the true situation. The <b>less-informed</b> (LI) player only has a guess (a probability).</div>
+<h3>What can the players do about it?</h3>
+<table><tr><th>Idea</th><th>Who acts</th><th>What happens</th><th>Example</th></tr>
+<tr><th>Signalling</th><td>The BI player</td><td>She takes an action that shows her type</td><td>A degree, or a warranty on a product</td></tr>
+<tr><th>Screening</th><td>The LI player</td><td>He designs choices that make types reveal themselves</td><td>An insurer offering a low-premium, high-deductible plan</td></tr>
+<tr><th>Cheap talk</th><td>Either</td><td>Free messages. Not trusted if lying costs nothing</td><td>"Just tell me your type": why would a bad type tell the truth?</td></tr>
+<tr><th>Signal jamming</th><td>The BI player</td><td>She <b>mixes</b> her behaviour so that her actions do not give her type away</td><td>A poker player who bluffs sometimes</td></tr></table>
+<div class="box ex"><b>"Why not simply ask?"</b> Because <b>talk is cheap</b>. If a high-value buyer could get a discount by saying "I value this at only 500", he would say it. A claim is believable only if lying is costly or unprofitable. That is why economists look for <i>actions</i> (signals) rather than <i>words</i>.</div>
+<p>Week 6 Part 1 builds the tool for <b>solving</b> such games: the Bayesian game and its equilibrium.</p></section>
+
+<section id="s2"><h2>2. Harsanyi's trick: turn incomplete into imperfect information</h2>
+<p>John Harsanyi's idea: <b>pretend a "player" called Nature moves first</b> and secretly draws each player's <b>type</b> (the private information, like "Meet type" or "Avoid type") from a known probability distribution. Then each player sees only <i>her own</i> type.</p>
+<div class="box def"><b>Type:</b> a complete description of a player's private information (her payoffs). <b>Common prior:</b> everybody knows the probabilities with which Nature draws the types. <b>Bayesian game:</b> players, types, a prior over types, actions, and payoffs that depend on actions <i>and</i> types.</div>
+<svg viewBox="0 0 700 250" width="700" role="img" aria-label="Harsanyi transformation flow">
+<g class="e"><path d="M350 52 L200 100"/><path d="M350 52 L500 100"/><path d="M200 152 L200 190"/><path d="M500 152 L500 190"/></g>
+<rect class="n" x="290" y="12" width="120" height="40" rx="8"/><text x="350" y="37" text-anchor="middle">Nature draws types</text>
+<text x="258" y="68">prob ½</text><text x="440" y="68">prob ½</text>
+<rect class="n" x="100" y="100" width="200" height="52" rx="8"/><text x="200" y="122" text-anchor="middle">Girl is "Meet" type</text><text x="200" y="140" text-anchor="middle">Girl knows. Boy does not</text>
+<rect class="n" x="400" y="100" width="200" height="52" rx="8"/><text x="500" y="122" text-anchor="middle">Girl is "Avoid" type</text><text x="500" y="140" text-anchor="middle">Girl knows. Boy does not</text>
+<rect class="n" x="100" y="190" width="200" height="40" rx="8"/><text x="200" y="215" text-anchor="middle">They play Game 1</text>
+<rect class="n" x="400" y="190" width="200" height="40" rx="8"/><text x="500" y="215" text-anchor="middle">They play Game 2</text></svg>
+<p class="cap">After Harsanyi's trick, "incomplete information" becomes a game where Nature moves first and the Boy cannot see Nature's move.</p>
+<div class="box der"><b>Why this works.</b> Before, the Boy was "unsure which game he is in". Now the Boy is in <i>one</i> game with a first move by Nature that he cannot observe. That is an ordinary game with <b>imperfect information</b>, which we already know how to handle (information sets, from the extensive-form weeks). The common prior is what lets him compute expected payoffs.</div></section>
+
+<section id="s3"><h2>3. Bayes' theorem (needed for updating beliefs)</h2>
+<p>When a player sees something, he should <b>update</b> his belief about the other player's type. The tool for updating is Bayes' theorem. Here is where the formula comes from.</p>
+<div class="box der"><b>Derivation.</b><br>
+1. The probability of "A and B" can be written two ways: <span class="m">P(A∩B) = P(A|B)·P(B)</span> and also <span class="m">P(A∩B) = P(B|A)·P(A)</span>. ("P(A|B)" means "probability of A given that B happened".)<br>
+2. Set them equal: <span class="m">P(B|A)·P(A) = P(A|B)·P(B)</span>.<br>
+3. Divide by P(A): <span class="eq">P(B|A) = P(A|B)·P(B) / P(A)</span>
+4. The event A can happen in two ways: with B or with "not B" (written Bᶜ). So <span class="m">P(A) = P(A|B)P(B) + P(A|Bᶜ)P(Bᶜ)</span> (law of total probability).<br>
+5. Put step 4 in step 3:
+<span class="eq">P(B|A) = P(A|B)·P(B) / [ P(A|B)·P(B) + P(A|Bᶜ)·P(Bᶜ) ]</span></div>
+<div class="box ex"><b>Tiny example.</b> A girl is Meet type with prior ½ and Avoid type with prior ½. Suppose a Meet type plays B with probability 1 and an Avoid type plays B with probability 0. You see her play B. Then
+<span class="eq">P(Meet | B) = (1·½) / (1·½ + 0·½) = 1</span>
+Her action revealed her type completely. If instead <i>both</i> types played B with probability ⅔, then P(Meet|B) = (⅔·½)/(⅔·½+⅔·½) = ½: nothing is learned. That is exactly <b>signal jamming</b> (mixing the same way for every type so the action carries no information).</div>
+<div class="box warn"><b>Where this matters this week.</b> In the Bayesian Battle of the Sexes below, the Boy moves <i>simultaneously</i>, so he cannot observe the Girl's action before choosing. He just uses the prior ½-½. Bayes' theorem becomes essential in <b>sequential</b> incomplete-information games (signalling games), which is why the lecture reminds you of it.</div></section>
+
+<section id="s4"><h2>4. Example: Battle of the Sexes with incomplete information</h2>
+<h3>4.1 The story and the two possible games</h3>
+<p>A Boy (row player) and a Girl (column player) each choose between two options, <b>B</b> and <b>S</b> (two events, as in the slides). They choose at the same time. The Boy likes B, the Girl likes S <i>if she wants to meet him</i>. But the Boy does not know whether the Girl <b>wants to meet him</b> or <b>wants to avoid him</b>. Each is equally likely (prob ½). The Girl knows her own type.</p>
+<p>Payoffs are written (Boy, Girl).</p>
+<table><caption><b>Game 1: Girl is "Meet" type (prob ½)</b></caption><tr><th>Boy \ Girl</th><th>B</th><th>S</th></tr><tr><th>B</th><td>2, 1</td><td>0, 0</td></tr><tr><th>S</th><td>0, 0</td><td>1, 2</td></tr></table>
+<table><caption><b>Game 2: Girl is "Avoid" type (prob ½)</b></caption><tr><th>Boy \ Girl</th><th>B</th><th>S</th></tr><tr><th>B</th><td>2, 0</td><td>0, 2</td></tr><tr><th>S</th><td>0, 1</td><td>1, 0</td></tr></table>
+<div class="box der"><b>Read the two tables.</b> Game 1: both get something only when they <b>match</b>, so this is the usual Battle of the Sexes. Game 2: the Girl gets a positive payoff only when they <b>mismatch</b> (BS gives her 2, SB gives her 1). The Boy's payoffs are the same in both games (he always likes to match, and likes B more). The <i>only</i> thing he is unsure about is the Girl's payoffs.</div>
+<svg viewBox="0 0 700 270" width="700" role="img" aria-label="Extensive form of the Bayesian BoS">
+<g class="e"><path d="M350 30 L170 90"/><path d="M350 30 L530 90"/>
+<path d="M170 90 L110 170"/><path d="M170 90 L230 170"/><path d="M530 90 L470 170"/><path d="M530 90 L590 170"/></g>
+<circle class="n" cx="350" cy="30" r="16"/><text x="337" y="35" style="font-size:11px">Nature</text>
+<text x="235" y="52">Meet ½</text><text x="440" y="52">Avoid ½</text>
+<circle class="n" cx="170" cy="90" r="15"/><text x="165" y="95">G</text><circle class="n" cx="530" cy="90" r="15"/><text x="525" y="95">G</text>
+<text x="118" y="128">B</text><text x="215" y="128">S</text><text x="478" y="128">B</text><text x="574" y="128">S</text>
+<text x="110" y="190" text-anchor="middle">Boy chooses</text><text x="230" y="190" text-anchor="middle">Boy chooses</text><text x="470" y="190" text-anchor="middle">Boy chooses</text><text x="590" y="190" text-anchor="middle">Boy chooses</text>
+<path d="M110 200 L590 200" stroke="#e11d48" stroke-width="2" stroke-dasharray="5 4" fill="none"/>
+<text x="350" y="225" text-anchor="middle" style="fill:#e11d48">Boy cannot tell which of these four nodes he is at: one information set</text>
+<text x="350" y="248" text-anchor="middle">(the Girl's own move is hidden because they move at the same time)</text></svg>
+<p class="cap">Extensive form: Nature picks the Girl's type, the Girl moves, the Boy moves without seeing either.</p>
+<h3>4.2 Strategies: why the Girl has 4</h3>
+<div class="box def"><b>A strategy is a complete plan.</b> The Girl knows her type, so her plan can depend on it: "what do I play if I am Meet type, and what do I play if I am Avoid type?" So a strategy for the Girl is a <b>pair</b> (action if Meet, action if Avoid).
+<table><tr><th>Name</th><th>If Meet type</th><th>If Avoid type</th></tr><tr><td>B1B2</td><td>B</td><td>B</td></tr><tr><td>B1S2</td><td>B</td><td>S</td></tr><tr><td>S1B2</td><td>S</td><td>B</td></tr><tr><td>S1S2</td><td>S</td><td>S</td></tr></table>
+The subscript 1 or 2 tells you the game. The Boy does not know the type, so he has just <b>2</b> strategies: B or S.</div>
+<h3>4.3 The Bayesian normal form (derivation of every cell)</h3>
+<p>For each pair (Boy action, Girl plan) we compute the <b>expected payoff</b>, averaging over Nature's draw (½ and ½). Boy's payoff first, then the Girl's <i>ex-ante</i> (before she learns her type) expected payoff.</p>
+<div class="box der"><b>Worked cells.</b><br>
+<b>(B, B1S2):</b> Meet type plays B, Avoid type plays S, Boy plays B.<br>
+&nbsp;&nbsp;Game 1 (BB): Boy 2, Girl 1. Game 2 (BS): Boy 0, Girl 2.<br>
+&nbsp;&nbsp;Boy: ½·2 + ½·0 = <b>1</b>. Girl: ½·1 + ½·2 = <b>3/2</b>. So the cell is (1, 3/2).<br>
+<b>(B, B1B2):</b> Game 1 (BB): (2,1). Game 2 (BB): (2,0). Boy: ½·2+½·2 = 2. Girl: ½·1+½·0 = ½. Cell (2, ½).<br>
+<b>(S, S1B2):</b> Game 1 (SS): (1,2). Game 2 (SB): (0,1). Boy: ½·1+½·0 = ½. Girl: ½·2+½·1 = 3/2. Cell (½, 3/2).<br>
+<b>(S, S1S2):</b> Game 1 (SS): (1,2). Game 2 (SS): (1,0). Boy: 1. Girl: ½·2+½·0 = 1. Cell (1, 1).</div>
+<table><tr><th>Boy \ Girl</th><th>B1B2</th><th>B1S2</th><th>S1B2</th><th>S1S2</th></tr>
+<tr><th>B</th><td>2, ½</td><td class="nash">1, 3/2</td><td>1, 0</td><td>0, 1</td></tr>
+<tr><th>S</th><td>0, ½</td><td>½, 0</td><td>½, 3/2</td><td>1, 1</td></tr></table>
+<p class="cap">Complete Bayesian normal form. Green = the Bayesian Nash equilibrium.</p>
+<div class="box warn"><b>Check I did (and a correction to the lecture summary).</b> I recomputed all 8 cells by hand and by script. The table above is right. The written summary has two wrong cells in its version of this table, so trust the table above (which matches the slide).</div>
+<h3>4.4 Solving it: best responses</h3>
+<div class="box def"><b>Bayesian Nash equilibrium (BNE):</b> a strategy for every player <i>and every type</i> such that nobody wants to change. The Boy maximises his <b>expected</b> payoff (over the Girl's types). Each <b>type</b> of the Girl maximises her payoff given that she knows her type. (Maximising the ex-ante payoff and maximising type by type give the same answer, as long as every type has positive probability.)</div>
+<div class="box der"><b>Boy's best responses</b> (look down each column, pick the larger first number):<br>
+vs B1B2: B (2) beats S (0). vs B1S2: B (1) beats S (½). vs S1B2: B (1) beats S (½). vs S1S2: S (1) beats B (0).<br>
+<b>Girl's best responses</b> (look along each row, pick the larger second number):<br>
+vs B: B1B2 gives ½, B1S2 gives 3/2, S1B2 gives 0, S1S2 gives 1. Best = <b>B1S2</b>.<br>
+vs S: B1B2 ½, B1S2 0, S1B2 3/2, S1S2 1. Best = <b>S1B2</b>.</div>
+<div class="box der"><b>Finding the equilibrium.</b> Look for a cell where both are best responses. If the Boy plays B, the Girl's best reply is B1S2; and the Boy's best reply to B1S2 is B. So <b>(B, B1S2)</b> is a BNE. If the Boy plays S, the Girl replies S1B2, but the Boy's best reply to S1B2 is B, not S, so it is not an equilibrium.</div>
+<div class="box ex"><b>Intuition for the answer.</b> The Boy plays B (his favourite). The <b>Meet</b> girl goes to B (she wants to meet him). The <b>Avoid</b> girl goes to S (she wants to avoid him). Both types do the sensible thing, the Boy bets on his favourite, and he gets 1 on average, the Girl 3/2 on average. This is the <b>unique pure-strategy BNE</b>.</div>
+<svg viewBox="0 0 700 170" width="700" role="img" aria-label="Flowchart to solve a Bayesian game">
+<g class="e"><path d="M130 55 L170 55"/><path d="M330 55 L370 55"/><path d="M530 55 L570 55"/><path d="M350 80 L350 120"/></g>
+<rect class="n" x="10" y="25" width="120" height="60" rx="8"/><text x="70" y="50" text-anchor="middle">1. List types</text><text x="70" y="68" text-anchor="middle">and the prior</text>
+<rect class="n" x="170" y="25" width="160" height="60" rx="8"/><text x="250" y="50" text-anchor="middle">2. Strategy = a plan</text><text x="250" y="68" text-anchor="middle">per type</text>
+<rect class="n" x="370" y="25" width="160" height="60" rx="8"/><text x="450" y="50" text-anchor="middle">3. Average payoffs</text><text x="450" y="68" text-anchor="middle">over types</text>
+<rect class="n" x="570" y="25" width="120" height="60" rx="8"/><text x="630" y="50" text-anchor="middle">4. Best</text><text x="630" y="68" text-anchor="middle">responses</text>
+<rect class="n" x="230" y="120" width="240" height="40" rx="8"/><text x="350" y="145" text-anchor="middle">5. Mutual best responses = BNE</text></svg>
+<p class="cap">The recipe for every Bayesian game.</p></section>
+
+<section id="s5"><h2>5. Mixed-strategy BNE (full derivation)</h2>
+<p>Now allow randomising. Let</p>
+<ul><li><span class="m">x</span> = probability the Boy plays B (so S with 1 − x),</li><li><span class="m">y</span> = probability the <b>Meet</b> type plays B,</li><li><span class="m">z</span> = probability the <b>Avoid</b> type plays B.</li></ul>
+<p>Rule: a player mixes strictly between two actions only if the two actions give the <b>same</b> expected payoff (indifference).</p>
+<div class="box der"><b>Step 1: the Meet type.</b> Game 1 payoffs for the Girl: if she plays B she gets 1 when the Boy plays B and 0 when he plays S; if she plays S she gets 0 when the Boy plays B and 2 when he plays S. The Boy plays B with probability x.<br>
+Girl plays B: x·1 + (1−x)·0 = <b>x</b>. Girl plays S: x·0 + (1−x)·2 = <b>2 − 2x</b>.<br>
+Indifferent when x = 2 − 2x, so 3x = 2, <b>x = 2/3</b>. If x &gt; 2/3, B is better (she plays B for sure). If x &lt; 2/3, S is better.</div>
+<div class="box der"><b>Step 2: the Avoid type.</b> Game 2 Girl payoffs: (Boy B, Girl B) 0, (Boy S, Girl B) 1, (Boy B, Girl S) 2, (Boy S, Girl S) 0.<br>
+Girl plays B: x·0 + (1−x)·1 = <b>1 − x</b>. Girl plays S: x·2 + (1−x)·0 = <b>2x</b>.<br>
+Indifferent when 1 − x = 2x, so <b>x = 1/3</b>. If x &gt; 1/3, S is better. If x &lt; 1/3, B is better.</div>
+<div class="box der"><b>Step 3: the Boy.</b> Boy payoffs are the same in both games (2 for BB, 0 for BS, 0 for SB, 1 for SS):<br>
+Boy plays B: ½[y·2 + (1−y)·0] + ½[z·2 + (1−z)·0] = <b>y + z</b>.<br>
+Boy plays S: ½[y·0 + (1−y)·1] + ½[z·0 + (1−z)·1] = <b>1 − (y+z)/2</b>.<br>
+Indifferent when y + z = 1 − (y+z)/2, so (3/2)(y+z) = 1, <b>y + z = 2/3</b>.</div>
+<svg viewBox="0 0 700 250" width="700" role="img" aria-label="Which x makes which type indifferent">
+<line class="ax" x1="60" y1="130" x2="640" y2="130"/>
+<line class="ax" x1="60" y1="125" x2="60" y2="135"/><line class="ax" x1="640" y1="125" x2="640" y2="135"/>
+<text x="60" y="152" text-anchor="middle">x = 0</text><text x="640" y="152" text-anchor="middle">x = 1</text>
+<circle cx="253" cy="130" r="7" fill="#d97706"/><text x="253" y="152" text-anchor="middle">1/3</text>
+<circle cx="447" cy="130" r="7" fill="#4f46e5"/><text x="447" y="152" text-anchor="middle">2/3</text>
+<text x="156" y="110" text-anchor="middle">Avoid type plays B</text><text x="156" y="90" text-anchor="middle" style="font-size:11px">(B better)</text>
+<text x="350" y="110" text-anchor="middle">Avoid plays S, Meet plays S</text>
+<text x="545" y="110" text-anchor="middle">Meet type plays B</text><text x="545" y="90" text-anchor="middle" style="font-size:11px">(B better)</text>
+<text x="253" y="190" text-anchor="middle" style="fill:#d97706">Avoid indifferent</text><text x="447" y="190" text-anchor="middle" style="fill:#4f46e5">Meet indifferent</text>
+<text x="350" y="228" text-anchor="middle">At most one type can be indifferent at a time, because 1/3 ≠ 2/3</text></svg>
+<p class="cap">The two types switch their behaviour at different x, which is what pins down the equilibria.</p>
+<h3>Putting the three conditions together</h3>
+<p>Because 1/3 ≠ 2/3, the Boy's x can make <b>only one</b> type indifferent. So there are two cases.</p>
+<table><tr><th></th><th>x</th><th>Meet type (y)</th><th>Avoid type (z)</th><th>Boy check (y + z = 2/3)</th></tr>
+<tr><th>Case A (the lecture's)</th><td>2/3</td><td>indifferent, so y free</td><td>x = 2/3 &gt; 1/3 so S is better: <b>z = 0</b></td><td>y = <b>2/3</b></td></tr>
+<tr><th>Case B (extra)</th><td>1/3</td><td>x = 1/3 &lt; 2/3 so S is better: <b>y = 0</b></td><td>indifferent, so z free</td><td>z = <b>2/3</b></td></tr></table>
+<div class="box ex"><b>Case A equilibrium:</b> the Boy plays B with prob ⅔ and S with prob ⅓. The Meet girl plays B with prob ⅔ and S with ⅓. The Avoid girl plays S for sure. Check the Boy's payoff: B gives y + z = 2/3, S gives 1 − 1/3 = 2/3. Equal, so he is happy to mix. ✔<br>
+<b>Case B equilibrium:</b> Boy plays B with prob ⅓. The Meet girl plays S for sure. The Avoid girl plays B with prob ⅔. Boy: B gives 0 + 2/3 = 2/3, S gives 1 − 1/3 = 2/3. ✔</div>
+<div class="box warn"><b>Flag.</b> The slides and summary present only Case A and call it the unique mixed BNE. My check (done by script, all fractions exact) found <b>Case B too</b>. If an exam asks for "the" mixed BNE, give Case A (the lecture's answer), but you can mention that Case B also works. Why no other: if x is anything other than 1/3 or 2/3, both types play pure actions, so y and z are 0 or 1 and y + z can never equal 2/3. And x = 0 or x = 1 are the pure cases covered by the matrix (only (B, B1S2) survives).</div>
+<div class="box ex"><b>Summary of all BNE of this game:</b> (1) pure: Boy B, Girl (B if Meet, S if Avoid). (2) mixed Case A. (3) mixed Case B.</div></section>
+
+<section id="s6"><h2>6. Auctions: a Bayesian game with continuous types</h2>
+<h3>6.1 Setup: first-price sealed-bid auction</h3>
+<p>One item is sold. Each bidder privately writes a <b>bid</b> in a sealed envelope. The <b>highest bid wins</b> and the winner <b>pays her own bid</b> (that is "first-price"). Each bidder has a private <b>value</b> <span class="m">v</span> for the item: this is her <b>type</b>. Nobody knows the others' values, only their distribution.</p>
+<div class="box def"><b>Assumptions:</b> two bidders; each value is drawn independently and uniformly from [0, 1]. So the probability that a value is below t is <span class="m">F(t) = t</span> (the CDF), the density is 1, and the average value is E[v] = ½.<br>
+<b>Payoff of bidder i</b> with value <span class="m">v<sub>i</sub></span> and bid <span class="m">b<sub>i</sub></span>:
+<ul><li>wins: <span class="m">v<sub>i</sub> − b<sub>i</sub></span> (value minus what she pays)</li><li>tie: ½(v<sub>i</sub> − b<sub>i</sub>) (a coin toss decides)</li><li>loses: 0</li></ul></div>
+<div class="box ex"><b>The trade-off.</b> Bid high: you win more often but your profit per win (v − b) is small. Bid low: bigger profit per win, but you may lose. Bidding your full value v gives profit 0 even if you win, so you would never do it. The equilibrium finds the best balance.</div>
+<svg viewBox="0 0 700 220" width="700" role="img" aria-label="Bid trade-off">
+<line class="ax" x1="70" y1="180" x2="650" y2="180"/><line class="ax" x1="70" y1="180" x2="70" y2="20"/>
+<path d="M70 180 L430 40" stroke="#4f46e5" stroke-width="2.5" fill="none"/>
+<path d="M70 40 L650 180" stroke="#e11d48" stroke-width="2.5" fill="none"/>
+<path d="M70 180 Q300 20 650 180" stroke="#0d9488" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+<text x="360" y="205" text-anchor="middle">my bid b (from 0 to v)</text>
+<text x="440" y="36" fill="#4f46e5" style="fill:#4f46e5">chance of winning rises</text>
+<text x="100" y="35" style="fill:#e11d48">profit if I win (v − b) falls</text>
+<text x="560" y="110" style="fill:#0d9488">expected profit: hump</text></svg>
+<p class="cap">A sketch (not to scale): the expected profit is the product of the two lines, so it peaks in the middle. We find the peak with calculus.</p>
+<h3>6.2 Derivation of the equilibrium bid</h3>
+<div class="box der"><b>Step 1: guess the rival's behaviour.</b> Suppose bidder 2 bids a fixed fraction <span class="m">a</span> of her value: <span class="m">b<sub>2</sub> = a·v<sub>2</sub></span>, where a is a number between 0 and 1 (to be found).<br>
+<b>Step 2: probability that bidder 1 wins</b> with bid <span class="m">b<sub>1</sub></span>. She wins when <span class="m">b<sub>1</sub> &gt; a·v<sub>2</sub></span>, i.e. <span class="m">v<sub>2</sub> &lt; b<sub>1</sub>/a</span>. Since v₂ is uniform on [0,1]: <span class="eq">P(win) = P(v<sub>2</sub> &lt; b<sub>1</sub>/a) = b<sub>1</sub>/a</span> (valid when b₁ ≤ a; nobody bids above a, the rival's highest bid).<br>
+<b>Step 3: expected payoff.</b> (The tie has probability 0 for continuous values, so ignore it.)
+<span class="eq">U<sub>1</sub>(b<sub>1</sub>) = (v<sub>1</sub> − b<sub>1</sub>) · (b<sub>1</sub>/a)</span>
+<b>Step 4: maximise.</b> Write U₁ = (v₁b₁ − b₁²)/a. Differentiate with respect to b₁ and set to 0:
+<span class="eq">dU<sub>1</sub>/db<sub>1</sub> = (v<sub>1</sub> − 2b<sub>1</sub>)/a = 0 ⟹ b<sub>1</sub> = v<sub>1</sub>/2</span>
+The second derivative is −2/a &lt; 0, so this is a maximum.<br>
+<b>Step 5: make the guess consistent.</b> Bidder 1's best reply is v₁/2, whatever a is. In a symmetric equilibrium bidder 1 uses the same rule as bidder 2, so <span class="m">a = ½</span>. Check that b₁ = v₁/2 ≤ a = ½ always, since v₁ ≤ 1. ✔</div>
+<div class="box ex"><b>Result (2 bidders):</b> <span class="m">b(v) = v/2</span>. Each bidder <b>shades</b> her bid to half her value.<br>Example: value 0.8 gives bid 0.4. If the rival has value 0.6 (bid 0.3), I win and my profit is 0.8 − 0.4 = 0.4.</div>
+<h3>6.3 Many bidders (n of them)</h3>
+<div class="box der"><b>Derivation.</b> Now n bidders; each of the other n − 1 bids a·v. Bidder 1 wins only if <b>all</b> the others bid less than b₁, each with probability b₁/a, independently:
+<span class="eq">P(win) = (b<sub>1</sub>/a)<sup>n−1</sup></span>
+<span class="eq">U<sub>1</sub> = (v<sub>1</sub> − b<sub>1</sub>)(b<sub>1</sub>/a)<sup>n−1</sup></span>
+Differentiate with the product rule (derivative of (v−b) is −1):
+<span class="eq">dU/db = −(b/a)<sup>n−1</sup> + (v − b)(n−1) b<sup>n−2</sup>/a<sup>n−1</sup> = 0</span>
+Divide everything by b<sup>n−2</sup>/a<sup>n−1</sup> (both are positive):
+<span class="eq">−b + (v − b)(n − 1) = 0 ⟹ (n−1)v = n·b ⟹ b = ((n−1)/n)·v</span></div>
+<table><tr><th>Bidders n</th><th>2</th><th>3</th><th>5</th><th>10</th><th>n → ∞</th></tr><tr><th>Bid</th><td>v/2</td><td>2v/3</td><td>4v/5</td><td>9v/10</td><td>→ v</td></tr></table>
+<div class="box ex"><b>Meaning.</b> More competition forces you to bid closer to your true value, which is good for the seller. (In the lecture's handwriting the same result appears as "n/(n+1)·v", where n counts the <i>rivals</i>. Same formula: with n rivals there are n+1 bidders.)</div>
+<h3>6.4 The seller's expected revenue (2 bidders)</h3>
+<div class="box der">Revenue = the winning bid = the larger of the two bids = ½ · (larger value). For two uniform values, the expected maximum is
+<span class="eq">E[max(v<sub>1</sub>, v<sub>2</sub>)] = ∫<sub>0</sub><sup>1</sup> x · 2x dx = 2/3</span>
+(the density of the maximum is 2x, because P(max ≤ x) = x²). So expected revenue = ½ · 2/3 = <b>1/3</b>.</div>
+<div class="box warn"><b>Handwriting check.</b> The slide has scribbles "1/2 → 1/4" and "2/3 → 1/3". My reading: a bidder with value ½ bids ¼, and the expected highest value 2/3 becomes expected revenue 1/3. These fit the formula above, but the handwriting is small, so treat this reading as mine.</div></section>
+
+<h2 style="margin-top:28px">Part B: Cooperative games</h2>
+<section id="s7"><h2>7. From competition to cooperation</h2>
+<p>In <b>non-cooperative</b> games (Weeks 1 to 6A) the players act separately and we ask "what will each one choose?". In <b>cooperative</b> games, players can <b>sign binding agreements and form groups</b> (coalitions). The questions become: <b>how much value can a group create, and how should it be shared?</b></p>
+<div class="box def"><b>Cooperative game = (N, v).</b><br><b>N</b> = the set of players. A <b>coalition</b> S is any subset of N. <b>N</b> itself is the <i>grand coalition</i>.<br><b>v</b> = the <b>characteristic function</b>: v(S) is the total value (money) that coalition S can create <i>on its own</i>. We take v(∅) = 0.</div>
+<h3>7.1 Running example: a seller and two buyers</h3>
+<div class="box ex">Player 1 is a <b>seller</b> with one item that costs her 400. Player 2 is a buyer willing to pay 900. Player 3 is another buyer willing to pay 1100. Value created by a sale = (buyer's willingness to pay) − (seller's cost).<br>
+v({1}) = 0 (a seller alone has nothing to gain), v({2}) = v({3}) = 0, v({2,3}) = 0 (two buyers cannot trade without the seller),<br>
+<b>v({1,2}) = 900 − 400 = 500</b>, <b>v({1,3}) = 1100 − 400 = 700</b>,<br>
+<b>v({1,2,3}) = 700</b> (the item can be sold only once, so the best use is to sell to buyer 3).</div>
+<svg viewBox="0 0 700 200" width="700" role="img" aria-label="Seller and buyers">
+<g class="e"><path d="M350 55 L180 130"/><path d="M350 55 L520 130"/></g>
+<rect class="n" x="270" y="15" width="160" height="40" rx="8"/><text x="350" y="40" text-anchor="middle">Seller 1 (cost 400)</text>
+<rect class="n" x="100" y="130" width="160" height="40" rx="8"/><text x="180" y="155" text-anchor="middle">Buyer 2 (pays 900)</text>
+<rect class="n" x="440" y="130" width="160" height="40" rx="8"/><text x="520" y="155" text-anchor="middle">Buyer 3 (pays 1100)</text>
+<text x="215" y="85" text-anchor="end">pair value 500</text><text x="495" y="85">pair value 700</text></svg>
+<h3>7.2 Allocation and its rules</h3>
+<div class="box def"><b>Allocation:</b> a vector x = (x₁, x₂, x₃) saying how much of the value each player gets.<br>
+<b>Efficiency:</b> the whole value is handed out: <span class="m">x₁ + x₂ + x₃ = v(N) = 700</span>.<br>
+<b>Individual rationality:</b> nobody takes less than she could get alone: <span class="m">x<sub>i</sub> ≥ v({i}) = 0</span>.<br>
+<b>BATNA</b> (Best Alternative To a Negotiated Agreement): what a player gets if the talks fail. A player will not accept less than her BATNA.</div>
+<h3>7.3 Marginal contribution and the "can't take more than you add" principle</h3>
+<div class="box def"><b>Marginal contribution</b> of player i: how much the pie shrinks if i leaves:
+<span class="eq">MC<sub>i</sub> = v(N) − v(N \ {i})</span>
+<b>Marginal Contribution Principle:</b> nobody can sensibly claim more than she adds: <span class="m">x<sub>i</sub> ≤ MC<sub>i</sub></span>. (If she demanded more, the others would just do the deal without her.)</div>
+<div class="box der"><b>Compute for the example.</b><br>
+MC₁ (seller) = v(N) − v({2,3}) = 700 − 0 = <b>700</b> (without the seller there is no deal).<br>
+MC₂ (buyer 900) = v(N) − v({1,3}) = 700 − 700 = <b>0</b> (buyer 3 and the seller make the same 700 without buyer 2).<br>
+MC₃ (buyer 1100) = v(N) − v({1,2}) = 700 − 500 = <b>200</b>.<br>
+So x₂ ≤ 0, and with x₂ ≥ 0 we get <b>x₂ = 0</b>. And x₃ ≤ 200, x₁ ≤ 700.<br>
+Efficiency: x₁ = 700 − x₃ (as x₂ = 0). So <span class="m">x₃ ∈ [0, 200]</span> and <span class="m">x₁ ∈ [500, 700]</span>.</div>
+<div class="box ex"><b>Plain-English reading.</b> The lower-valuing buyer is just "competition": he gets nothing. The high-valuing buyer can keep at most 200, which is his advantage over buyer 2 (1100 − 900). The seller gets at least 500, because she could always sell to buyer 2 for 900 − 400 = 500. Where in these ranges they end up depends on bargaining power.</div></section>
+
+<section id="s8"><h2>8. The core</h2>
+<div class="box def"><b>The core</b> is the set of allocations that <b>no coalition wants to break away from</b>. For every coalition S, the members' total must be at least what S could create alone:
+<span class="eq">Σ<sub>i∈S</sub> x<sub>i</sub> ≥ v(S) for every S, and Σ<sub>i∈N</sub> x<sub>i</sub> = v(N)</span></div>
+<h3>8.1 Two equivalent ways to write the core</h3>
+<div class="box der"><b>Derivation (the link to marginal contributions).</b> Take any coalition S and let N\S be everybody else. Efficiency says the total is v(N), so
+<span class="eq">Σ<sub>i∈S</sub> x<sub>i</sub> = v(N) − Σ<sub>j∈N\S</sub> x<sub>j</sub></span>
+The condition "outsiders N\S get at least v(N\S)" reads Σ<sub>j∈N\S</sub> x<sub>j</sub> ≥ v(N\S). Putting it in:
+<span class="eq">Σ<sub>i∈S</sub> x<sub>i</sub> ≤ v(N) − v(N\S) =: MC<sub>S</sub></span>
+So <b>"no coalition gets less than v(S)"</b> is the same as <b>"no coalition gets more than its marginal contribution MC<sub>S</sub>"</b>. They are two views of one statement (we use S and its complement N\S in turn). For a single player S = {i} this gives exactly x_i ≤ MC_i.</div>
+<h3>8.2 The core of the seller and two buyers</h3>
+<table><tr><th>Coalition S</th><th>v(S)</th><th>Condition Σx ≥ v(S)</th></tr>
+<tr><td>{1}, {2}, {3}</td><td>0</td><td>x₁, x₂, x₃ ≥ 0</td></tr><tr><td>{2,3}</td><td>0</td><td>x₂ + x₃ ≥ 0</td></tr>
+<tr><td>{1,2}</td><td>500</td><td>x₁ + x₂ ≥ 500</td></tr><tr><td>{1,3}</td><td>700</td><td>x₁ + x₃ ≥ 700</td></tr><tr><td>N</td><td>700</td><td>x₁ + x₂ + x₃ = 700</td></tr></table>
+<div class="box der"><b>Solve.</b> From {1,3}: x₁ + x₃ ≥ 700 and efficiency x₁ + x₂ + x₃ = 700 give <b>x₂ ≤ 0</b>, so <b>x₂ = 0</b>. Then x₁ + x₃ = 700. From {1,2}: x₁ ≥ 500, so x₃ ≤ 200. And x₃ ≥ 0.<br>
+<b>Core = { (x₁, 0, x₃) : x₃ ∈ [0, 200], x₁ = 700 − x₃ }.</b> It is exactly the set found from marginal contributions. (I checked this by script on a grid.)</div>
+<svg viewBox="0 0 700 150" width="700" role="img" aria-label="Core as a segment">
+<line class="ax" x1="60" y1="80" x2="640" y2="80"/>
+<line x1="60" y1="80" x2="640" y2="80" stroke="#0d9488" stroke-width="8" stroke-opacity=".35"/>
+<circle cx="150" cy="80" r="7" fill="#e11d48"/><circle cx="560" cy="80" r="7" fill="#e11d48"/>
+<text x="150" y="110" text-anchor="middle">seller 700, buyer 3 gets 0</text><text x="560" y="110" text-anchor="middle">seller 500, buyer 3 gets 200</text>
+<text x="355" y="60" text-anchor="middle">the core: every point between them</text>
+<text x="355" y="135" text-anchor="middle" style="font-size:12px">buyer 2 gets 0 everywhere</text></svg>
+<div class="box ex"><b>Why the core is useful.</b> It tells you which splits are <i>stable</i>. A split outside it, e.g. seller 400, buyer 3 gets 300, buyer 2 gets 0, fails: the seller and buyer 2 could break away, trade for 500, and share it so that both beat what they get now (the seller needs only to get more than 400). So that split is not stable.</div>
+<div class="box warn"><b>Core can be empty, and can be large.</b> This example gave a whole range. Other games have no allocation satisfying all the conditions at once. The core says what is <i>stable</i>, not what is <i>fair</i> (Shapley value, not in this week, is a rule for a single "fair" point).</div></section>
+
+<h2 style="margin-top:28px">Part C: Coopetition, "playing the right game"</h2>
+<section id="s9"><h2>9. Change the game, not just your move</h2>
+<p>Brandenburger and Nalebuff (the authors of <i>Co-opetition</i>) say: most people only <b>analyse the game they are given</b>. The best players ask a bigger question: <b>"Is this the right game to be playing? Can I change it?"</b></p>
+<div class="box def"><b>Coopetition</b> = cooperation + competition at the same time. Business is war <i>and</i> peace: you cooperate with others to create the pie (value) and compete to divide it.</div>
+<table><tr><th>Analyse the game</th><th>Design a new game</th></tr><tr><td>Take players, actions, payoffs as fixed</td><td>Change who plays, what they can do, how payoffs are decided</td></tr><tr><td>Find the equilibrium and play it</td><td>Reshape the game so the equilibrium is better for you</td></tr></table>
+<h3>9.1 Burning the bridge (Sun Tzu)</h3>
+<p>The ancient general Sun Tzu advised putting your army in a position with no way back. Your own troops then fight harder, and the enemy knows it. Game theory reading: <b>removing your own option can make you better off</b>.</p>
+<div class="box ex"><b>The game (slide payoffs, written (Country 1, Country 2)).</b> Country 1 chooses <b>Attack (A)</b> or <b>Don't Attack (DA)</b>. If it does not attack, payoffs are (5, 3). If it attacks, Country 2 chooses <b>Fight (F)</b> or <b>Retreat (R)</b>: (A, F) gives (0, 1); (A, R) gives (10, 2).</div>
+<svg viewBox="0 0 700 250" width="700" role="img" aria-label="Burning bridge tree">
+<g class="e"><path d="M300 30 L180 100"/><path d="M300 30 L480 100"/><path d="M180 100 L100 190"/><path d="M180 100 L260 190"/></g>
+<path d="M180 100 L260 190" class="hi"/><path d="M300 30 L180 100" class="hi"/>
+<circle class="n" cx="300" cy="30" r="16"/><text x="295" y="35">1</text><circle class="n" cx="180" cy="100" r="16"/><text x="175" y="105">2</text>
+<text x="218" y="55">A</text><text x="415" y="55">DA</text><text x="126" y="140">F</text><text x="232" y="140">R</text>
+<text x="100" y="212" text-anchor="middle">(0, 1)</text><text x="260" y="212" text-anchor="middle">(10, 2)</text><text x="480" y="122" text-anchor="middle">(5, 3)</text></svg>
+<p class="cap">Green = backward-induction path before burning the bridge.</p>
+<div class="box der"><b>Before burning (backward induction).</b> At Country 2's node: Fight gives 1, Retreat gives 2, so Country 2 <b>retreats</b>. Country 1 expects this: Attack gives 10, Don't attack gives 5. It attacks. <b>Outcome (A, R) = (10, 2).</b><br>
+<b>After Country 2 burns its bridge</b> (it removes the Retreat option): at its node only Fight remains, giving (0, 1). Country 1 now compares Attack (0) with Don't attack (5), and chooses <b>DA</b>. <b>Outcome (5, 3).</b><br>
+<b>Who gained?</b> Country 2 improves from 2 to 3. Country 1 drops from 10 to 5. Country 2 gained by <b>making its threat credible</b>: an empty threat to fight is not believed, but a bridge that is gone cannot be crossed back.</div>
+<div class="box warn"><b>Lesson.</b> Having fewer options can be good if it is <b>visible and irreversible</b>. Where the bridge can be quietly rebuilt, burning it proves nothing.</div>
+
+<h3>9.2 The card-burning game (cooperative game with a twist)</h3>
+<div class="box ex"><b>Setup.</b> A teacher holds 50 <b>black</b> cards, and 50 students each hold 1 <b>red</b> card. A black-red pair together is worth <b>1000</b> (slide: INR 1000; the written summary says $, the number is the same). Unpaired cards are worth 0. The group may form pairs and then decide how to split the money. How does the split come out?</div>
+<div class="box der"><b>Value of coalitions.</b> v(all 51 players) = 50 pairs × 1000 = <b>50,000</b>.<br>
+<b>Marginal contribution of a student:</b> without one student there are still 50 black cards but only 49 red cards, so 49 pairs: v = 49,000. MC_student = 50,000 − 49,000 = <b>1,000</b>.<br>
+<b>Marginal contribution of the teacher:</b> without the teacher there are no black cards, so v = 0. MC_teacher = 50,000 − 0 = <b>50,000</b>.<br>
+The "equal split" intuition: it looks like the teacher is crucial, so she could take much. With a symmetric 50-50 division of each pair's 1000, the teacher gets 25,000 and each student 500. (This is the slide's "25,000, 500 each".)</div>
+<h3>Now the teacher burns 5 of her own black cards</h3>
+<div class="box der">The teacher destroys 5 of her black cards, keeping 45. Now:<br>
+v(N) = 45 pairs = <b>45,000</b> (there are 45 black cards and 50 red, only 45 pairs possible).<br>
+Remove one student: 45 black, 49 red, still 45 pairs: v = 45,000.<br>
+<span class="eq">MC<sub>student</sub> = 45,000 − 45,000 = 0</span>
+By the Marginal Contribution Principle, <b>x_student ≤ 0, so each student gets 0</b>. The teacher takes the full 45,000, which is <b>more than the 25,000 she got before</b>, even though the total value fell.</div>
+<svg viewBox="0 0 700 190" width="700" role="img" aria-label="Before and after burning cards">
+<rect class="n" x="40" y="20" width="270" height="140" rx="10"/><text x="175" y="46" text-anchor="middle" style="font-weight:700">Before: 50 black, 50 red</text>
+<text x="175" y="76" text-anchor="middle">total 50,000</text><text x="175" y="100" text-anchor="middle">student can add 1,000</text><text x="175" y="124" text-anchor="middle">equal split: teacher 25,000</text><text x="175" y="146" text-anchor="middle">students 500 each</text>
+<path class="e" d="M320 90 L380 90"/><text x="350" y="80" text-anchor="middle">burn 5</text>
+<rect class="n" x="390" y="20" width="270" height="140" rx="10" style="stroke:#0d9488"/><text x="525" y="46" text-anchor="middle" style="font-weight:700">After: 45 black, 50 red</text>
+<text x="525" y="76" text-anchor="middle">total 45,000</text><text x="525" y="100" text-anchor="middle">student can add 0</text><text x="525" y="124" text-anchor="middle">teacher can claim all 45,000</text><text x="525" y="146" text-anchor="middle">students 0 each</text></svg>
+<div class="box ex"><b>Why it happens.</b> Scarcity gives power. After burning, black cards are scarce, and there are spare red cards. Any single student is replaceable (marginal contribution 0), so no student can demand anything. This is the same logic as buyer 2 getting 0 in the seller example.</div>
+<div class="box warn"><b>Handwriting I could not decode.</b> The slide shows "45,000 × 0.9 = 40,500" near this, and "1 lakh" beside the 50,000. I could not work out what they refer to, so I have not built on them. The stated result "students get 0, teacher takes everything" follows from MC = 0 on its own. (In the exam, rely on the MC argument.)</div>
+
+<h3>9.3 Example 3: information can hurt</h3>
+<p>In a one-player decision, more information never hurts. In a game it <b>can</b>. Here is the example from the slides, with the number ε (epsilon) a small positive number (the slide circles "ε &lt; ½").</p>
+<p>Player 1 chooses T (top) or B (bottom). Player 2 chooses L, M or R. Two possible games, each with probability ½. Payoffs (P1, P2):</p>
+<table><caption><b>Game 1 (prob ½)</b></caption><tr><th></th><th>L</th><th>M</th><th>R</th></tr><tr><th>T</th><td>1, 2ε</td><td>1, 0</td><td>1, 3ε</td></tr><tr><th>B</th><td>2, 2</td><td>0, 0</td><td>0, 3</td></tr></table>
+<table><caption><b>Game 2 (prob ½)</b></caption><tr><th></th><th>L</th><th>M</th><th>R</th></tr><tr><th>T</th><td>1, 2ε</td><td>1, 3ε</td><td>1, 0</td></tr><tr><th>B</th><td>2, 2</td><td>0, 3</td><td>0, 0</td></tr></table>
+<p>Notice that Player 1's payoffs are the same in both games. Only the roles of M and R are swapped for Player 2.</p>
+<div class="box der"><b>Case 1: Player 2 does NOT know which game is played.</b> Average each cell (½ Game 1 + ½ Game 2). For P2:<br>
+T, L: 2ε. T, M: ½·0 + ½·3ε = 3ε/2. T, R: ½·3ε + ½·0 = 3ε/2.<br>
+B, L: 2. B, M: ½·0 + ½·3 = 3/2. B, R: ½·3 + ½·0 = 3/2.
+<table><tr><th></th><th>L</th><th>M</th><th>R</th></tr><tr><th>T</th><td>1, 2ε</td><td>1, 3ε/2</td><td>1, 3ε/2</td></tr><tr><th>B</th><td class="nash">2, 2</td><td>0, 3/2</td><td>0, 3/2</td></tr></table>
+<b>L dominates M and R for Player 2:</b> against T, 2ε &gt; 3ε/2 (true for ε &gt; 0); against B, 2 &gt; 3/2. So Player 2 plays L. Player 1's best reply to L is B (2 &gt; 1). <b>Unique NE: (B, L), payoffs (2, 2).</b></div>
+<div class="box der"><b>Case 2: Player 2 LEARNS which game it is</b> (Player 1 still does not). Now P2's plan can depend on the game, so we check what is best for her in each game.<br>
+In Game 1, P2's payoffs are: against T (L, M, R) = (2ε, 0, 3ε); against B = (2, 0, 3). R is best against both (3ε &gt; 2ε &gt; 0 and 3 &gt; 2 &gt; 0). So in Game 1 she plays <b>R</b>.<br>
+In Game 2: against T = (2ε, 3ε, 0); against B = (2, 3, 0). M is best against both. So in Game 2 she plays <b>M</b>.<br>
+Her plan "R in Game 1, M in Game 2" is best <b>whatever</b> P1 does. Now P1 (who does not know the game) predicts it: B gives 0 (against R in Game 1 and against M in Game 2), while T gives 1. So P1 plays T.<br>
+<b>Unique BNE: (T, (R in Game 1, M in Game 2)).</b> Payoffs: P1 gets 1, P2 gets 3ε in either game.</div>
+<svg viewBox="0 0 700 150" width="700" role="img" aria-label="Information hurts Player 2">
+<rect class="n" x="40" y="30" width="280" height="90" rx="10"/><text x="180" y="58" text-anchor="middle" style="font-weight:700">P2 does not know the game</text><text x="180" y="84" text-anchor="middle">(B, L): P2 gets 2</text>
+<rect class="n" x="380" y="30" width="280" height="90" rx="10" style="stroke:#e11d48"/><text x="520" y="58" text-anchor="middle" style="font-weight:700">P2 learns the game</text><text x="520" y="84" text-anchor="middle">(T, R or M): P2 gets 3ε</text>
+<text x="350" y="140" text-anchor="middle">2 &gt; 3ε whenever ε &lt; 2/3, so P2 is worse off knowing more</text></svg>
+<div class="box ex"><b>Why does knowing more hurt?</b> Once P2 is known to react to the true game, Player 1 can predict her moves and exploit them: P1 switches to the safe T. When P2 is "blind", L is her only sensible move, and P1 best-replies with B, which happens to give P2 the high 2. Being able to commit to <b>not reacting</b> is valuable. This links to burning the bridge: less flexibility can be a strength.</div>
+<div class="box warn"><b>Note.</b> The slide circles ε &lt; ½. My working shows the conclusion needs only ε &lt; 2/3 (so 3ε &lt; 2), and ε &lt; ½ certainly satisfies it. I could not tell what extra role ½ plays. The answer is the same for any ε in (0, ½).</div></section>
+
+<section id="s10"><h2>10. The Value Net: who are the players?</h2>
+<p>To change a game, first map <b>everyone</b> who affects it. The Value Net places a firm among four groups.</p>
+<svg viewBox="0 0 700 330" width="700" role="img" aria-label="Value Net diagram">
+<g class="e"><path d="M350 85 L350 130"/><path d="M350 250 L350 205"/><path d="M185 168 L250 168"/><path d="M515 168 L450 168"/></g>
+<rect class="n" x="260" y="130" width="180" height="75" rx="10" style="stroke:#d97706"/><text x="350" y="162" text-anchor="middle" style="font-weight:700">YOU</text><text x="350" y="184" text-anchor="middle" style="font-size:12px">(the firm)</text>
+<rect class="n" x="250" y="12" width="200" height="73" rx="10"/><text x="350" y="42" text-anchor="middle" style="font-weight:700">Customers</text><text x="350" y="64" text-anchor="middle" style="font-size:12px">buy from you</text>
+<rect class="n" x="250" y="250" width="200" height="73" rx="10"/><text x="350" y="280" text-anchor="middle" style="font-weight:700">Suppliers</text><text x="350" y="302" text-anchor="middle" style="font-size:12px">sell to you</text>
+<rect class="n" x="10" y="130" width="175" height="75" rx="10" style="stroke:#e11d48"/><text x="97" y="160" text-anchor="middle" style="font-weight:700">Substitutors</text><text x="97" y="182" text-anchor="middle" style="font-size:12px">(competitors)</text>
+<rect class="n" x="515" y="130" width="175" height="75" rx="10" style="stroke:#0d9488"/><text x="602" y="160" text-anchor="middle" style="font-weight:700">Complementors</text><text x="602" y="182" text-anchor="middle" style="font-size:12px">(partners)</text></svg>
+<p class="cap">Vertical axis = the value chain (supply to customers). Horizontal axis = substitutes versus complements.</p>
+<div class="box def"><b>Value chain:</b> supplier → firm/business → customer. Money flows one way, products the other.<br>
+<b>WTP</b> (willingness to pay): the most a customer would pay. <b>Opportunity cost (OC)</b>: the least a supplier would accept.<br>
+<b>Competitor (substitutor)</b> of A: a player whose product makes customers value yours <i>less</i>: customers' WTP for A falls when they have B. <br>
+<b>Complementor</b> of A: a player whose product makes customers value yours <i>more</i>: <span class="m">WTP(A and B) &gt; WTP(A) + WTP(B)</span> (peanut butter and jelly; a console and games).<br>
+On the supplier side, B is a complementor if <span class="m">OC(A and B) &lt; OC(A) + OC(B)</span>: serving both together costs a supplier less than serving them separately (e.g. two firms that share the same supplier's delivery run).</div>
+<div class="box ex"><b>"Friend or foe: BOTH."</b> The same player can be a competitor and a complementor. Think of two airlines on a route: they compete for passengers but together they make the airport and route more valuable. Lesson: do not label players simply as enemies.</div>
+<h3>Cases from the lecture</h3>
+<table><tr><th>Case</th><th>What the lecture summary says</th></tr>
+<tr><td>Kodak and Fuji (APS)</td><td>They cooperated to develop a common film-camera technology and processing set-up (cutting R&amp;D cost, and making the whole market bigger), while competing hard in retail.</td></tr>
+<tr><td>Toyota and Maruti</td><td>They share vehicle platforms (e.g. Urban Cruiser / Brezza, Highryder / Grand Vitara) to pool manufacturing scale, while competing in sales.</td></tr>
+<tr><td>GM credit card</td><td>GM partnered with card issuers; rebate points could be used only on GM cars. This picked out brand-loyal customers and removed the need for year-end price-war sales.</td></tr>
+<tr><td>University value net</td><td>An illustration of the four-sided map applied to a university (students, funders, other universities, partners). The slide is a sketch, so the detail is the lecture's example, not a precise case.</td></tr></table>
+<div class="box warn"><b>Honesty note.</b> I have described these at the level of the lecture summary. Use them as <i>illustrations</i>, not precise histories.</div></section>
+
+<section id="s11"><h2>11. PARTS: the five levers to change a game</h2>
+<p>The levers spell <b>PARTS</b>. The slides use <b>PAARTS</b>: Players, <b>Actions</b>, <b>Added value</b>, Rules, Tactics, Scope. (Brandenburger and Nalebuff's original PARTS has "Added value" as the A. The lecture summary uses "Actions" as the A, and the burning bridge is its example. Learn both: they are two sides of the same idea.)</p>
+<table><tr><th>Letter</th><th>Lever</th><th>Question to ask</th></tr>
+<tr><th>P</th><td>Players</td><td>Who else could be in the game? Who could be removed or added?</td></tr>
+<tr><th>A</th><td>Actions</td><td>Can I expand or restrict the actions available? (burning bridges, long-term supply contracts)</td></tr>
+<tr><th>A</th><td>Added value</td><td>What would the pie lose without me? (my marginal contribution)</td></tr>
+<tr><th>R</th><td>Rules</td><td>What rules fix how the game is played? Can I change or add them?</td></tr>
+<tr><th>T</th><td>Tactics</td><td>How do players perceive the game? Can I shape their perception?</td></tr>
+<tr><th>S</th><td>Scope</td><td>Is the game too narrow or broad? Can I link it to other games?</td></tr></table>
+<svg viewBox="0 0 700 120" width="700" role="img" aria-label="PARTS levers">
+<g class="n"><rect x="10" y="30" width="100" height="60" rx="8"/><rect x="123" y="30" width="100" height="60" rx="8"/><rect x="236" y="30" width="110" height="60" rx="8"/><rect x="359" y="30" width="100" height="60" rx="8"/><rect x="472" y="30" width="100" height="60" rx="8"/><rect x="585" y="30" width="100" height="60" rx="8"/></g>
+<text x="60" y="66" text-anchor="middle">Players</text><text x="173" y="66" text-anchor="middle">Actions</text><text x="291" y="66" text-anchor="middle">Added value</text><text x="409" y="66" text-anchor="middle">Rules</text><text x="522" y="66" text-anchor="middle">Tactics</text><text x="635" y="66" text-anchor="middle">Scope</text></svg>
+
+<h3>11.1 Players: NutraSweet</h3>
+<div class="box ex"><b>The story (as in the lecture).</b> NutraSweet, the sweetener in diet drinks, was supplied by Monsanto, which held a monopoly (patent protected until about 1992). Diet Coke and Diet Pepsi both depended on it, so Monsanto kept the price high. <b>Coke brought in a new supplier, HSC</b>, as an alternative source. The handwritten slide shows Coke, Monsanto and HSC and a "n/2, n/2" split sketch, plus numbers 500 and 3500 and the years 1992 to 1998. I could not decode what 500 and 3500 measure, so I do not use them.<br>
+<b>Lesson (change the players):</b> adding a supplier changes the game from "one supplier sets the price" to "suppliers compete for Coke's business". Monsanto's bargaining power falls because it is now replaceable.</div>
+<div class="box der"><b>Think with marginal contribution.</b> With no rival supplier, Monsanto's MC is the whole value of diet drinks, so it can charge almost anything. A second supplier cuts its MC to the cost saving over the rival. That shrinks its bargaining power. Players with bigger MC get larger shares.</div>
+<h3>11.2 Added value: Nintendo</h3>
+<div class="box ex">The slide recalls market values (1990 to 91): Sony 2.2, Nissan 2.0 and <b>Nintendo 2.4 trillion yen</b>, so Nintendo, a game company, was worth more than Nissan. The lecture's point: <b>you can't take away more than you add</b>. Nintendo kept high margins on its 8-bit NES console by <b>strictly limiting cartridge supply</b> to retailers. Holding back supply is destroying a little value on purpose, which keeps retailers needing Nintendo and avoids price wars. This is the same logic as the teacher burning cards: scarcity raises your share.</div>
+<h3>11.3 Rules: simultaneous vs sequential (Cournot vs Stackelberg)</h3>
+<div class="box ex">The lecture example: moving from Cournot to Stackelberg. Same two firms and same costs, but different <b>rules of moving</b>:
+<table><tr><th></th><th>Cournot</th><th>Stackelberg</th></tr><tr><th>Timing</th><td>Both choose quantity at the same time</td><td>Leader chooses first, follower sees it and then chooses</td></tr><tr><th>Who gains</th><td>Neither has an edge</td><td>The leader gets a first-mover edge</td></tr></table>
+<b>Rule of thumb from the slides: "look forward, reason back".</b> Whoever can set the rules of timing can change the outcome.</div>
+<h3>11.4 Tactics: NY Post vs Daily News</h3>
+<div class="box ex">The NY Post made a <b>targeted price cut in Staten Island</b> only, not across the whole city. The slide shows prices of 25¢, 40¢ and 50¢ around the Daily News and Post; I could not read exactly which price belongs to which paper, so I do not give them. The idea: a small, local move sends the rival a <b>signal</b> (and a test) that a price war is possible, without starting one everywhere. Tactics include <b>fog</b> (hiding your intentions), <b>signalling</b>, and <b>local tests</b>.</div>
+<h3>11.5 Scope: Nintendo vs Sega</h3>
+<div class="box ex">Nintendo stayed with its profitable 8-bit console (the slide circles "8 Bit" and crosses out "16 Bit") and left the 16-bit market to Sega, to protect its 8-bit business. Lesson: <b>the boundaries of the game matter</b>. Deciding which market you will and will not play in is a strategic choice. Widen or shrink the frame on purpose.</div>
+
+<h3>Putting it all together</h3>
+<svg viewBox="0 0 700 150" width="700" role="img" aria-label="Flow of coopetition thinking">
+<g class="e"><path d="M170 60 L210 60"/><path d="M360 60 L400 60"/><path d="M520 60 L560 60"/></g>
+<rect class="n" x="10" y="30" width="160" height="60" rx="8"/><text x="90" y="55" text-anchor="middle">1. Map the</text><text x="90" y="73" text-anchor="middle">Value Net</text>
+<rect class="n" x="210" y="30" width="150" height="60" rx="8"/><text x="285" y="55" text-anchor="middle">2. Find your</text><text x="285" y="73" text-anchor="middle">added value</text>
+<rect class="n" x="400" y="30" width="120" height="60" rx="8"/><text x="460" y="55" text-anchor="middle">3. Pull the</text><text x="460" y="73" text-anchor="middle">PARTS levers</text>
+<rect class="n" x="560" y="30" width="130" height="60" rx="8"/><text x="625" y="55" text-anchor="middle">4. Play the</text><text x="625" y="73" text-anchor="middle">new game</text></svg></section>
+
+<section id="s12"><h2>12. Practice questions (try first, then open the answer)</h2>
+<div class="box der"><b>Q1.</b> In the Bayesian BoS, the Boy's payoff table is as in section 4. Find the Boy's expected payoff from S if the Girl plays B1S2. <details><summary>Answer</summary>Game 1 (S vs B): Boy 0. Game 2 (S vs S): Boy 1. Expected = ½·0 + ½·1 = <b>½</b>.</details></div>
+<div class="box der"><b>Q2.</b> In the pure BNE, what does each type of Girl do, and what do the Boy and the Girl get? <details><summary>Answer</summary>Boy plays B. Meet type plays B, Avoid type plays S. Boy's expected payoff 1; Girl's ex-ante expected payoff 3/2 (Meet type gets 1, Avoid type gets 2).</details></div>
+<div class="box der"><b>Q3.</b> Why does the Meet type mix only when x = 2/3? <details><summary>Answer</summary>Her payoffs are x from B and 2 − 2x from S. She is indifferent only if x = 2 − 2x, i.e. x = 2/3.</details></div>
+<div class="box der"><b>Q4.</b> First-price auction, 3 bidders with values uniform on [0,1]. Your value is 0.9. What do you bid? <details><summary>Answer</summary>b = ((n−1)/n)v = (2/3)(0.9) = <b>0.6</b>.</details></div>
+<div class="box der"><b>Q5.</b> Two bidders, uniform values. What is the seller's expected revenue? <details><summary>Answer</summary>Expected max value = 2/3, bids are half of values, so revenue = 1/3.</details></div>
+<div class="box der"><b>Q6.</b> Seller cost 400, buyers 900 and 1100. Give the core. <details><summary>Answer</summary>x₂ = 0, x₃ ∈ [0, 200], x₁ = 700 − x₃ ∈ [500, 700]. Prices: the item is sold to buyer 3 at a price between 900 and 1100, since the seller's gain is price − 400 ∈ [500, 700].</details></div>
+<div class="box der"><b>Q7.</b> The teacher has 50 black cards and the students 50 red cards, a pair worth 1000. After the teacher burns 5 black cards, what is a student's marginal contribution and share? <details><summary>Answer</summary>v(N) = 45,000. Without one student still 45 pairs: 45,000. MC = 0, so a student's share is 0.</details></div>
+<div class="box der"><b>Q8.</b> In the burning-bridge game, why does Country 2 gain by burning the bridge? <details><summary>Answer</summary>Without the bridge Country 2 can only Fight, so Attack gives Country 1 just 0 and it chooses DA. Country 2 gets 3 instead of 2.</details></div>
+<div class="box der"><b>Q9.</b> Why can extra information hurt Player 2 in Example 3? <details><summary>Answer</summary>When informed, she plays the best reply to the real game (R or M), and Player 1 responds with T, leaving her 3ε &lt; 2. When uninformed she plays L, Player 1 replies B and she gets 2.</details></div>
+<div class="box der"><b>Q10.</b> Name the five PARTS levers and give one example. <details><summary>Answer</summary>Players (Coke adds HSC), Actions (burning a bridge), Added value (Nintendo limits cartridge supply), Rules (Cournot to Stackelberg), Tactics (NY Post in Staten Island), Scope (Nintendo leaves 16-bit to Sega).</details></div>
+<h3>One-page recap</h3>
+<ul><li><b>Bayesian game:</b> Nature picks types; a strategy is a plan per type; payoffs are averaged using the prior.</li><li><b>BNE:</b> mutual best responses, type by type. For the BoS: pure (B, B1S2); mixed Case A (⅔, ⅔, 0) and Case B (⅓, 0, ⅔).</li><li><b>Auction:</b> b = ((n−1)/n)v; 2 bidders b = v/2, revenue 1/3.</li><li><b>Cooperative game:</b> (N, v); MC<sub>i</sub> = v(N) − v(N\{i}); the core = allocations where no group gets less than it can make alone ⟺ no group gets more than its MC.</li><li><b>Coopetition:</b> change the game: Value Net (customers, suppliers, substitutors, complementors) and PARTS.</li></ul>
+</section>
+</main></body></html>
