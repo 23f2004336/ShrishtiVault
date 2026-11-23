@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game Theory and Strategy: Week 8 Notes</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#1d2433;--def:#4f46e5;--der:#0d9488;--ex:#d97706;--warn:#e11d48;--line:#dbe3ee;--defbg:#eef0ff;--derbg:#e6f7f4;--exbg:#fff6e5;--warnbg:#ffecef}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#121722;--card:#1b2231;--ink:#e8ecf4;--line:#2c3649;--defbg:#23275a;--derbg:#12332f;--exbg:#3a2c0e;--warnbg:#3d1620}}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);scroll-padding-top:60px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#0d9488,#4f46e5 55%,#d97706);color:#fff;padding:36px 20px}
+header h1{margin:0 0 6px;font-size:2rem}header p{margin:0;opacity:.94}
+nav{position:sticky;top:0;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px;overflow-x:auto;white-space:nowrap;z-index:5}
+nav a{color:var(--def);text-decoration:none;padding:4px 10px;border-radius:14px;font-size:.9rem}nav a:hover{background:var(--defbg)}
+main{max-width:860px;margin:0 auto;padding:12px 16px 60px}
+section{margin-top:34px}
+h2{font-size:1.6rem;margin:0 0 10px;border-bottom:3px solid var(--ex);padding-bottom:6px}
+h3{margin:22px 0 6px;font-size:1.2rem;color:var(--def)}
+.box{border-left:5px solid;border-radius:8px;padding:10px 16px;margin:14px 0}
+.def{background:var(--defbg);border-color:var(--def)}.der{background:var(--derbg);border-color:var(--der)}
+.ex{background:var(--exbg);border-color:var(--ex)}.warn{background:var(--warnbg);border-color:var(--warn)}
+.m{font-family:Cambria,"Times New Roman",serif;font-style:italic;background:var(--card);padding:1px 6px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.eq{display:block;text-align:center;font-family:Cambria,"Times New Roman",serif;font-size:1.1rem;margin:10px 0;overflow-x:auto;background:var(--card);border-radius:8px;padding:8px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;margin:12px auto;background:var(--card);display:block;width:max-content;max-width:100%;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:7px 13px;text-align:center}th{background:var(--defbg)}
+td.nash{background:#c8f2e6;color:#073b33;font-weight:700}
+td.bad{background:#ffd9df;color:#5a0b19}
+svg{max-width:100%;height:auto;display:block;margin:12px auto}
+svg text{fill:var(--ink);font-family:inherit;font-size:13px}
+.n{fill:var(--card);stroke:var(--def);stroke-width:2}
+.e{stroke:var(--def);stroke-width:2.2;fill:none}.hi{stroke:#0d9488;stroke-width:4;fill:none}
+.ax{stroke:var(--ink);stroke-width:1.5;fill:none}
+ul,ol{padding-left:22px}li{margin:3px 0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 12px;margin:6px 0}summary{cursor:pointer;font-weight:600}
+.cap{font-size:.88rem;opacity:.8;text-align:center;margin:-4px 0 10px}
+</style><style>.tr td,.tr th{padding:5px 11px}</style></head><body>
+<header><h1>Game Theory and Strategy: Week 8</h1><p>Information cascades (herding), then voting: preferences, Condorcet's paradox, Borda and other rules, Arrow's impossibility theorem, and the Condorcet jury theorem</p></header>
+<nav><a href="#s1">1 Herding</a><a href="#s2">2 Marble game</a><a href="#s3">3 Bayes in the game</a><a href="#s4">4 Lessons</a><a href="#s5">5 Preferences</a><a href="#s6">6 Majority rule</a><a href="#s7">7 Positional voting</a><a href="#s8">8 Rules compared</a><a href="#s9">9 Arrow</a><a href="#s10">10 Jury theorem</a><a href="#s11">11 Insincere voting</a><a href="#s12">12 Sequential voting</a><a href="#s13">13 Practice</a></nav>
+<main>
+<div class="box def"><b>Colour key:</b> blue = definition, green = derivation (every step shown), orange = worked example, red = trap or "check this". Week 8 has two halves. <b>Part A</b> (sections 1 to 4): <i>information cascades</i>, i.e. when it is rational to copy the crowd. <b>Part B</b> (sections 5 to 12): <i>voting</i>, i.e. how a group turns many opinions into one decision.</div>
+<div class="box ex"><b>What you need:</b> conditional probability and <b>Bayes' rule</b> (derived again in section 3, so you can start fresh), the idea of a sequence of independent draws, and basic counting. Nothing else.</div>
+<div class="box warn"><b>Honest note about the sources.</b> I read both slide decks (8A cascades, 8B voting) and the lecture summary, and checked every number by computer (exact fractions, simulation of the cascade game, all voting rules, the jury theorem table). I follow the <b>slides</b>. Where the summary disagrees with the slides, or where I found something the slides do not say, it is in a red box. The main points: (1) the summary's "Type R" voters in the budget example have the wrong ranking; (2) the slides' "Copeland" totals are really Borda scores, and a true Copeland count gives a 3-way tie; (3) the chance of a <i>wrong</i> cascade is exactly <b>1/5</b>, not the 1/9 on the slide (1/9 is only one way a wrong cascade can start); (4) the summary uses 100 students in the "fragile cascade" example but the slide uses 80.</div>
+
+<h2 style="margin-top:28px">Part A: Information cascades</h2>
+<section id="s1"><h2>1. Herding: why copying can be rational</h2>
+<p>You arrive in an unfamiliar town. Your own research says restaurant A is good. But when you reach it, <b>A is empty and B next door is nearly full</b>. What do you do?</p>
+<div class="box ex"><b>The reasoning.</b> If you think other diners have tastes like yours and some information of their own about where to eat, then a <b>full</b> B is evidence that B is better. Many independent people, each with a hint, chose B. That crowd's information can be <b>stronger than your single private hint</b>. So it can be perfectly rational to go to B <b>even though your own information says A</b>.</div>
+<div class="box def"><b>Information cascade (herding):</b> people abandon their own information in favour of inferences drawn from what earlier people <b>did</b>.<br>
+It can happen when four things are true (slide labels [A] to [D]):
+<table class="tr"><tr><th>[A]</th><td>A decision to make (adopt a technology, wear a style, eat in a restaurant, support a politician)</td></tr><tr><th>[B]</th><td>People decide <b>sequentially</b>, and each can see what earlier people chose</td></tr><tr><th>[C]</th><td>Each person has some <b>private information</b> that guides the decision</td></tr><tr><th>[D]</th><td>You <b>cannot see</b> others' private information, only what they <b>do</b>; so you infer it from their actions</td></tr></table></div>
+<p>Examples the slides give: fashions and fads, voting for popular candidates, books that sell because they are high on the bestseller list, and the spread of a technology among consumers and firms.</p>
+<svg viewBox="0 0 700 150" width="700" role="img" aria-label="Chain of actions and inference">
+<g class="e"><path d="M150 60 L195 60"/><path d="M335 60 L380 60"/><path d="M520 60 L565 60"/></g>
+<rect class="n" x="10" y="30" width="140" height="60" rx="8"/><text x="80" y="55" text-anchor="middle">Early people have</text><text x="80" y="73" text-anchor="middle">private hints</text>
+<rect class="n" x="195" y="30" width="140" height="60" rx="8"/><text x="265" y="55" text-anchor="middle">They act</text><text x="265" y="73" text-anchor="middle">(visible)</text>
+<rect class="n" x="380" y="30" width="140" height="60" rx="8"/><text x="450" y="55" text-anchor="middle">Later people infer</text><text x="450" y="73" text-anchor="middle">the hints</text>
+<rect class="n" x="565" y="30" width="125" height="60" rx="8" style="stroke:#e11d48"/><text x="627" y="55" text-anchor="middle">They may drop</text><text x="627" y="73" text-anchor="middle">their own hint</text>
+<text x="350" y="125" text-anchor="middle" style="font-size:12px">Actions are seen. Hints are not. That is what makes cascades possible.</text></svg></section>
+
+<section id="s2"><h2>2. The classroom marble experiment</h2>
+<div class="box def"><b>Setup (slides).</b> An urn hides <b>three marbles</b>. With probability ½ it holds <b>two red and one blue</b> ("majority-red"). With probability ½ it holds <b>two blue and one red</b> ("majority-blue"). Students come one by one to the front. Each student:<br>
+1. draws a marble, <b>looks at its colour</b>, and puts it back <b>without showing it</b>;<br>
+2. <b>publicly announces a guess</b>: "majority-red" or "majority-blue".<br>
+At the end every student who guessed <b>correctly</b> gets a reward; wrong guessers get nothing. Everyone reasons correctly using everything they have heard.</div>
+<p><b>The key numbers.</b> If the urn is majority-blue, a draw is blue with probability <b>2/3</b> and red with probability <b>1/3</b>. If it is majority-red, the reverse. So a marble is a "signal" that is right <b>2/3</b> of the time. I write <span class="m">q = 2/3</span> for this accuracy.</p>
+<h3>2.1 Going student by student</h3>
+<div class="box der"><b>Student 1.</b> Sees one marble. If it is blue, majority-blue is more likely (we prove it below: 2/3), so she guesses blue. If red, she guesses red. Her guess <b>equals her draw</b>, so her guess reveals her marble perfectly.</div>
+<div class="box der"><b>Student 2.</b> Knows student 1's marble (from the guess) and sees her own.<br>
+• <b>Same colour</b> as student 1: two draws point the same way, so she guesses that colour.<br>
+• <b>Different colour</b> (say student 1 said blue and she draws red): it is as if she had drawn twice, once blue and once red. That is a <b>tie</b> (probability exactly ½ each). The slides assume she breaks the tie by <b>guessing the colour she saw</b>. Either way, her guess <b>equals her draw</b>, so it also reveals her marble perfectly.</div>
+<div class="box der"><b>Student 3.</b><br>
+• If the first two guesses were <b>different</b> (one blue, one red), they cancel out. Student 3 is in the same position as student 1: she guesses her own colour.<br>
+• If the first two guesses were the <b>same</b> (say both blue), she knows two blue marbles were drawn. Suppose she draws <b>red</b>. She now has <b>three draws: blue, blue, red</b>. We compute below that majority-blue has probability <b>2/3</b>. So she should guess <b>blue and ignore her own red marble</b>.<br>
+<b>That is the cascade starting.</b> Her guess is blue whatever she draws, so it tells later students <b>nothing</b> about her marble.</div>
+<div class="box der"><b>Student 4 and everyone after.</b> Student 4 hears blue, blue, blue. She knows that the first two guesses showed real marbles, and that student 3's blue was automatic (it would be blue whatever he saw), so it carries no information. So she faces exactly the situation of student 3: two blue draws against whatever she holds. Even a red marble is outweighed, so she guesses <b>blue</b>. The same applies to students 5, 6, 7, … by repeating the argument. <b>All later guesses are blue and no new information ever enters the public record.</b></div>
+<svg viewBox="0 0 700 330" width="700" role="img" aria-label="Decision tree for the first three students">
+<g class="e"><path d="M350 36 L180 90"/><path d="M350 36 L520 90"/><path d="M180 126 L110 190"/><path d="M180 126 L250 190"/><path d="M520 126 L450 190"/><path d="M520 126 L590 190"/></g>
+<rect class="n" x="270" y="8" width="160" height="30" rx="8"/><text x="350" y="28" text-anchor="middle">Students 1 and 2 guess</text>
+<rect class="n" x="100" y="90" width="160" height="36" rx="8" style="stroke:#4f46e5"/><text x="180" y="113" text-anchor="middle">Same (e.g. blue, blue)</text>
+<rect class="n" x="440" y="90" width="160" height="36" rx="8" style="stroke:#d97706"/><text x="520" y="113" text-anchor="middle">Different (blue, red)</text>
+<text x="240" y="62" text-anchor="end" style="font-size:12px">prob 5/9</text><text x="470" y="62" style="font-size:12px">prob 4/9</text>
+<rect class="n" x="30" y="190" width="160" height="50" rx="8" style="stroke:#e11d48"/><text x="110" y="212" text-anchor="middle">Student 3 draws red</text><text x="110" y="230" text-anchor="middle">guesses BLUE anyway</text>
+<rect class="n" x="200" y="190" width="160" height="50" rx="8" style="stroke:#e11d48"/><text x="280" y="212" text-anchor="middle">Student 3 draws blue</text><text x="280" y="230" text-anchor="middle">guesses BLUE</text>
+<rect class="n" x="400" y="190" width="300" height="50" rx="8" style="stroke:#0d9488"/><text x="550" y="212" text-anchor="middle">Draws cancel: student 3 copies</text><text x="550" y="230" text-anchor="middle">her own draw; no cascade yet</text>
+<rect class="n" x="30" y="268" width="330" height="48" rx="8" style="stroke:#e11d48"/><text x="195" y="289" text-anchor="middle">CASCADE: students 4, 5, 6, ... all guess blue</text><text x="195" y="306" text-anchor="middle">whatever they draw</text>
+<path class="e" d="M110 240 L110 268"/><path class="e" d="M280 240 L280 268"/></svg>
+<p class="cap">The tree for the case "first two guesses blue". "Same" has probability 5/9 when we average over both urns (computed in section 3); the other side starts the same story again with a clean slate.</p></section>
+
+<section id="s3"><h2>3. Bayes' rule, derived, and used to check each student's reasoning</h2>
+<div class="box der"><b>Derivation of Bayes' rule (slides).</b> For events A and B, <span class="m">Pr[A|B]</span> means "probability of A given that B happened".<br>
+1. By definition, <span class="m">Pr[A|B] = Pr[A∩B] / Pr[B]</span> (the part of B's probability where A also happens).<br>
+2. Likewise <span class="m">Pr[B|A] = Pr[A∩B] / Pr[A]</span>.<br>
+3. From step 2, <span class="m">Pr[A∩B] = Pr[B|A]·Pr[A]</span>. Substitute into step 1:
+<span class="eq">Pr[A|B] = Pr[B|A] · Pr[A] / Pr[B]</span>
+4. The denominator can be split by the two possible urns ("law of total probability"):
+<span class="eq">Pr[B] = Pr[A]·Pr[B|A] + Pr[not A]·Pr[B|not A]</span></div>
+<p><b>Why the students use it.</b> A student wants to maximise her chance of being right. She guesses majority-blue if <span class="m">Pr[majority-blue | what she saw and heard] &gt; 0.5</span> and majority-red if it is below 0.5.</p>
+<h3>3.1 Student 1 (and 2)</h3>
+<div class="box der">Prior: Pr[majority-blue] = Pr[majority-red] = ½. Likelihoods: Pr[blue | majority-blue] = 2/3 and Pr[blue | majority-red] = 1/3. She draws blue.<br>
+<b>Denominator:</b> Pr[blue] = ½·(2/3) + ½·(1/3) = 1/3 + 1/6 = <b>1/2</b>.<br>
+<b>Posterior:</b> Pr[majority-blue | blue] = (½·2/3) / (1/2) = (1/3)/(1/2) = <b>2/3</b> &gt; 1/2. So she guesses blue. ✔</div>
+<h3>3.2 Student 3, who has heard blue, blue and draws red</h3>
+<div class="box der">She knows the three draws were <b>blue, blue, red</b> (the first two are revealed by the guesses; the third is her own). The draws are independent given the urn.<br>
+<b>If majority-blue:</b> Pr[b, b, r | majority-blue] = (2/3)·(2/3)·(1/3) = <b>4/27</b>.<br>
+<b>If majority-red:</b> Pr[b, b, r | majority-red] = (1/3)·(1/3)·(2/3) = <b>2/27</b>.<br>
+<b>Denominator:</b> Pr[b, b, r] = ½·(4/27) + ½·(2/27) = 2/27 + 1/27 = 3/27 = <b>1/9</b>.<br>
+<b>Posterior:</b> Pr[majority-blue | b, b, r] = (½·4/27) / (1/9) = (2/27)/(1/9) = <b>2/3</b> &gt; 1/2.<br>
+So she <b>should guess blue</b>, ignoring her red marble. ✔ (Shortcut: the red cancels one blue, leaving one net blue draw, which gives 2/3, the same as student 1's calculation.)</div>
+<h3>3.3 A general rule: when does a cascade start? (the net count d)</h3>
+<p>Let each signal be right with probability <span class="m">q</span> (here 2/3). Each informative signal multiplies the <b>odds</b> of its colour by <span class="m">q/(1−q)</span> (for q = 2/3 that factor is 2). A signal of the opposite colour multiplies by <span class="m">(1−q)/(q)</span> (that is ½), cancelling one of the other kind.</p>
+<div class="box der"><b>Derivation.</b> Let d be the <b>net number</b> of revealed signals favouring blue (blue signals minus red signals) before a student moves. Prior odds are 1 : 1. Suppose the student holds a <b>red</b> signal (against the crowd).<br>
+Odds(blue : red) = (q/(1−q))<sup>d</sup> × ((1−q)/q) = (q/(1−q))<sup>d−1</sup>.<br>
+• d = 1: odds = (q/(1−q))⁰ = 1, a <b>tie</b>. She follows her own signal (the slide's tie-break rule), so her guess reveals her signal.<br>
+• d = 2: odds = q/(1−q) = <b>2 &gt; 1</b> (for q = 2/3). She follows the crowd against her own signal: <b>cascade</b>.<br>
+So <b>a cascade starts as soon as the net revealed count reaches 2</b>. Inside a cascade, guesses carry no information, so d stops changing.</div>
+<svg viewBox="0 0 700 170" width="700" role="img" aria-label="Net count d as a walk with absorbing ends at plus or minus 2">
+<line class="ax" x1="70" y1="85" x2="630" y2="85"/>
+<g><circle cx="110" cy="85" r="20" fill="#ffecef" stroke="#e11d48" stroke-width="2"/><circle cx="250" cy="85" r="20" class="n"/><circle cx="350" cy="85" r="22" class="n" style="stroke:#d97706"/><circle cx="450" cy="85" r="20" class="n"/><circle cx="590" cy="85" r="20" fill="#e6f7f4" stroke="#0d9488" stroke-width="2"/></g>
+<g text-anchor="middle"><text x="110" y="90">−2</text><text x="250" y="90">−1</text><text x="350" y="90">0</text><text x="450" y="90">+1</text><text x="590" y="90">+2</text></g>
+<text x="110" y="130" text-anchor="middle" style="font-size:12px">red cascade</text><text x="590" y="130" text-anchor="middle" style="font-size:12px">blue cascade</text>
+<text x="350" y="40" text-anchor="middle" style="font-size:12px">start here: each informative guess moves d by +1 or −1</text>
+<text x="350" y="155" text-anchor="middle" style="font-size:12px">Once |d| = 2, the walk stops: all later guesses repeat the cascade</text></svg>
+<p class="cap">The count d is a walk that stops at ±2. We use this picture to compute the chance of a wrong cascade in section 4.</p></section>
+
+<section id="s4"><h2>4. Three lessons from cascades</h2>
+<h3>L1: Cascades can be wrong</h3>
+<div class="box der"><b>Slide example.</b> Suppose the urn is truly <b>majority-red</b>. A blue draw has probability 1/3. The chance that student 1 <b>and</b> student 2 both draw blue is 1/3 × 1/3 = <b>1/9</b>. Then both guess blue, a cascade of "blue" starts, and <b>every later guess is wrong</b>. The chance of such an error is <b>not reduced by having more students</b>: it stays at 1/9 however many take part.</div>
+<div class="box warn"><b>Something the slides do not say (my own calculation, checked by simulation).</b> The slide's 1/9 counts only the case where the <b>first two</b> draws are both wrong. But a wrong cascade can also start later. If student 1 and 2 disagree, the count resets to d = 0 and the walk starts again. So the <i>full</i> chance of a wrong cascade is bigger than 1/9. Let w = chance that the cascade ends up <b>correct</b>, starting from d = 0 (correct signals have probability q = 2/3, wrong ones 1 − q = 1/3).<br>
+From d = 0: step to +1 with probability q, to −1 with probability 1−q. Write a = chance of a correct cascade from d = +1 and b = from d = −1.<br>
+w = q·a + (1−q)·b. From +1: with probability q we reach +2 (correct, done), otherwise we go back to 0: a = q + (1−q)·w. From −1: with probability q we go back to 0, otherwise we hit −2 (wrong): b = q·w.<br>
+Substitute: w = q(q + (1−q)w) + (1−q)(q·w) = q² + 2q(1−q)·w. So w(1 − 2q(1−q)) = q², and since 1 − 2q(1−q) = q² + (1−q)², we get
+<span class="eq">w = q² / (q² + (1−q)²) = (4/9) / (4/9 + 1/9) = 4/5</span>
+So a cascade ends <b>wrong with probability 1/5 = 20%</b>, not 1/9. (Check: 1/9 for "first two wrong" + (4/9 chance of a reset) × (1/5) = 1/9 + 4/45 = 1/5. ✔) The lesson is the same: the error does not shrink with more people. Notice that even a cascade is right 80% of the time, more than one person's 2/3.</div>
+<h3>L2: Cascades can be based on very little information</h3>
+<p>Once a cascade starts, <b>private signals are ignored</b>. So only the signals before the cascade matter. In a large population where a cascade starts quickly, most of the information that the group <i>holds</i> (all those private marbles) <b>is never used</b>. Example: with 1,000 students and a cascade starting at student 3, the group decision rests on just <b>2</b> marbles; the other 998 are wasted.</p>
+<h3>L3: Cascades are fragile</h3>
+<p>Because a cascade rests on so little information (a net count of just 2), it is <b>easy to start and easy to stop</b>.</p>
+<div class="box ex"><b>Slide example.</b> A class of <b>80</b> students. The first two guesses are blue, and as predicted all the following guesses are blue. Now students <b>40 and 41</b> both draw red, and they "cheat" by <b>showing their marbles</b> to the class. The cascade breaks. Student 42 now has <b>four real pieces of information</b>: the colours seen by students 1, 2 (blue, blue) and 40, 41 (red, red). Two blue vs two red is a tie, so she <b>goes by her own draw</b>. A run of 39 blue guesses was overturned by two pieces of fresh information.</div>
+<div class="box warn"><b>Slide vs summary.</b> The summary uses a 100-agent version (agents 101 and 102 reveal red). The idea is identical; I use the slide's numbers.</div>
+<h3>Wisdom of the crowd versus a cascade</h3>
+<table class="tr"><tr><th></th><th>Wisdom of the crowd</th><th>Information cascade</th></tr>
+<tr><th>How people decide</th><td>Each guesses <b>independently</b> and the guesses are averaged</td><td>Each <b>sees earlier choices</b> before deciding</td></tr>
+<tr><th>Example</th><td>Jelly beans in a jar; weight of a bull at a fair</td><td>Restaurant B, fashions, bestseller lists</td></tr>
+<tr><th>What happens to errors</th><td>Individual errors cancel; the average can be very accurate</td><td>Information is suppressed; the herd can be confidently wrong</td></tr>
+<tr><th>Key ingredient</th><td>Independence</td><td>Sequential observation of <b>actions</b></td></tr></table>
+<div class="box ex"><b>Main lesson of the lecture:</b> be careful about concluding what is best from what a crowd does. A crowd can be wrong even when everybody is rational and everybody takes the same action. If guesses are made one after another and seen by later people, there is <b>no reason to expect the average guess to be good</b>.</div>
+<h3>Where this shows up</h3>
+<ul><li><b>Committees.</b> A hiring committee goes around the table asking who supports candidate A or B. If everyone assumes the others are about as well informed as they are, a cascade develops quickly. It is not just social pressure; the slides stress that it can be a <b>rational</b> reaction to what earlier speakers know.</li><li><b>Remedies.</b> (1) Force the experts to reach partial decisions <b>independently</b> before they discuss and agree. (2) If some people have unusually good information, it matters whether they speak <b>early or late</b> (early is better, since they set the first signals).</li><li><b>Marketing.</b> Firms try to start a buying cascade by getting an initial group to adopt the product. Later buyers may follow even if it is no better, or worse, than competitors. It works best if buyers can see <b>adoption decisions but not how satisfied early buyers were</b>. If payoffs or satisfaction statistics of earlier consumers are available, that can <b>prevent</b> a cascade of bad choices.</li></ul></section>
+
+<h2 style="margin-top:28px">Part B: Voting</h2>
+<section id="s5"><h2>5. Voting and individual preferences</h2>
+<p><b>Voting</b> is used when a group must reach <b>one decision that speaks for the group</b>: an election (India, the US, France), a legislature passing a bill, a jury, a prize committee, critics ranking the best films. It can pick a single winner or produce a <b>ranked list</b> (the greatest players of all time).</p>
+<p>Why do voters disagree? Slide gives two reasons:</p>
+<table class="tr"><tr><th>Reason</th><th>Example</th><th>Which half of the lecture</th></tr>
+<tr><th>Genuinely <b>different tastes</b></th><td>Experts who rank Maradona vs Pele differently do not lack information; they judge differently</td><td>Sections 5 to 9 (preference aggregation)</td></tr>
+<tr><th>A <b>shared goal</b> but different information</th><td>A jury wants the correct verdict but each juror knows or notices different things</td><td>Sections 10 to 12 (information aggregation)</td></tr></table>
+<p>Online systems use the same ideas (search engines ranking results, recommendation systems). The slide questions: how should we make one ranking from conflicting opinions? Is majority voting good, is something better, and <b>what does "good" even mean</b> for a voting system?</p>
+<h3>5.1 Modelling one voter</h3>
+<div class="box def">A group evaluates a finite set of <b>alternatives</b> (candidates, verdicts, budget amounts, award nominees). Voter <i>i</i> writes <span class="m">X ≻<sub>i</sub> Y</span> if she <b>prefers X to Y</b>. We require two properties:<br>
+<b>[IP1] Completeness:</b> for any two different alternatives X and Y, voter i prefers X to Y <b>or</b> Y to X, but not both. This rules out ties and "no opinion".<br>
+<b>[IP2] Transitivity:</b> if X ≻ Y and Y ≻ Z, then X ≻ Z.</div>
+<div class="box der"><b>Why transitivity is reasonable: the money pump.</b> Suppose someone ranks Chocolate over Vanilla, Vanilla over Kesar Pista, and Kesar Pista over Chocolate (C ≻ V ≻ K ≻ C, a cycle). She holds a Chocolate cone.<br>
+1. You offer a Kesar Pista cone for her Chocolate plus a small fee ε. She prefers K to C, so she pays.<br>
+2. You offer Vanilla for her Kesar Pista plus ε. She prefers V to K, so she pays.<br>
+3. You offer Chocolate for her Vanilla plus ε. She prefers C to V, so she pays.<br>
+She is back to the Chocolate cone she started with, but <b>3ε poorer</b>. You can repeat this forever. (The slide asks: faced with just these three flavours in a shop, what would she buy? There is no sensible answer.)</div>
+<div class="box ex"><b>Equivalence.</b> A complete and transitive preference is exactly the same thing as a <b>ranked list</b> from best to worst. So we describe each voter by her ranking.</div>
+<div class="box def"><b>Voting system:</b> any method that takes everyone's complete and transitive rankings and produces a <b>group ranking</b>. (For a fixed number k of voters, it is a function from k rankings to one ranking.)</div></section>
+
+<section id="s6"><h2>6. Majority rule and its paradox</h2>
+<h3>6.1 Two alternatives: all fine</h3>
+<p>With two alternatives and an <b>odd</b> number of voters (so no ties), majority rule ranks first the alternative that more voters prefer. It gives a complete, transitive group ranking.</p>
+<h3>6.2 More than two: apply majority to every pair</h3>
+<p>For each pair X, Y, count voters who prefer X and voters who prefer Y. The larger number wins the pair: X ≻ Y or Y ≻ X. Because the number of voters is odd, there is <b>exactly one</b> winner in each pair, so the group preference is <b>complete</b>. But is it <b>transitive</b>?</p>
+<h3>6.3 The Condorcet paradox</h3>
+<table class="tr"><tr><th>Voter</th><th>1st</th><th>2nd</th><th>3rd</th></tr><tr><th>1</th><td>A</td><td>B</td><td>C</td></tr><tr><th>2</th><td>B</td><td>C</td><td>A</td></tr><tr><th>3</th><td>C</td><td>A</td><td>B</td></tr></table>
+<div class="box der"><b>Count each pair.</b><br>
+<b>A vs B:</b> voters 1 and 3 prefer A (voter 3: C ≻ A ≻ B), voter 2 prefers B. A wins <b>2 to 1</b>: A ≻ B.<br>
+<b>B vs C:</b> voters 1 and 2 prefer B, voter 3 prefers C. B wins <b>2 to 1</b>: B ≻ C.<br>
+<b>C vs A:</b> voters 2 and 3 prefer C, voter 1 prefers A. C wins <b>2 to 1</b>: C ≻ A.<br>
+Together: A ≻ B ≻ C ≻ A, a <b>cycle</b>. Transitivity would require A ≻ C, but the group says C ≻ A.</div>
+<svg viewBox="0 0 400 250" width="400" role="img" aria-label="Condorcet cycle">
+<g class="e"><path d="M214 56 L296 150"/><path d="M270 188 L130 188"/><path d="M104 150 L186 56"/></g>
+<circle class="n" cx="200" cy="40" r="22"/><text x="200" y="45" text-anchor="middle">A</text><circle class="n" cx="320" cy="190" r="22"/><text x="320" y="195" text-anchor="middle">B</text><circle class="n" cx="80" cy="190" r="22"/><text x="80" y="195" text-anchor="middle">C</text>
+<text x="275" y="105">A beats B (2:1)</text><text x="200" y="222" text-anchor="middle">B beats C (2:1)</text><text x="125" y="105" text-anchor="end">C beats A (2:1)</text>
+<text x="200" y="125" text-anchor="middle" style="fill:#e11d48;font-size:20px">↻</text></svg>
+<p class="cap">Every alternative loses to another: there is no Condorcet winner (an alternative that beats all others head to head).</p>
+<div class="box def"><b>Condorcet paradox:</b> every voter has a complete, transitive ranking, but the pairwise-majority group preference can be <b>non-transitive</b>. Each individual is "rational" and the group is not.</div>
+<h3>6.4 Elimination tournaments and agenda setting</h3>
+<p>To get a full ranking, one can pick a group favourite, remove it, and repeat. A natural way to pick a favourite is a <b>knockout tournament</b>: compare the first two alternatives by majority, then compare the winner with the third, then the winner with the fourth, and so on. The last winner is the "group favourite". (Slide picture: A vs B, winner vs C, winner vs D.)</p>
+<div class="box der"><b>Use it on the paradox profile (three alternatives).</b><br>
+• <b>Agenda 1: A vs B first, then winner vs C.</b> A beats B; then C beats A (2:1). <b>C wins.</b><br>
+• <b>Agenda 2: B vs C first, then winner vs A.</b> B beats C; then A beats B. <b>A wins.</b><br>
+• <b>Agenda 3: C vs A first, then winner vs B.</b> C beats A; then B beats C. <b>B wins.</b><br>
+The winner is decided <b>entirely by the order of the votes</b>.</div>
+<svg viewBox="0 0 700 210" width="700" role="img" aria-label="Three agendas">
+<g class="e"><path d="M100 160 L130 120"/><path d="M160 160 L130 120"/><path d="M130 120 L160 80"/><path d="M200 120 L160 80"/>
+<path d="M340 160 L370 120"/><path d="M400 160 L370 120"/><path d="M370 120 L400 80"/><path d="M440 120 L400 80"/>
+<path d="M580 160 L610 120"/><path d="M640 160 L610 120"/><path d="M610 120 L640 80"/><path d="M680 120 L640 80"/></g>
+<g class="n"><circle cx="100" cy="170" r="14"/><circle cx="160" cy="170" r="14"/><circle cx="200" cy="130" r="14"/><circle cx="340" cy="170" r="14"/><circle cx="400" cy="170" r="14"/><circle cx="440" cy="130" r="14"/><circle cx="580" cy="170" r="14"/><circle cx="640" cy="170" r="14"/><circle cx="680" cy="130" r="14"/></g>
+<g text-anchor="middle"><text x="100" y="175">A</text><text x="160" y="175">B</text><text x="200" y="135">C</text><text x="340" y="175">B</text><text x="400" y="175">C</text><text x="440" y="135">A</text><text x="580" y="175">C</text><text x="640" y="175">A</text><text x="680" y="135">B</text>
+<text x="160" y="60" style="font-weight:700;fill:#0d9488">C wins</text><text x="400" y="60" style="font-weight:700;fill:#0d9488">A wins</text><text x="640" y="60" style="font-weight:700;fill:#0d9488">B wins</text>
+<text x="160" y="205" style="font-size:12px">A vs B, then C</text><text x="400" y="205" style="font-size:12px">B vs C, then A</text><text x="640" y="205" style="font-size:12px">C vs A, then B</text></g></svg>
+<div class="box ex"><b>Rule of thumb (slide):</b> to make C win, vote A vs B first. To make B win, vote A vs C first. To make A win, vote B vs C first. In short, <b>knock out early the alternative that would have beaten your favourite</b>. If voter 3 (C ≻ A ≻ B) sets the agenda, C wins; if voter 1 (A ≻ B ≻ C) sets it, A wins. <b>The group favourite is chosen by whoever controls the agenda.</b></div>
+<div class="box der"><b>Allowing eliminated alternatives back?</b> It does not fix things. With these preferences there is always an alternative that beats the current favourite (C beats A, B beats C, A beats B), so the process <b>never ends</b>.</div></section>
+
+<section id="s7"><h2>7. Positional voting: Borda count, plurality</h2>
+<div class="box def"><b>Positional voting:</b> build the group ranking directly from the individual rankings (not from pairwise duels). Each position in a ranking is worth some points; add the points an alternative gets across all voters; rank by total.<br>
+<b>Borda count</b> (k alternatives): 1st place = k − 1 points, 2nd = k − 2, …, last = 0.<br>
+<b>Plurality:</b> 1 point for 1st place, 0 for everything else: the most first-place votes wins. (It is also a positional rule.)<br>
+(The Ballon d'Or gives each journalist's top five 6, 4, 3, 2, 1 points; 100 journalists for the men's award, 50 for the women's award, from a 30-player shortlist. The point values 6-4-3-2-1 come from the lecture summary, not the slide.)</div>
+<div class="box ex"><b>Small example (slide).</b> Two voters, four alternatives. Voter 1: A ≻ B ≻ C ≻ D. Voter 2: B ≻ C ≻ A ≻ D. Points (3, 2, 1, 0): A = 3 + 1 = <b>4</b>, B = 2 + 3 = <b>5</b>, C = 1 + 2 = <b>3</b>, D = 0 + 0 = <b>0</b>. Group ranking: <b>B ≻ A ≻ C ≻ D</b>.</div>
+<div class="box der"><b>Good news:</b> Borda (ignoring ties) always produces a <b>complete and transitive</b> ranking, because the total points are numbers and numbers can always be sorted. So it can never give a Condorcet cycle. <b>Bad news:</b> the fight for top places can depend on how alternatives <b>lower down</b> are ranked.</div>
+<h3>7.1 Problem 1: Borda breaks "independence of irrelevant alternatives"</h3>
+<div class="box ex"><b>Pele, Maradona, Messi (slide).</b> Five experts. <b>First vote only on Pele (P) vs Maradona (M):</b> experts 1, 2, 3 pick Pele; experts 4, 5 pick Maradona. Pele wins 3 to 2.<br>
+<b>At the last moment Messi (L) is added.</b> Rankings: experts 1 to 3: P ≻ M ≻ L; experts 4 and 5: M ≻ L ≻ P. Borda (2, 1, 0):<br>
+P = 3×2 + 2×0 = <b>6</b>. M = 3×1 + 2×2 = <b>7</b>. L = 3×0 + 2×1 = <b>2</b>.<br>
+<b>Maradona wins</b>, although in the head-to-head P beat M 3 to 2, <b>and the person who joined the race (Messi) came last</b>.</div>
+<div class="box der"><b>Check by computer:</b> Pele also beats Messi head to head (3 to 2) and Maradona beats Messi 5 to 0. So <b>Pele beats everyone in pairwise duels</b> (he is the Condorcet winner), yet Borda ranks him second. The "irrelevant" alternative flipped the Pele/Maradona order.</div>
+<div class="box def"><b>Independence of irrelevant alternatives (IIA):</b> the group's ordering of X and Y should depend only on how each voter ranks X and Y against each other, not on where a third alternative Z is placed. Borda violates it. (Majority rule does satisfy it, but it fails transitivity.)</div>
+<h3>7.2 Problem 2: strategic misreporting</h3>
+<div class="box ex"><b>Same example.</b> Suppose experts 4 and 5 truly believe <b>M ≻ P ≻ L</b>.<br>
+<b>If they are honest:</b> P = 3×2 + 2×1 = <b>8</b>, M = 3×1 + 2×2 = <b>7</b>. Pele wins.<br>
+<b>If they lie</b> and report M ≻ L ≻ P (dropping Pele below Messi): P = 3×2 + 2×0 = <b>6</b>, M = <b>7</b>. <b>Maradona wins</b>, which is what they wanted.<br>
+So voters can gain by <b>lying</b>, especially by pushing down the main rival of their favourite.</div>
+<div class="box ex"><b>Plurality has similar "third-party" effects:</b> an alternative that is the favourite of very few people can shift the outcome from one of the two leading contenders to the other (vote-splitting).</div></section>
+
+<section id="s8"><h2>8. Three rules on one example: the budget problem</h2>
+<div class="box ex"><b>Setup (slide).</b> A fixed budget goes to one of three causes: Health (H), Security (S) or Education (E). 12 voters submit full rankings:
+<table class="tr"><tr><th>Type</th><th>Voters</th><th>1st</th><th>2nd</th><th>3rd</th></tr><tr><th>L</th><td>3</td><td>Health</td><td>Security</td><td>Education</td></tr><tr><th>M</th><td>4</td><td>Education</td><td>Health</td><td>Security</td></tr><tr><th>R</th><td>5</td><td>Security</td><td>Education</td><td>Health</td></tr></table></div>
+<div class="box warn"><b>Summary vs slide.</b> The summary lists Type R as <b>Security ≻ Health ≻ Education</b>. The slide says <b>Security ≻ Education ≻ Health</b>. The slide is the one consistent with the numbers (H–E = 3 to 9) used later; with the summary's ranking, H would beat E 8 to 4. I use the slide.</div>
+<h3>System 1: Plurality (most first-place votes)</h3>
+<p>First places: Health 3, Education 4, Security 5. <b>Security wins.</b> The 2nd and 3rd choices are ignored. Yet <b>a majority prefers Health to Security</b> (types L and M: 3 + 4 = 7 voters vs 5).</p>
+<h3>System 2: Instant runoff (alternative vote)</h3>
+<div class="box der">Count first places. If an alternative has <b>more than 50%</b>, it wins. Otherwise remove the alternative with the fewest first places and "virtually re-run" the election.<br>
+Round 1: S = 5, E = 4, H = 3. Nobody has more than 6 of 12. <b>Health is eliminated.</b> Type L voters' next choice is Security, so S = 5 + 3 = <b>8</b>, E = <b>4</b>. <b>Security wins</b> with 8 of 12 (66.7%).</div>
+<h3>System 3: Copeland's method (pairwise contests)</h3>
+<div class="box der"><b>Head-to-head counts.</b><br>
+<b>H vs S:</b> L (3) and M (4) prefer H; R (5) prefers S. H 7, S 5. <b>H wins.</b><br>
+<b>H vs E:</b> L (3) prefers H; M (4) and R (5) prefer E. H 3, E 9. <b>E wins.</b><br>
+<b>S vs E:</b> L (3) and R (5) prefer S; M (4) prefers E. S 8, E 4. <b>S wins.</b></div>
+<table class="tr"><tr><th></th><th>Health</th><th>Security</th><th>Education</th></tr><tr><th>Votes won in all duels (slide's "wins")</th><td>7 + 3 = <b>10</b></td><td>5 + 8 = <b>13</b></td><td>9 + 4 = <b>13</b></td></tr><tr><th>Contests won</th><td>1 (beats S)</td><td>1 (beats E)</td><td>1 (beats H)</td></tr></table>
+<p>The slide's outcome: Health 10, Security 13, Education 13, so <b>Security and Education tie</b>. The slide adds: "if Copeland chooses a single winner, that winner would beat every other candidate head to head".</p>
+<div class="box warn"><b>Two honest remarks (found by checking).</b><br>
+1. The slide's totals (10, 13, 13) are the number of <b>votes</b> won across duels. These are exactly the <b>Borda scores</b> of this profile (H 10, S 13, E 13), because adding up an alternative's head-to-head votes is the same as Borda. The usual Copeland method counts <b>contests won</b>. By that count each alternative wins exactly one contest, a <b>three-way tie</b> (the Condorcet cycle H ≻ S ≻ E ≻ H).<br>
+2. The "winner beats everyone" claim only holds when a Condorcet winner exists. In this example there is a cycle, so no alternative beats every other.</div>
+<table class="tr"><tr><th>Rule</th><th>Winner</th></tr><tr><td>Plurality</td><td>Security (5 votes)</td></tr><tr><td>Instant runoff</td><td>Security (8 votes after Health's elimination)</td></tr><tr><td>Copeland as on the slide</td><td>Security and Education tied (13 each)</td></tr></table>
+<div class="box ex"><b>Take-away:</b> different (reasonable) rules can choose different winners from the same ballots. So "what does it mean for a voting system to be good?" needs an answer, and the next section gives the famous one.</div></section>
+
+<section id="s9"><h2>9. Arrow's impossibility theorem</h2>
+<p>We have seen pathologies in majority rule (cycles, agenda control), Borda (IIA failure, lying) and plurality (vote splitting). <b>Is there any voting system for three or more alternatives that avoids all of them?</b> Kenneth Arrow (1951) said no.</p>
+<div class="box def"><b>[VP1] Pareto principle (unanimity).</b> If <b>every</b> voter prefers X to Y, the group ranking must put X above Y.<br>
+<b>[VP2] Independence of irrelevant alternatives (IIA).</b> The group's ordering of X and Y must depend <b>only</b> on how each voter ranks X versus Y. If we take a third alternative Z and move it around in some voters' rankings, <b>without changing</b> any voter's X-versus-Y order, the group must still rank X and Y the same way.<br>
+<b>Non-dictatorship.</b> No single voter i whose ranking <b>always</b> becomes the group ranking.</div>
+<div class="box ex"><b>Where IIA matters.</b> Most pathologies above are failures of IIA. In the Borda misreporting example, moving Messi was enough to change Pele vs Maradona. In the agenda example, the key was to eliminate alternative X early, <b>before</b> it could meet an alternative Y that it would beat.</div>
+<h3>9.1 Dictatorship passes both tests</h3>
+<div class="box der"><b>Dictatorship:</b> pick one voter j and declare the group ranking equal to j's ranking. With k voters there are k such systems.<br>
+• <b>Unanimity:</b> if everybody prefers X to Y, j does too, so the group ranks X above Y. ✔<br>
+• <b>IIA:</b> the group's order of X and Y is j's order of X and Y, which does not depend on how anyone ranks Z. ✔<br>
+(With only <b>two</b> alternatives, majority rule also satisfies both.)</div>
+<div class="box def"><b>Arrow's Impossibility Theorem.</b> If there are <b>at least three alternatives</b>, every voting system that satisfies both Unanimity and IIA is a <b>dictatorship</b>: dictatorship is the <i>only</i> one.<br>
+<b>Equivalent form:</b> with at least three alternatives, <b>no</b> voting system satisfies Unanimity, IIA <i>and</i> non-dictatorship at the same time.</div>
+<svg viewBox="0 0 700 190" width="700" role="img" aria-label="Which rules satisfy which Arrow properties">
+<text x="350" y="20" text-anchor="middle" style="font-weight:700">Every rule gives up something</text>
+<g class="n"><rect x="20" y="40" width="200" height="110" rx="10"/><rect x="250" y="40" width="200" height="110" rx="10"/><rect x="480" y="40" width="200" height="110" rx="10"/></g>
+<text x="120" y="66" text-anchor="middle" style="font-weight:700">Pairwise majority</text><text x="120" y="90" text-anchor="middle" style="font-size:12px">keeps unanimity, IIA, non-dictator</text><text x="120" y="112" text-anchor="middle" style="font-size:12px;fill:#e11d48">gives up: a transitive</text><text x="120" y="128" text-anchor="middle" style="font-size:12px;fill:#e11d48">group order (cycles)</text>
+<text x="350" y="66" text-anchor="middle" style="font-weight:700">Borda count</text><text x="350" y="90" text-anchor="middle" style="font-size:12px">keeps transitive order, unanimity</text><text x="350" y="112" text-anchor="middle" style="font-size:12px;fill:#e11d48">gives up: IIA</text><text x="350" y="128" text-anchor="middle" style="font-size:12px;fill:#e11d48">(and is open to lying)</text>
+<text x="580" y="66" text-anchor="middle" style="font-weight:700">Dictatorship</text><text x="580" y="90" text-anchor="middle" style="font-size:12px">keeps transitivity, unanimity, IIA</text><text x="580" y="112" text-anchor="middle" style="font-size:12px;fill:#e11d48">gives up: non-dictatorship</text></svg>
+<div class="box ex"><b>Take-away.</b> Voting rules are subject to <b>unavoidable trade-offs</b>. Whatever we choose will show some undesirable behaviour, so the job is to choose which flaws we can live with. (The summary's practical advice: avoid positional rules where voters have a strong incentive to demote rivals; use pairwise or randomised agendas to reduce agenda control.) The slides state the theorem but do not prove it; the proof is a longer argument beyond these notes.</div></section>
+
+<section id="s10"><h2>10. Voting to find the truth: the Condorcet jury theorem</h2>
+<p>Now the voters do <b>not</b> disagree about tastes. They share one goal: pick the <b>truly best</b> alternative (a jury wants the correct verdict; a board wants the profitable plan). They differ only because each has <b>different, imperfect information</b>. If everybody had all the information, they would all agree.</p>
+<div class="box def"><b>Model (slides).</b> Two alternatives, X and Y; exactly one is truly best, each with prior probability ½. Each voter gets an <b>independent private signal</b>: an "X-signal" (says X is better) or a "Y-signal". Signals favour the truly best alternative with probability <span class="m">q &gt; 1/2</span>:
+<span class="eq">Pr[X-signal | X best] = q,  Pr[Y-signal | Y best] = q</span>
+All voters vote <b>simultaneously</b> (nobody sees another's vote) and <b>sincerely</b> (each votes for the alternative she believes best given her own signal). Majority wins.</div>
+<h3>10.1 Why voting sincerely is what you would do (Bayes)</h3>
+<div class="box der">A voter with an X-signal computes the probability that X is best:
+<span class="eq">Pr[X best | X-signal] = Pr[X best]·Pr[X-signal | X best] / Pr[X-signal]</span>
+Denominator: Pr[X-signal] = Pr[X best]·Pr[X-signal | X best] + Pr[Y best]·Pr[X-signal | Y best] = ½·q + ½·(1 − q) = <b>½</b>.<br>
+So Pr[X best | X-signal] = (½·q)/(½) = <b>q &gt; ½</b>. She favours X. Symmetrically, a Y-signal makes her favour Y. <b>Each voter backs the alternative her own signal points to.</b></div>
+<h3>10.2 The theorem</h3>
+<div class="box def"><b>Condorcet jury theorem.</b> Suppose X is the best alternative (Y is symmetric). As the number of voters N grows, the fraction voting X converges to q, which is more than ½. So <b>the probability that the majority is right goes to 1</b>. A big group makes a better decision than any single expert.</div>
+<h3>10.3 Derivation (exact numbers first)</h3>
+<div class="box der"><b>Three voters.</b> The majority is right if at least 2 of 3 voters get the right signal. Each is right with probability q:<br>
+P(exactly 3 right) = q³. P(exactly 2 right) = 3q²(1−q) (three ways to choose the wrong one).<br>
+P(majority right) = q³ + 3q²(1−q) = 3q² − 2q³.<br>
+For q = 2/3: 3·(4/9) − 2·(8/27) = 12/9 − 16/27 = 36/27 − 16/27 = <b>20/27 ≈ 0.741</b> (better than a single voter's 0.667).<br>
+For q = 0.6: 3(0.36) − 2(0.216) = 1.08 − 0.432 = <b>0.648</b> (better than 0.6).<br>
+<b>N voters (N odd):</b> P(majority right) = Σ over k &gt; N/2 of C(N,k)·q<sup>k</sup>·(1−q)<sup>N−k</sup>.</div>
+<svg viewBox="0 0 700 335" width="700" role="img" aria-label="Probability that the majority is right versus number of voters"><line class="ax" x1="70" y1="250" x2="660" y2="250"/><line class="ax" x1="70" y1="250" x2="70" y2="30"/><text x="62" y="254.0" text-anchor="end" style="font-size:12px">0.5</text><line x1="70" y1="250.0" x2="660" y2="250.0" stroke="#dbe3ee" stroke-dasharray="3 4"/><text x="62" y="144.0" text-anchor="end" style="font-size:12px">0.75</text><line x1="70" y1="140.0" x2="660" y2="140.0" stroke="#dbe3ee" stroke-dasharray="3 4"/><text x="62" y="34.0" text-anchor="end" style="font-size:12px">1.0</text><line x1="70" y1="30.0" x2="660" y2="30.0" stroke="#dbe3ee" stroke-dasharray="3 4"/><text x="70.0" y="268" text-anchor="middle" style="font-size:12px">1</text><text x="188.0" y="268" text-anchor="middle" style="font-size:12px">21</text><text x="306.0" y="268" text-anchor="middle" style="font-size:12px">41</text><text x="424.0" y="268" text-anchor="middle" style="font-size:12px">61</text><text x="542.0" y="268" text-anchor="middle" style="font-size:12px">81</text><text x="660.0" y="268" text-anchor="middle" style="font-size:12px">101</text><polyline points="70.0,176.7 81.8,144.1 93.6,122.3 105.4,106.3 117.2,93.7 129.0,83.7 140.8,75.6 152.6,68.8 164.4,63.2 176.2,58.5 188.0,54.5 199.8,51.1 211.6,48.3 223.4,45.8 235.2,43.7 247.0,41.9 258.8,40.3 270.6,39.0 282.4,37.8 294.2,36.8 306.0,35.9 317.8,35.2 329.6,34.5 341.4,34.0 353.2,33.5 365.0,33.0 376.8,32.7 388.6,32.3 400.4,32.0 412.2,31.8 424.0,31.6 435.8,31.4 447.6,31.2 459.4,31.1 471.2,30.9 483.0,30.8 494.8,30.7 506.6,30.6 518.4,30.6 530.2,30.5 542.0,30.4 553.8,30.4 565.6,30.3 577.4,30.3 589.2,30.3 601.0,30.2 612.8,30.2 624.6,30.2 636.4,30.2 648.2,30.1 660.0,30.1" fill="none" stroke="#4f46e5" stroke-width="3"/><polyline points="70.0,206.0 81.8,184.9 93.6,169.7 105.4,157.5 117.2,147.3 129.0,138.5 140.8,130.7 152.6,123.8 164.4,117.5 176.2,111.9 188.0,106.7 199.8,102.0 211.6,97.7 223.4,93.6 235.2,89.9 247.0,86.5 258.8,83.3 270.6,80.3 282.4,77.5 294.2,74.9 306.0,72.5 317.8,70.2 329.6,68.0 341.4,66.0 353.2,64.1 365.0,62.4 376.8,60.7 388.6,59.1 400.4,57.6 412.2,56.2 424.0,54.9 435.8,53.6 447.6,52.4 459.4,51.3 471.2,50.3 483.0,49.3 494.8,48.3 506.6,47.4 518.4,46.6 530.2,45.8 542.0,45.0 553.8,44.3 565.6,43.6 577.4,42.9 589.2,42.3 601.0,41.7 612.8,41.2 624.6,40.6 636.4,40.1 648.2,39.6 660.0,39.2" fill="none" stroke="#d97706" stroke-width="3"/><line x1="70" y1="176.66666666666669" x2="660" y2="176.66666666666669" stroke="#4f46e5" stroke-dasharray="6 4" stroke-opacity=".5"/><text x="660" y="192.66666666666669" text-anchor="end" style="font-size:12px;fill:#4f46e5">one voter alone (q = 2/3)</text><rect x="270" y="308" width="12" height="12" fill="#4f46e5"/><text x="288" y="319" style="font-size:12px">q = 2/3</text><rect x="370" y="308" width="12" height="12" fill="#d97706"/><text x="388" y="319" style="font-size:12px">q = 0.6</text><text x="365" y="293" text-anchor="middle" style="font-size:12px">number of voters N</text></svg>
+<table class="tr"><tr><th>Voters N</th><th>1</th><th>3</th><th>5</th><th>11</th><th>21</th><th>51</th><th>101</th></tr>
+<tr><th>q = 2/3</th><td>0.667</td><td>0.741</td><td>0.790</td><td>0.878</td><td>0.944</td><td>0.993</td><td>0.9997</td></tr>
+<tr><th>q = 0.6</th><td>0.600</td><td>0.648</td><td>0.683</td><td>0.753</td><td>0.826</td><td>0.926</td><td>0.979</td></tr></table>
+<p class="cap">Computed exactly. More voters always help, and the weaker the signal, the more voters it takes.</p>
+<div class="box der"><b>Why it tends to 1 (the law of large numbers).</b><br>
+1. Suppose X is best. Voter i votes X with probability q. Write V<sub>i</sub> = 1 for an X-vote, 0 for a Y-vote: independent, with mean q and variance q(1−q).<br>
+2. Let S<sub>N</sub> = V₁ + … + V<sub>N</sub>. Then S<sub>N</sub>/N has mean q and variance q(1−q)/N, which <b>shrinks to 0</b> as N grows.<br>
+3. The majority is right if S<sub>N</sub>/N &gt; ½. Let ε = q − ½ &gt; 0. The majority is wrong only if S<sub>N</sub>/N ≤ ½, i.e. it is at least ε <b>below its mean</b>.<br>
+4. By Chebyshev's inequality: <span class="m">P(wrong) ≤ P(|S<sub>N</sub>/N − q| ≥ ε) ≤ q(1−q) / (N·ε²)</span>.<br>
+5. This bound goes to 0 as N → ∞. For q = 2/3: ε = 1/6, so the bound is (2/9)/(N/36) = 8/N. (For N = 101 it gives 0.079, much looser than the true 0.0003, but it proves the point.)<br>
+So P(majority right) → 1. ∎ (The slides state "converges almost surely"; the law of large numbers is the engine.)</div>
+<div class="box ex"><b>Two assumptions hide here:</b> (1) voters vote <b>sincerely</b>; (2) they vote <b>simultaneously and independently</b>. The next two sections drop each in turn, and the theorem fails.</div></section>
+
+<section id="s11"><h2>11. Dropping sincerity: the ten-marble urn</h2>
+<p>Voting sincerely sounds mild: if you cannot share signals, why vote against your own best guess? But if your goal is that the <b>group</b> decides correctly, your vote only matters in certain situations, and that changes what is best.</p>
+<div class="box def"><b>The experiment (slides).</b> An urn has 10 marbles. With probability ½ it is <b>"pure"</b> (10 white). With probability ½ it is <b>"mixed"</b> (9 green, 1 white). Three people each draw one marble in secret (and replace it), then cast <b>simultaneous votes</b>: pure or mixed. If the <b>majority is right, all three get a prize</b>; otherwise nobody gets anything (even those who personally voted correctly).</div>
+<div class="box der"><b>What each marble tells you.</b><br>
+• <b>Green:</b> a pure urn has no green, so the urn is <b>mixed for certain</b>.<br>
+• <b>White:</b> Pr[pure | white] = (½·1) / (½·1 + ½·(1/10)) = 0.5/0.55 = <b>10/11 ≈ 91%</b>. So white points strongly to pure.<br>
+Sincere voting: <b>white → vote pure; green → vote mixed.</b></div>
+<h3>11.1 Why sincere voting is not an equilibrium: the pivotal voter</h3>
+<div class="box der">Suppose voters 1 and 2 vote sincerely, and you are voter 3 with a <b>white</b> marble. When does <b>your vote change the outcome</b>? Only when the other two are <b>split</b>: one votes pure and the other votes mixed. (If they agree, the majority is already decided.)<br>
+Under sincere voting, a voter votes mixed <b>only if she drew green</b>. So "the others are split" means <b>one of them drew a green marble</b>. A green marble means the urn is <b>mixed with certainty</b>.<br>
+<b>Conclusion:</b> <i>whenever your vote matters, the urn is mixed.</i> So you should vote <b>mixed</b>, even though your own marble is white. Sincere voting is not an equilibrium: you can do better by voting insincerely.</div>
+<div class="box der"><b>Check the numbers (computed exactly).</b><br>
+<b>All three sincere.</b> Pure urn (prob ½): all three see white, all vote pure: always right. Mixed urn (prob ½): the majority is wrong only if at least two of three drew white: 3·(0.1)²·(0.9) + (0.1)³ = 0.027 + 0.001 = 0.028, so right with 0.972. Total: ½·1 + ½·0.972 = <b>0.986</b>.<br>
+<b>Voter 3 always votes mixed</b> (others sincere). Pure urn: voters 1 and 2 both vote pure, voter 3 votes mixed, pure wins 2 to 1: still always right. Mixed urn: wrong only if voters 1 and 2 <b>both</b> drew white (0.1 × 0.1 = 0.01), so right with 0.99. Total: ½ + ½·0.99 = <b>0.995</b>.<br>
+0.995 &gt; 0.986: voting "mixed" regardless <b>raises everyone's chance of the prize</b>.</div>
+<svg viewBox="0 0 700 170" width="700" role="img" aria-label="Pivotal logic">
+<g class="e"><path d="M150 60 L200 60"/><path d="M340 60 L390 60"/><path d="M530 60 L580 60"/></g>
+<rect class="n" x="10" y="30" width="140" height="60" rx="8"/><text x="80" y="55" text-anchor="middle">Your vote matters</text><text x="80" y="73" text-anchor="middle">only if others split</text>
+<rect class="n" x="200" y="30" width="140" height="60" rx="8"/><text x="270" y="55" text-anchor="middle">So one of them</text><text x="270" y="73" text-anchor="middle">voted "mixed"</text>
+<rect class="n" x="390" y="30" width="140" height="60" rx="8"/><text x="460" y="55" text-anchor="middle">Sincere "mixed"</text><text x="460" y="73" text-anchor="middle">means a green marble</text>
+<rect class="n" x="580" y="30" width="110" height="60" rx="8" style="stroke:#e11d48"/><text x="635" y="55" text-anchor="middle">Urn is MIXED</text><text x="635" y="73" text-anchor="middle">vote mixed</text>
+<text x="350" y="130" text-anchor="middle" style="font-size:12px">Condition on the situations where your vote counts, not on your own marble alone.</text></svg>
+<div class="box ex"><b>The lesson.</b> When the aim is a correct <b>group</b> decision, you should think about the case in which your vote is <b>decisive</b>, and use all the information that case reveals. Sincerity can fail even among people who all want the same thing.</div></section>
+
+<section id="s12"><h2>12. Dropping simultaneity: sequential voting is a cascade</h2>
+<p>Keep sincerity, but let voters vote <b>one after another</b>, each seeing earlier votes. This is exactly the marble experiment of section 2: votes are public actions and signals are private.</p>
+<div class="box der"><b>What happens.</b> Early votes reveal signals. When the first two voters choose X, the net count is d = 2 and a <b>cascade</b> starts: every later voter votes X whatever her own signal says. In general a cascade eventually forms. It can be <b>wrong</b>: even if Y is best, a cascade for X can develop, and <b>adding more voters does not stop it</b>. So there is no reason to expect a large crowd of sequential voters to get the answer right. <b>The Condorcet jury theorem fails.</b></div>
+<div class="box warn"><b>Correction on the summary's limit formula.</b> The summary writes the long-run probability of a correct group decision as 1 − (1 − q)² (that is 8/9 for q = 2/3). That counts only the case where the first two voters are wrong. The exact value (section 4, L1) is <b>q²/(q² + (1−q)²) = 4/5</b> for q = 2/3. Either way it is <b>below 1 and does not improve with N</b>, which is the lesson.</div>
+<table class="tr"><tr><th></th><th>Simultaneous, independent</th><th>Sequential, observed</th></tr><tr><th>Information used</th><td>All N signals (through the votes)</td><td>Only the first few signals (before the cascade)</td></tr><tr><th>Accuracy as N → ∞</th><td>→ 1 (Condorcet)</td><td>stays below 1 (4/5 for q = 2/3)</td></tr><tr><th>Design lesson</th><td>Use secret, simultaneous ballots to aggregate noisy information</td><td>Avoid going around the table in order</td></tr></table>
+<div class="box ex"><b>Two halves, one picture.</b> Preference aggregation (conflicting tastes): the benchmark is <b>Arrow's theorem</b>, and the failures are the Condorcet cycle and agenda manipulation. Information aggregation (shared goal): the benchmark is the <b>jury theorem</b>, and the failures are cascades and insincere voting.</div></section>
+
+<section id="s13"><h2>13. Practice questions (try first, then open the answer)</h2>
+<div class="box der"><b>Q1.</b> In the marble game, the first guess was blue. Student 2 draws red. What does she guess, and what does her guess tell student 3? <details><summary>Answer</summary>One blue and one red: a 50-50 tie, so she follows her own draw and guesses red. Her guess equals her draw, so it reveals her marble. The net count goes back to 0.</details></div>
+<div class="box der"><b>Q2.</b> Compute Pr[majority-blue | blue, blue, red]. <details><summary>Answer</summary>Pr[b,b,r | blue-urn] = (2/3)(2/3)(1/3) = 4/27; Pr[b,b,r | red-urn] = (1/3)(1/3)(2/3) = 2/27. Posterior = (½·4/27) / (½·4/27 + ½·2/27) = 4/6 = <b>2/3</b>.</details></div>
+<div class="box der"><b>Q3.</b> The urn is majority-red. What is the probability that students 1 and 2 both guess blue? Why does it not shrink with more students? <details><summary>Answer</summary>Each draws blue with probability 1/3, so (1/3)² = <b>1/9</b>. After that a cascade of blue starts and no new information enters, so adding students changes nothing. (The exact chance of ending in a wrong cascade, counting later starts, is 1/5.)</details></div>
+<div class="box der"><b>Q4.</b> In a cascade of 80 students, students 40 and 41 show red marbles. What does student 42 do? <details><summary>Answer</summary>She has four real signals: blue, blue (students 1, 2) and red, red (40, 41). That is a tie, so she follows her own draw. The cascade is broken.</details></div>
+<div class="box der"><b>Q5.</b> Three voters have rankings A≻B≻C, B≻C≻A, C≻A≻B. Who wins if the agenda is "A vs C first, then the winner vs B"? <details><summary>Answer</summary>A vs C: voters 2 and 3 prefer C, so C wins 2:1. Then C vs B: voters 1 and 2 prefer B, so B wins 2:1. <b>B wins.</b></details></div>
+<div class="box der"><b>Q6.</b> Borda with three voters: X≻Y≻Z, Y≻Z≻X, Z≻X≻Y. What are the scores? <details><summary>Answer</summary>Each alternative gets 2 + 1 + 0 = 3 points. A three-way tie (the same profile gives a pairwise-majority cycle, so neither method names a winner).</details></div>
+<div class="box der"><b>Q7.</b> In the Pele, Maradona and Messi example, why does Borda violate IIA? <details><summary>Answer</summary>Pele beats Maradona 3:2 when only they are compared. After adding Messi (who finishes last), Borda scores are M 7, P 6, L 2, so Maradona now beats Pele. Messi's placement changed the Pele/Maradona order.</details></div>
+<div class="box der"><b>Q8.</b> Budget example: who wins under plurality and under instant runoff? <details><summary>Answer</summary>Plurality: Security (5 first places vs Education 4, Health 3). Instant runoff: Health (fewest first places) is eliminated, its 3 voters move to Security, so Security wins 8 to 4.</details></div>
+<div class="box der"><b>Q9.</b> State Arrow's theorem. Which of the three properties does dictatorship violate? <details><summary>Answer</summary>With at least three alternatives, any voting system satisfying unanimity and IIA is a dictatorship (equivalently, no system satisfies unanimity, IIA and non-dictatorship). Dictatorship satisfies unanimity and IIA but violates non-dictatorship.</details></div>
+<div class="box der"><b>Q10.</b> Jury theorem with 3 voters and q = 0.6: probability the majority is right? <details><summary>Answer</summary>3q² − 2q³ = 3(0.36) − 2(0.216) = <b>0.648</b>.</details></div>
+<div class="box der"><b>Q11.</b> In the ten-marble urn game, you draw white and the other two vote sincerely. Which way should you vote and why? <details><summary>Answer</summary><b>Mixed.</b> Your vote matters only if the others split, which under sincere voting means one drew green, which means the urn is mixed for certain. (Exact check: 0.995 correct this way vs 0.986 if everyone is sincere.)</details></div>
+<div class="box der"><b>Q12.</b> Why does the jury theorem fail with sequential voting? <details><summary>Answer</summary>Votes are observed, so a cascade starts once the net count reaches 2. Later voters ignore their own signals, the effective sample stays at the first few signals, and a wrong cascade has a fixed positive probability however large N is.</details></div>
+<h3>One-page recap</h3>
+<ul><li><b>Cascade:</b> sequential choices + private signals + only actions visible. Starts when the net revealed count reaches 2 (for 2/3-accurate signals). Can be wrong, uses little information, is fragile.</li><li><b>Voting system:</b> function from complete, transitive rankings to a group ranking.</li><li><b>Majority rule:</b> complete but can cycle (Condorcet paradox), so the agenda setter decides.</li><li><b>Borda:</b> transitive but violates IIA and invites lying. <b>Plurality:</b> ignores lower ranks, vote-splitting.</li><li><b>Different rules, different winners</b> (budget example).</li><li><b>Arrow:</b> with 3 or more alternatives, unanimity + IIA forces a dictator.</li><li><b>Jury theorem:</b> independent, simultaneous, sincere votes with q &gt; ½ make the majority right with probability → 1. It fails with insincere (pivotal) voting and with sequential voting.</li></ul>
+</section>
+</main></body></html>
