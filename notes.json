@@ -87,6 +87,10 @@
     {
       "title": "llm week 5 tokenizers bpe wordpiece sentencepiece ",
       "path": "notes/llm/llm-week-5-tokenizers-bpe-wordpiece-sentencepiece-.html"
+    },
+    {
+      "title": "llm week 7 gpt 2 t5 and choices that affect performance",
+      "path": "notes/llm/llm-week-7-gpt-2-t5-and-choices-that-affect-performance.html"
     }
   ]
 }
