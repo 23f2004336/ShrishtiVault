@@ -91,6 +91,10 @@
     {
       "title": "llm week 7 gpt 2 t5 and choices that affect performance",
       "path": "notes/llm/llm-week-7-gpt-2-t5-and-choices-that-affect-performance.html"
+    },
+    {
+      "title": "llm week 8 data pipelines and design choices",
+      "path": "notes/llm/llm-week-8-data-pipelines-and-design-choices.html"
     }
   ]
 }
